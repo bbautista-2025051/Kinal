@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+<div th:replace="~{layout :: navbar}"></div>
+
+<div class="notas-layout">
+    <div class="page-header">
+        <p class="eyebrow"><i class="fas fa-chart-bar me-1"></i> Mi progreso</p>
+        <h1>Historial de notas</h1>
+        <p>Revisa tus resultados y detecta las áreas donde puedes mejorar.</p>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-grid" th:unless="${resultados.empty}">
+        <div class="summary-card">
+            <div class="label">Tests realizados</div>
+            <div class="value" th:text="${resultados.size()}"></div>
+        </div>
+        <div class="summary-card highlight">
+            <div class="label">Mejor nota</div>
+            <div class="value" th:text="${mejorNota}"></div>
+        </div>
+        <div class="summary-card">
+            <div class="label">Promedio general</div>
+            <div class="value" th:text="${promedio}"></div>
+        </div>
+    </div>
+
+    <!-- Empty state -->
+    <div th:if="${resultados.empty}" class="empty-state">
+        <div class="icon"><i class="fas fa-clipboard-list"></i></div>
+        <h3>Aún no tienes resultados</h3>
+        <p>Realiza tu primer test para ver tu historial aquí.</p>
+        <a th:href="@{/carreras}" class="btn-kinal-red">
+            <i class="fas fa-book-open"></i> Explorar lecturas
+        </a>
+    </div>
+
+    <!-- Table -->
+    <div class="notas-table-wrap" th:unless="${resultados.empty}">
+        <table class="notas-table">
+            <thead>
+            <tr>
+                <th>Lectura</th>
+                <th>Fecha</th>
+                <th>Aciertos</th>
+                <th>Nota</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${resultados}">
+                <td class="title-cell" th:text="${r.lectura.titulo}"></td>
+                <td th:text="${#temporals.format(r.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+                <td>
+                        <span class="badge-aciertos">
+                            <i class="fas fa-check" style="color:var(--red);font-size:.65rem"></i>
+                            <span th:text="${r.aciertos + ' / ' + r.totalPreguntas}"></span>
+                        </span>
+                </td>
+                <td>
+                    <span th:if="${r.nota >= 70}" class="nota-badge nota-pass" th:text="${r.nota}"></span>
+                    <span th:unless="${r.nota >= 70}" class="nota-badge nota-fail" th:text="${r.nota}"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+<div th:replace="~{layout :: navbar}"></div>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="container-custom">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="hero-label"><i class="fas fa-star"></i> Plataforma educativa Kinal</div>
+                <h1>Mejora tu comprensión lectora <span>técnica</span></h1>
+                <p>Desarrolla habilidades de lectura con contenido especializado en tu carrera. Practica con textos reales y pon a prueba tus conocimientos.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a th:href="@{/login}" class="btn-kinal-red px-4 py-2" style="border-radius:var(--radius);font-size:.9rem;">
+                        <i class="fas fa-arrow-right-to-bracket"></i> Iniciar sesión
+                    </a>
+                    <a th:href="@{/registro}" class="btn-kinal-outline px-4 py-2" style="border-radius:var(--radius);font-size:.9rem;border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.8);">
+                        Crear cuenta
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-img">
+                    <img src="https://static.wixstatic.com/media/128120_d85e94e94f1048659b09fa09c476764b~mv2.jpg/v1/fill/w_640,h_446,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/128120_d85e94e94f1048659b09fa09c476764b~mv2.jpg" alt="Estudiantes Kinal">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+    <div class="container-custom">
+        <div class="row g-3 justify-content-center">
+            <div class="col-6 col-md-3 stat-item">
+                <span class="stat-num">5+</span>
+                <span class="stat-label">Carreras técnicas</span>
+            </div>
+            <div class="col-6 col-md-3 stat-item">
+                <span class="stat-num">50+</span>
+                <span class="stat-label">Lecturas disponibles</span>
+            </div>
+            <div class="col-6 col-md-3 stat-item">
+                <span class="stat-num">100%</span>
+                <span class="stat-label">Contenido técnico</span>
+            </div>
+            <div class="col-6 col-md-3 stat-item">
+                <span class="stat-num">Gratis</span>
+                <span class="stat-label">Para estudiantes Kinal</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<section class="features">
+    <div class="container-custom">
+        <div class="text-center mb-5">
+            <p class="section-eyebrow">¿Por qué Kinal Lecturas?</p>
+            <h2 class="section-title">Todo lo que necesitas para mejorar</h2>
+            <p class="text-muted" style="max-width:500px;margin:0 auto;font-size:.9rem;">Una herramienta diseñada específicamente para estudiantes de carreras técnicas del Instituto Kinal.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-laptop-code"></i></div>
+                    <h5>Lecturas por carrera</h5>
+                    <p>Contenido adaptado a tu especialidad: Informática, Electrónica, Dibujo Técnico y más carreras disponibles.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-shuffle"></i></div>
+                    <h5>Preguntas aleatorias</h5>
+                    <p>Cada test genera 5 preguntas al azar desde un amplio banco, asegurando una evaluación única cada vez.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h5>Historial de notas</h5>
+                    <p>Consulta tu progreso con fechas, aciertos y calificaciones para identificar áreas de mejora.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA band -->
+<section class="cta-band">
+    <div class="container-custom">
+        <h2>¿Listo para empezar?</h2>
+        <p>Únete a los estudiantes que ya mejoran su comprensión lectora técnica.</p>
+        <div class="d-flex justify-content-center flex-wrap gap-3">
+            <a th:href="@{/registro}" class="btn-white"><i class="fas fa-user-plus"></i> Crear cuenta gratis</a>
+            <a th:href="@{/login}" class="btn-white-outline">Iniciar sesión</a>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

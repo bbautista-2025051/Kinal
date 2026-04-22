@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+<div th:replace="~{layout :: navbar}"></div>
+
+<div class="resultado-layout">
+
+    <!-- Ya realizado banner -->
+    <div th:if="${yaRealizado}" class="ya-realizado-banner">
+        <i class="fas fa-info-circle me-2"></i>
+        Ya habías completado este test anteriormente. Se muestra tu resultado previo.
+    </div>
+
+    <!-- Score card -->
+    <div class="resultado-card">
+
+        <div class="resultado-icon-wrap" th:classappend="${nota != null and nota >= 70} ? 'pass' : 'fail'">
+            <i th:if="${nota != null and nota >= 70}" class="fas fa-trophy"></i>
+            <i th:unless="${nota != null and nota >= 70}" class="fas fa-times-circle"></i>
+        </div>
+
+        <p class="resultado-eyebrow"><i class="fas fa-pen-to-square me-1"></i> Resultado del test</p>
+
+        <div class="resultado-nota-wrap">
+            <div class="resultado-nota"
+                 th:text="${nota != null ? nota : '—'}"
+                 th:classappend="${nota != null and nota >= 70} ? 'pass' : 'fail'">
+            </div>
+            <span class="resultado-sobre">/ 100</span>
+        </div>
+
+        <div class="resultado-detalle" th:if="${nota != null}">
+            <div class="detalle-item">
+                <span class="detalle-label">Aciertos</span>
+                <span class="detalle-value"
+                      th:text="${aciertos != null and total != null ? aciertos + ' de ' + total : '—'}">
+                </span>
+            </div>
+            <div class="detalle-sep"></div>
+            <div class="detalle-item">
+                <span class="detalle-label">Estado</span>
+                <span th:if="${nota >= 70}" class="detalle-value estado-pass">
+                    <i class="fas fa-check me-1"></i> Aprobado
+                </span>
+                <span th:unless="${nota >= 70}" class="detalle-value estado-fail">
+                    <i class="fas fa-times me-1"></i> Reprobado
+                </span>
+            </div>
+        </div>
+
+        <!-- Sin flash attributes (acceso directo) -->
+        <div th:if="${nota == null}" class="resultado-vacio">
+            <p>No hay resultado que mostrar. Realiza un test primero.</p>
+        </div>
+
+        <div class="resultado-actions">
+            <a th:href="@{/mis-notas}" class="btn-kinal-red">
+                <i class="fas fa-chart-bar me-1"></i> Ver historial completo
+            </a>
+            <a th:href="@{/carreras}" class="btn-kinal-outline">
+                <i class="fas fa-book-open me-1"></i> Más lecturas
+            </a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layout :: footer}"></div>
+<script th:src="@{/js/resultado.js}"></script>
+</body>
+</html>

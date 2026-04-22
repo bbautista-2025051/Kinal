@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+<div th:replace="~{layout :: navbar}"></div>
+
+<div class="error-page">
+    <div class="error-box">
+        <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="error-status" th:text="'Error ' + ${status}">Error</div>
+        <h2 th:text="${error}">Algo salió mal</h2>
+        <p th:text="${message}">Ocurrió un error inesperado. Por favor intenta de nuevo o regresa al inicio.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a th:href="@{/}" class="btn-kinal-red"><i class="fas fa-home"></i> Inicio</a>
+            <a th:href="@{/carreras}" class="btn-kinal-outline">Ver carreras</a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>
