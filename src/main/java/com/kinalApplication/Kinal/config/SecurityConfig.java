@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -68,7 +69,6 @@ public class SecurityConfig {
                                                 AuthenticationException ex) throws IOException, ServletException {
                 String ip = getClientIp(req);
                 registerFailure(ip);
-                // Timing-safe: delay fijo para no revelar si el email existe
                 try { Thread.sleep(500); } catch (InterruptedException ignored) {}
                 super.onAuthenticationFailure(req, res, ex);
             }
@@ -77,99 +77,101 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        // Handler que resuelve el CSRF token correctamente en Thymeleaf + Spring Security 6
+        CsrfTokenRequestAttributeHandler csrfHandler = new CsrfTokenRequestAttributeHandler();
+        csrfHandler.setCsrfRequestAttributeName("_csrf");
+
         http
-            // ── CSRF con cookie segura ──────────────────────────────────────
-            .csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            )
-
-            // ── Cabeceras de seguridad HTTP ─────────────────────────────────
-            .headers(headers -> headers
-                // Evita que el contenido se renderice en iframes externos (clickjacking)
-                .frameOptions(frame -> frame.sameOrigin())
-                // HSTS: fuerza HTTPS durante 1 año
-                .httpStrictTransportSecurity(hsts -> hsts
-                    .includeSubDomains(true)
-                    .maxAgeInSeconds(31536000)
+                // ── CSRF con cookie segura ──────────────────────────────────────
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(csrfHandler)
                 )
-                // No detectar tipo MIME automáticamente
-                .contentTypeOptions(ct -> {})
-                // XSS Protection
-                .xssProtection(xss -> {})
-                // Content Security Policy: solo recursos propios + Google Fonts + CDN permitidos
-                .contentSecurityPolicy(csp -> csp
-                    .policyDirectives(
-                        "default-src 'self'; " +
-                        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-                        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
-                        "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; " +
-                        "img-src 'self' https://static.wixstatic.com data:; " +
-                        "connect-src 'self'; " +
-                        "frame-ancestors 'self'; " +
-                        "form-action 'self'"
-                    )
+
+                // ── Cabeceras de seguridad HTTP ─────────────────────────────────
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin())
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .includeSubDomains(true)
+                                .maxAgeInSeconds(31536000)
+                        )
+                        .contentTypeOptions(ct -> {})
+                        .xssProtection(xss -> {})
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives(
+                                        "default-src 'self'; " +
+                                                "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+                                                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
+                                                "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; " +
+                                                "img-src 'self' https://static.wixstatic.com data:; " +
+                                                "connect-src 'self'; " +
+                                                "frame-ancestors 'self'; " +
+                                                "form-action 'self'"
+                                )
+                        )
+                        .referrerPolicy(ref -> ref
+                                .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
+                        )
+                        .permissionsPolicy(pp -> pp
+                                .policy("camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()")
+                        )
                 )
-                // No filtrar el Referer fuera del origen
-                .referrerPolicy(ref -> ref
-                    .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
+
+                // ── Autorización de rutas ───────────────────────────────────────
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**",
+                                "/registro", "/login", "/").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
+                        .anyRequest().authenticated()
                 )
-                // Permissions Policy: deshabilitar APIs del navegador no necesarias
-                .permissionsPolicy(pp -> pp
-                    .policy("camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()")
+
+                // ── Login ───────────────────────────────────────────────────────
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/carreras", true)
+                        .failureHandler(failureHandler())
+                        .permitAll()
                 )
-            )
 
-            // ── Autorización de rutas ───────────────────────────────────────
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**",
-                                 "/registro", "/login", "/").permitAll()
-                .anyRequest().authenticated()
-            )
+                // ── Logout seguro ───────────────────────────────────────────────
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .clearAuthentication(true)
+                        .permitAll()
+                )
 
-            // ── Login ───────────────────────────────────────────────────────
-            .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/carreras", true)
-                .failureHandler(failureHandler())
-                .permitAll()
-            )
+                // ── Gestión de sesión ───────────────────────────────────────────
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                        .and()
+                        .sessionFixation().changeSessionId()
+                )
 
-            // ── Logout seguro ───────────────────────────────────────────────
-            .logout(logout -> logout
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
-                .logoutSuccessUrl("/login?logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .clearAuthentication(true)
-                .permitAll()
-            )
-
-            // ── Gestión de sesión ───────────────────────────────────────────
-            .sessionManagement(session -> session
-                // Un solo inicio de sesión simultáneo por cuenta
-                .maximumSessions(1)
-                    .maxSessionsPreventsLogin(false)
-                .and()
-                // Regenerar ID de sesión tras login (previene session fixation)
-                .sessionFixation().changeSessionId()
-            )
-
-            .userDetailsService(estudianteService);
+                .userDetailsService(estudianteService);
 
         return http.build();
     }
 
-    // ── Publicar eventos de sesión (necesario para maximumSessions) ─────────
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
 
-    // ── Extraer IP real aunque haya proxy ───────────────────────────────────
+    // ── Extraer IP real aunque haya proxy (Railway usa X-Forwarded-For) ─────
     public static String getClientIp(HttpServletRequest request) {
         String xf = request.getHeader("X-Forwarded-For");
         if (xf != null && !xf.isBlank()) {
             return xf.split(",")[0].trim();
+        }
+        String xri = request.getHeader("X-Real-IP");
+        if (xri != null && !xri.isBlank()) {
+            return xri.trim();
         }
         return request.getRemoteAddr();
     }
