@@ -31,11 +31,10 @@ public class SecurityConfig {
     @Autowired
     private EstudianteService estudianteService;
 
-    // ── Rate limiting simple en memoria ─────────────────────────────────────
     private static final ConcurrentHashMap<String, AtomicInteger> failedAttempts = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, Long>          lockoutTime    = new ConcurrentHashMap<>();
-    private static final int  MAX_ATTEMPTS      = 5;
-    private static final long LOCKOUT_MS        = 15 * 60 * 1000L; // 15 minutos
+    private static final int  MAX_ATTEMPTS = 5;
+    private static final long LOCKOUT_MS   = 15 * 60 * 1000L;
 
     public static boolean isLocked(String ip) {
         Long locked = lockoutTime.get(ip);
@@ -78,18 +77,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        // Handler que resuelve el CSRF token correctamente en Thymeleaf + Spring Security 6
-        CsrfTokenRequestAttributeHandler csrfHandler = new CsrfTokenRequestAttributeHandler();
-        csrfHandler.setCsrfRequestAttributeName("_csrf");
+        // Spring Security 6: usar CsrfTokenRequestAttributeHandler para compatibilidad
+        // con Thymeleaf. Esto expone _csrf como atributo de request para los templates.
+        CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+        // CRITICO: setCsrfRequestAttributeName(null) hace que Spring Security resuelva
+        // el token de forma lazy, lo que es necesario para que funcione con cookie CSRF
+        // detrás de un proxy como Railway.
+        requestHandler.setCsrfRequestAttributeName(null);
+
+        // CookieCsrfTokenRepository.withHttpOnlyFalse() permite que JS lea la cookie
+        // para incluirla en requests AJAX, y Thymeleaf la lee del request attribute.
+        CookieCsrfTokenRepository tokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
 
         http
-                // ── CSRF con cookie segura ──────────────────────────────────────
                 .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(csrfHandler)
+                        .csrfTokenRepository(tokenRepository)
+                        .csrfTokenRequestHandler(requestHandler)
                 )
 
-                // ── Cabeceras de seguridad HTTP ─────────────────────────────────
                 .headers(headers -> headers
                         .frameOptions(frame -> frame.sameOrigin())
                         .httpStrictTransportSecurity(hsts -> hsts
@@ -118,7 +123,6 @@ public class SecurityConfig {
                         )
                 )
 
-                // ── Autorización de rutas ───────────────────────────────────────
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**",
                                 "/registro", "/login", "/").permitAll()
@@ -126,7 +130,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                // ── Login ───────────────────────────────────────────────────────
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
@@ -135,7 +138,6 @@ public class SecurityConfig {
                         .permitAll()
                 )
 
-                // ── Logout seguro ───────────────────────────────────────────────
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
                         .logoutSuccessUrl("/login?logout")
@@ -145,7 +147,6 @@ public class SecurityConfig {
                         .permitAll()
                 )
 
-                // ── Gestión de sesión ───────────────────────────────────────────
                 .sessionManagement(session -> session
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(false)
@@ -163,7 +164,6 @@ public class SecurityConfig {
         return new HttpSessionEventPublisher();
     }
 
-    // ── Extraer IP real aunque haya proxy (Railway usa X-Forwarded-For) ─────
     public static String getClientIp(HttpServletRequest request) {
         String xf = request.getHeader("X-Forwarded-For");
         if (xf != null && !xf.isBlank()) {

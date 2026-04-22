@@ -43,6 +43,7 @@
     </div>
 
     <form th:action="@{/test/calificar}" method="post" th:object="${respuestaTestDTO}" id="testForm">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <input type="hidden" name="testToken" th:value="${testToken}">
         <div th:each="pregunta, iterStat : ${preguntas}" class="q-card" th:id="'qcard_' + ${iterStat.index}">
             <div class="q-number">
