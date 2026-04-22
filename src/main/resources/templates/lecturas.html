@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+<div th:replace="~{layout :: navbar}"></div>
+
+<div class="page-hero">
+    <div class="container-custom">
+        <div class="breadcrumb">
+            <a th:href="@{/carreras}"><i class="fas fa-graduation-cap me-1"></i> Carreras</a>
+            <i class="fas fa-chevron-right" style="font-size:.6rem"></i>
+            <span th:text="${carrera.nombre}"></span>
+        </div>
+        <h1>Lecturas de <span class="text-kinal-red" th:text="${carrera.nombre}"></span></h1>
+        <p style="font-size:.85rem;color:var(--muted);margin:0">Selecciona una lectura, estúdiala y luego realiza el test de comprensión.</p>
+    </div>
+</div>
+
+<div class="lecturas-grid">
+    <div class="container-custom">
+        <div th:if="${lecturas.empty}" class="empty-state">
+            <i class="fas fa-book-open"></i>
+            <p>Aún no hay lecturas disponibles para esta carrera.</p>
+        </div>
+        <div class="row g-4" th:unless="${lecturas.empty}">
+            <div class="col-md-6 col-lg-4" th:each="l, iterStat : ${lecturas}">
+                <div class="lectura-card">
+                    <div class="lectura-card-top">
+                        <div class="lectura-num">Lectura <span th:text="${iterStat.index + 1}"></span></div>
+                        <div class="lectura-titulo" th:text="${l.titulo}"></div>
+                    </div>
+                    <div class="lectura-card-body">
+                        <p class="lectura-preview" th:text="${#strings.abbreviate(l.contenido, 130)}"></p>
+                        <a th:href="@{/lectura/{id} (id=${l.id})}" class="btn-lectura">
+                            <i class="fas fa-book-reader" style="font-size:.7rem"></i> Leer contenido
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

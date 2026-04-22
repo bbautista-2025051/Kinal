@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+<div th:replace="~{layout :: navbar}"></div>
+
+<!-- Timer sticky bar -->
+<div class="timer-bar" id="timerBar">
+    <div class="timer-left">
+        <div class="timer-display" id="timerDisplay">
+            <i class="fas fa-clock"></i>
+            <span id="timerText">10:00</span>
+        </div>
+        <div class="timer-track">
+            <div class="timer-fill" id="timerFill" style="width:100%"></div>
+        </div>
+    </div>
+    <span class="timer-label">Tiempo restante para completar el test</span>
+</div>
+
+<!-- Timeout overlay -->
+<div class="timeout-overlay" id="timeoutOverlay">
+    <div class="timeout-box">
+        <div class="icon"><i class="fas fa-hourglass-end"></i></div>
+        <h3>¡Tiempo agotado!</h3>
+        <p>El tiempo límite ha expirado. Tus respuestas serán enviadas automáticamente.</p>
+        <div class="spinner-border text-danger" role="status" style="width:1.5rem;height:1.5rem">
+            <span class="visually-hidden">Enviando...</span>
+        </div>
+    </div>
+</div>
+
+<div class="test-layout">
+    <div class="test-header">
+        <p class="eyebrow"><i class="fas fa-pen-to-square me-1"></i> Test de comprensión</p>
+        <h1>Demuestra lo que aprendiste</h1>
+        <p>Tienes <strong>10 minutos</strong> para responder las 5 preguntas. Solo puedes realizarlo una vez.</p>
+    </div>
+
+    <div class="q-progress" id="progressTracker">
+        <div class="q-progress-dots" id="progressDots"></div>
+        <span class="q-progress-text" id="progressText">0 de 5 respondidas</span>
+    </div>
+
+    <form th:action="@{/test/calificar}" method="post" th:object="${respuestaTestDTO}" id="testForm">
+        <input type="hidden" name="testToken" th:value="${testToken}">
+        <div th:each="pregunta, iterStat : ${preguntas}" class="q-card" th:id="'qcard_' + ${iterStat.index}">
+            <div class="q-number">
+                <span class="num-badge" th:text="${iterStat.index + 1}"></span>
+                Pregunta <span th:text="${iterStat.index + 1}"></span>
+            </div>
+            <div class="q-text" th:text="${pregunta.texto}"></div>
+            <div class="options">
+                <label class="option-label" th:each="opcion : ${pregunta.opciones}">
+                    <input type="radio"
+                           th:name="'respuestas[' + ${iterStat.index} + ']'"
+                           th:value="${opcion.id}"
+                           th:id="'opcion_' + ${opcion.id}"
+                           required
+                           onchange="markAnswered(this)">
+                    <div class="opt-circle"></div>
+                    <span class="opt-text" th:text="${opcion.texto}"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="submit-section">
+            <div>
+                <strong>¿Respondiste todo?</strong>
+                <p>Una vez enviado no podrás volver a intentarlo.</p>
+            </div>
+            <button type="submit" class="btn-submit-test" id="btnSubmit">
+                Calificar <i class="fas fa-check ms-1"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div th:replace="~{layout :: footer}"></div>
+
+<script th:inline="javascript">
+    var timerSegundos = /*[[${timerSegundos}]]*/ 600;
+</script>
+<script th:src="@{/js/test.js}"></script>
+
+</body>
+</html>
