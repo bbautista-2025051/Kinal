@@ -11,7 +11,6 @@
         <p>Revisa tus resultados y detecta las áreas donde puedes mejorar.</p>
     </div>
 
-    <!-- Summary -->
     <div class="summary-grid" th:unless="${resultados.empty}">
         <div class="summary-card">
             <div class="label">Tests realizados</div>
@@ -27,7 +26,6 @@
         </div>
     </div>
 
-    <!-- Empty state -->
     <div th:if="${resultados.empty}" class="empty-state">
         <div class="icon"><i class="fas fa-clipboard-list"></i></div>
         <h3>Aún no tienes resultados</h3>
@@ -37,14 +35,15 @@
         </a>
     </div>
 
-    <!-- Table -->
     <div class="notas-table-wrap" th:unless="${resultados.empty}">
         <table class="notas-table">
             <thead>
             <tr>
                 <th>Lectura</th>
-                <th>Fecha</th>
+                <th>Fecha y hora del test</th>
                 <th>Aciertos</th>
+                <th>Tiempo test</th>
+                <th>Velocidad lectora</th>
                 <th>Nota</th>
             </tr>
             </thead>
@@ -53,14 +52,31 @@
                 <td class="title-cell" th:text="${r.lectura.titulo}"></td>
                 <td th:text="${#temporals.format(r.fecha, 'dd/MM/yyyy HH:mm')}"></td>
                 <td>
-                        <span class="badge-aciertos">
-                            <i class="fas fa-check" style="color:var(--red);font-size:.65rem"></i>
-                            <span th:text="${r.aciertos + ' / ' + r.totalPreguntas}"></span>
-                        </span>
+                    <span class="badge-aciertos">
+                        <i class="fas fa-check" style="color:var(--red);font-size:.65rem"></i>
+                        <span th:text="${r.aciertos + ' / ' + r.totalPreguntas}"></span>
+                    </span>
                 </td>
                 <td>
-                    <span th:if="${r.nota >= 70}" class="nota-badge nota-pass" th:text="${r.nota}"></span>
-                    <span th:unless="${r.nota >= 70}" class="nota-badge nota-fail" th:text="${r.nota}"></span>
+                    <span th:if="${r.tiempoTestSegundos != null}"
+                          class="badge-tiempo"
+                          th:text="${T(java.lang.String).format('%02d:%02d', r.tiempoTestSegundos / 60, r.tiempoTestSegundos % 60)}">
+                    </span>
+                    <span th:unless="${r.tiempoTestSegundos != null}" class="text-muted">—</span>
+                </td>
+                <td>
+                    <span th:if="${r.velocidadLectoraPpm != null}" class="badge-velocidad"
+                          th:classappend="${r.velocidadLectoraPpm >= 300} ? 'excelente' : (${r.velocidadLectoraPpm >= 200} ? 'buena' : 'normal')">
+                        <i class="fas fa-tachometer-alt me-1"></i>
+                        <span th:text="${r.velocidadLectoraPpm + ' ppm'}"></span>
+                    </span>
+                    <span th:unless="${r.velocidadLectoraPpm != null}" class="text-muted">—</span>
+                </td>
+                <td>
+                    <span th:if="${r.nota >= 70}"  class="nota-badge nota-pass" th:text="${#numbers.formatDecimal(r.nota,1,1)}"></span>
+                    <span th:unless="${r.nota >= 70}" class="nota-badge nota-fail" th:text="${#numbers.formatDecimal(r.nota,1,1)}"></span>
+                    <span th:if="${r.bonusVelocidad != null and r.bonusVelocidad > 0}"
+                          class="bonus-mini" th:text="'(+' + r.bonusVelocidad + ')'"></span>
                 </td>
             </tr>
             </tbody>

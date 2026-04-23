@@ -6,17 +6,15 @@
 
 <div class="resultado-layout">
 
-    <!-- Ya realizado banner -->
     <div th:if="${yaRealizado}" class="ya-realizado-banner">
         <i class="fas fa-info-circle me-2"></i>
         Ya habías completado este test anteriormente. Se muestra tu resultado previo.
     </div>
 
-    <!-- Score card -->
     <div class="resultado-card">
 
         <div class="resultado-icon-wrap" th:classappend="${nota != null and nota >= 70} ? 'pass' : 'fail'">
-            <i th:if="${nota != null and nota >= 70}" class="fas fa-trophy"></i>
+            <i th:if="${nota != null and nota >= 70}"  class="fas fa-trophy"></i>
             <i th:unless="${nota != null and nota >= 70}" class="fas fa-times-circle"></i>
         </div>
 
@@ -24,10 +22,16 @@
 
         <div class="resultado-nota-wrap">
             <div class="resultado-nota"
-                 th:text="${nota != null ? nota : '—'}"
+                 th:text="${nota != null ? #numbers.formatDecimal(nota,1,1) : '—'}"
                  th:classappend="${nota != null and nota >= 70} ? 'pass' : 'fail'">
             </div>
             <span class="resultado-sobre">/ 100</span>
+        </div>
+
+        <!-- Bonus badge -->
+        <div th:if="${bonusVelocidad != null and bonusVelocidad > 0}" class="bonus-badge">
+            <i class="fas fa-bolt me-1"></i>
+            +<span th:text="${bonusVelocidad}"></span> pts por velocidad lectora
         </div>
 
         <div class="resultado-detalle" th:if="${nota != null}">
@@ -49,7 +53,51 @@
             </div>
         </div>
 
-        <!-- Sin flash attributes (acceso directo) -->
+        <div class="resultado-tiempos" th:if="${tiempoTest != null or tiempoLectura != null}">
+            <div class="tiempo-item" th:if="${tiempoLectura != null and tiempoLectura > 0}">
+                <i class="fas fa-book-reader"></i>
+                <div>
+                    <span class="tiempo-label">Tiempo de lectura</span>
+                    <span class="tiempo-valor"
+                          th:text="${T(java.lang.String).format('%02d:%02d', tiempoLectura / 60, tiempoLectura % 60)}">
+                    </span>
+                </div>
+            </div>
+            <div class="tiempo-item" th:if="${tiempoTest != null and tiempoTest > 0}">
+                <i class="fas fa-stopwatch"></i>
+                <div>
+                    <span class="tiempo-label">Tiempo en el test</span>
+                    <span class="tiempo-valor"
+                          th:text="${T(java.lang.String).format('%02d:%02d', tiempoTest / 60, tiempoTest % 60)}">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="velocidad-card" th:if="${velocidadLectora != null and velocidadLectora > 0}">
+            <div class="velocidad-header">
+                <i class="fas fa-tachometer-alt me-2"></i>
+                Velocidad Lectora
+            </div>
+            <div class="velocidad-ppm">
+                <span th:text="${velocidadLectora}"></span>
+                <span class="ppm-label">PPM</span>
+            </div>
+            <div class="velocidad-nivel"
+                 th:classappend="${nivelVelocidad == 'Excelente'} ? 'excelente' : (${nivelVelocidad == 'Buena'} ? 'buena' : (${nivelVelocidad == 'Lenta'} ? 'lenta' : 'normal'))">
+                <span th:if="${nivelVelocidad == 'Excelente'}"><i class="fas fa-star me-1"></i> Velocidad Excelente (+10 pts)</span>
+                <span th:if="${nivelVelocidad == 'Buena'}"><i class="fas fa-thumbs-up me-1"></i> Buena Velocidad (+5 pts)</span>
+                <span th:if="${nivelVelocidad == 'Normal'}"><i class="fas fa-minus-circle me-1"></i> Velocidad Normal</span>
+                <span th:if="${nivelVelocidad == 'Lenta'}"><i class="fas fa-turtle me-1"></i> Velocidad Lenta — ¡Sigue practicando!</span>
+            </div>
+            <div class="velocidad-escala">
+                <span>Lenta &lt;150</span>
+                <span>Normal 150-199</span>
+                <span>Buena 200-299</span>
+                <span>Excelente 300+</span>
+            </div>
+        </div>
+
         <div th:if="${nota == null}" class="resultado-vacio">
             <p>No hay resultado que mostrar. Realiza un test primero.</p>
         </div>

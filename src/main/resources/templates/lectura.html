@@ -1,54 +1,69 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout :: head}"></head>
-<body>
+<body th:data-lectura-id="${lectura.id}">
 <div th:replace="~{layout :: navbar}"></div>
 
-<!-- Progress indicator -->
 <div class="reading-progress" id="readingProgress">
     <span><i class="fas fa-book-open me-1"></i> Leyendo</span>
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill"></div></div>
     <span id="progressPct">0%</span>
 </div>
 
+<!-- Timer de lectura -->
+<div class="reading-timer-bar" id="readingTimerBar">
+    <i class="fas fa-stopwatch me-2"></i>
+    Tiempo de lectura: <strong id="readingTimerDisplay">00:00</strong>
+    <span class="reading-timer-note">El tiempo se registra automáticamente</span>
+</div>
+
 <main class="reading-layout">
-    <!-- Breadcrumb -->
     <div class="reading-meta">
         <a th:href="@{/carreras}">Carreras</a>
         <span class="sep">›</span>
-        <span>Lectura</span>
+        <span th:text="${lectura.titulo}">Lectura</span>
     </div>
 
-    <!-- Title -->
+    <div class="reading-info-row">
+        <span class="reading-badge"><i class="fas fa-text-width me-1"></i>
+            <span th:text="${palabrasLectura}"></span> palabras
+        </span>
+        <span class="reading-badge"><i class="fas fa-clock me-1"></i>
+            ~<span th:text="${minEstimadoLectura}"></span> min de lectura
+        </span>
+    </div>
+
     <h2 class="reading-title" th:text="${lectura.titulo}"></h2>
     <div class="reading-divider"></div>
 
-    <!-- Content -->
     <div class="reading-body" th:text="${lectura.contenido}"></div>
 
-    <!-- CTA to test -->
-    <div th:if="${yaRealizado}" class="reading-cta" style="background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%)">
+    <!-- CTA ya realizado -->
+    <div th:if="${yaRealizado}" class="reading-cta reading-cta-done">
         <div class="reading-cta-text">
             <h4>Test ya completado</h4>
             <p>Solo se permite un intento. Puedes ver tu resultado en el historial.</p>
         </div>
-        <a th:href="@{/mis-notas}" class="btn-kinal-red px-4 py-2" style="white-space:nowrap;background:#fff;color:#1d4ed8;">
+        <a th:href="@{/mis-notas}" class="btn-kinal-outline" style="white-space:nowrap;">
             <i class="fas fa-chart-bar me-1"></i> Ver mis notas
         </a>
     </div>
+
     <div th:unless="${yaRealizado}" class="reading-cta">
         <div class="reading-cta-text">
             <h4>¿Terminaste de leer?</h4>
-            <p>Pon a prueba tu comprensión. Solo tienes <strong style="color:#f87171">un intento</strong>.</p>
+            <p>Pon a prueba tu comprensión. Solo tienes <strong style="color:#e63946">un intento</strong>.</p>
         </div>
-        <a th:href="@{/test/{id} (id=${lectura.id})}" class="btn-kinal-red px-4 py-2" style="white-space:nowrap">
+        <a th:href="${testUrl}"
+           th:data-lectura-id="${lectura.id}"
+           class="btn-kinal-red btn-ir-test"
+           style="white-space:nowrap">
             Ir al test <i class="fas fa-arrow-right ms-1"></i>
         </a>
     </div>
 </main>
 
 <div th:replace="~{layout :: footer}"></div>
-
 <script th:src="@{/js/lectura.js}"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import com.kinalApplication.Kinal.model.Lectura;
 import com.kinalApplication.Kinal.repository.LecturaRepository;
 import com.kinalApplication.Kinal.repository.ResultadoRepository;
 import com.kinalApplication.Kinal.service.EstudianteService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -26,9 +27,9 @@ public class LecturaController {
     public String verLectura(@PathVariable Long id,
                              Model model,
                              Authentication auth,
+                             HttpSession session,
                              RedirectAttributes ra) {
 
-        // ── Validar id positivo ───────────────────────────────────────────────
         if (id == null || id <= 0) return "redirect:/carreras";
 
         Lectura lectura = lecturaRepository.findById(id).orElse(null);
@@ -39,13 +40,28 @@ public class LecturaController {
 
         model.addAttribute("lectura", lectura);
 
+        boolean yaRealizado = false;
         if (auth != null) {
             Estudiante estudiante = estudianteService.findByEmail(auth.getName()).orElse(null);
             if (estudiante != null) {
-                boolean yaRealizado = resultadoRepository.existsByEstudianteAndLectura(estudiante, lectura);
-                model.addAttribute("yaRealizado", yaRealizado);
+                yaRealizado = resultadoRepository.existsByEstudianteAndLectura(estudiante, lectura);
             }
         }
+        model.addAttribute("yaRealizado", yaRealizado);
+
+        String urlToken = java.util.UUID.randomUUID().toString();
+        session.setAttribute("lecturaUrlToken_" + id, urlToken);
+
+        session.setAttribute("lecturaInicio_" + id, System.currentTimeMillis());
+
+        String testUrl = "/test/" + id + "?token=" + urlToken;
+        model.addAttribute("testUrl",   testUrl);
+        model.addAttribute("urlToken",  urlToken);
+
+        int palabras = lectura.getContenido().trim().split("\\s+").length;
+        int minEstimado = (int) Math.ceil(palabras / 200.0); // 200 ppm promedio
+        model.addAttribute("palabrasLectura",  palabras);
+        model.addAttribute("minEstimadoLectura", minEstimado);
 
         return "lectura";
     }

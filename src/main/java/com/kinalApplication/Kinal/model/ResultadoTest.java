@@ -19,14 +19,18 @@ public class ResultadoTest {
     private Lectura lectura;
 
     private LocalDateTime fecha;
-
     private int aciertos;
-
     private int totalPreguntas;
+    private double nota;
 
-    private double nota; // sobre 100
+    private Integer tiempoTestSegundos;
 
-    // Constructores
+    private Integer tiempoLecturaSegundos;
+
+    private Integer velocidadLectoraPpm;
+
+    private double bonusVelocidad;
+
     public ResultadoTest() {}
 
     public ResultadoTest(Estudiante estudiante, Lectura lectura, int aciertos, int totalPreguntas, double nota) {
@@ -36,9 +40,9 @@ public class ResultadoTest {
         this.aciertos = aciertos;
         this.totalPreguntas = totalPreguntas;
         this.nota = nota;
+        this.bonusVelocidad = 0.0;
     }
 
-    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Estudiante getEstudiante() { return estudiante; }
@@ -53,4 +57,12 @@ public class ResultadoTest {
     public void setTotalPreguntas(int totalPreguntas) { this.totalPreguntas = totalPreguntas; }
     public double getNota() { return nota; }
     public void setNota(double nota) { this.nota = nota; }
+    public Integer getTiempoTestSegundos() { return tiempoTestSegundos; }
+    public void setTiempoTestSegundos(Integer t) { this.tiempoTestSegundos = t; }
+    public Integer getTiempoLecturaSegundos() { return tiempoLecturaSegundos; }
+    public void setTiempoLecturaSegundos(Integer t) { this.tiempoLecturaSegundos = t; }
+    public Integer getVelocidadLectoraPpm() { return velocidadLectoraPpm; }
+    public void setVelocidadLectoraPpm(Integer v) { this.velocidadLectoraPpm = v; }
+    public double getBonusVelocidad() { return bonusVelocidad; }
+    public void setBonusVelocidad(double b) { this.bonusVelocidad = b; }
 }
