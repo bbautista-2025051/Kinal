@@ -11,926 +11,704 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private CarreraRepository carreraRepository;
-
     @Autowired
     private LecturaRepository lecturaRepository;
-
     @Autowired
     private PreguntaRepository preguntaRepository;
-
     @Autowired
     private OpcionRepository opcionRepository;
 
     @Override
     public void run(String... args) throws Exception {
-        // Solo cargar si no hay carreras
         if (carreraRepository.count() == 0) {
-
-            // ========== CARRERA ==========
+            // ==================== CARRERAS ====================
             Carrera informatica = new Carrera("Perito en Informática",
                     "Desarrollo de software, bases de datos, redes y programación orientada a objetos.");
             carreraRepository.save(informatica);
 
-            // ========== LECTURA 1: Java Avanzado (ya existente) ==========
-            String textoLargo1 =
-                    " Programación Orientada a Objetos en Java - Nivel Intermedio\n\n" +
-                            "Java es un lenguaje de programación orientado a objetos que sigue los principios de encapsulamiento, herencia, polimorfismo y abstracción. " +
-                            "Estos pilares permiten crear código modular, reutilizable y fácil de mantener.\n\n" +
-                            "**Encapsulamiento**: Consiste en ocultar los detalles internos de una clase y exponer solo lo necesario mediante métodos públicos (getters/setters). " +
-                            "Se logra usando modificadores de acceso como `private`, `protected` y `public`.\n\n" +
-                            "**Herencia**: Permite que una clase (hija) herede atributos y métodos de otra clase (padre) usando la palabra clave `extends`. " +
-                            "Java soporta herencia simple, pero se puede simular múltiples herencias con interfaces.\n\n" +
-                            "**Polimorfismo**: Es la capacidad de un objeto para tomar muchas formas. Se manifiesta mediante la sobrecarga de métodos (mismo nombre, diferentes parámetros) " +
-                            "y la sobreescritura de métodos (redefinir un método heredado).\n\n" +
-                            "**Abstracción**: Se enfoca en ocultar la complejidad y mostrar solo las características esenciales. Se logra con clases abstractas e interfaces.\n\n" +
-                            "Además, Java cuenta con **colecciones** como ArrayList, HashMap, LinkedList, que facilitan el manejo de grupos de objetos. " +
-                            "El manejo de excepciones permite controlar errores en tiempo de ejecución usando bloques `try-catch-finally`.\n\n" +
-                            "Java también incorpora **programación funcional** desde Java 8 con expresiones lambda y streams, que permiten procesar datos de forma declarativa.\n\n" +
-                            "Por último, el sistema de **entrada/salida (I/O)** y el API de **concurrencia** (hilos) son fundamentales para aplicaciones robustas.\n\n" +
-                            "En resumen, dominar estos conceptos te permitirá desarrollar software profesional y escalable.";
-
-            Lectura lecturaJava = new Lectura("Programación Orientada a Objetos en Java (Nivel Intermedio)", textoLargo1, informatica);
-            lecturaRepository.save(lecturaJava);
-
-            // Crear 15 preguntas para Lectura 1
-            // Pregunta 1
-            Pregunta p1 = new Pregunta("¿Cuál de los siguientes NO es un pilar de la Programación Orientada a Objetos?", lecturaJava);
-            preguntaRepository.save(p1);
-            Opcion p1a = new Opcion("Encapsulamiento", p1);
-            Opcion p1b = new Opcion("Herencia", p1);
-            Opcion p1c = new Opcion("Polimorfismo", p1);
-            Opcion p1d = new Opcion("Compilación", p1);
-            opcionRepository.save(p1a); opcionRepository.save(p1b); opcionRepository.save(p1c); opcionRepository.save(p1d);
-            p1.setRespuestaCorrecta(p1d);
-            preguntaRepository.save(p1);
-
-            // Pregunta 2
-            Pregunta p2 = new Pregunta("¿Qué modificador de acceso permite que un atributo sea visible solo dentro de la misma clase?", lecturaJava);
-            preguntaRepository.save(p2);
-            Opcion p2a = new Opcion("public", p2);
-            Opcion p2b = new Opcion("private", p2);
-            Opcion p2c = new Opcion("protected", p2);
-            Opcion p2d = new Opcion("default", p2);
-            opcionRepository.save(p2a); opcionRepository.save(p2b); opcionRepository.save(p2c); opcionRepository.save(p2d);
-            p2.setRespuestaCorrecta(p2b);
-            preguntaRepository.save(p2);
-
-            // Pregunta 3
-            Pregunta p3 = new Pregunta("¿Qué palabra clave se usa para heredar de una clase en Java?", lecturaJava);
-            preguntaRepository.save(p3);
-            Opcion p3a = new Opcion("implements", p3);
-            Opcion p3b = new Opcion("extends", p3);
-            Opcion p3c = new Opcion("inherit", p3);
-            Opcion p3d = new Opcion("super", p3);
-            opcionRepository.save(p3a); opcionRepository.save(p3b); opcionRepository.save(p3c); opcionRepository.save(p3d);
-            p3.setRespuestaCorrecta(p3b);
-            preguntaRepository.save(p3);
-
-            // Pregunta 4
-            Pregunta p4 = new Pregunta("El polimorfismo por sobrecarga de métodos se caracteriza por:", lecturaJava);
-            preguntaRepository.save(p4);
-            Opcion p4a = new Opcion("Mismo nombre y diferentes parámetros", p4);
-            Opcion p4b = new Opcion("Mismo nombre y mismos parámetros", p4);
-            Opcion p4c = new Opcion("Diferente nombre y mismos parámetros", p4);
-            Opcion p4d = new Opcion("Redefinir un método heredado", p4);
-            opcionRepository.save(p4a); opcionRepository.save(p4b); opcionRepository.save(p4c); opcionRepository.save(p4d);
-            p4.setRespuestaCorrecta(p4a);
-            preguntaRepository.save(p4);
-
-            // Pregunta 5
-            Pregunta p5 = new Pregunta("¿Cuál de estas es una interfaz de colecciones en Java?", lecturaJava);
-            preguntaRepository.save(p5);
-            Opcion p5a = new Opcion("ArrayList", p5);
-            Opcion p5b = new Opcion("HashMap", p5);
-            Opcion p5c = new Opcion("List", p5);
-            Opcion p5d = new Opcion("LinkedList", p5);
-            opcionRepository.save(p5a); opcionRepository.save(p5b); opcionRepository.save(p5c); opcionRepository.save(p5d);
-            p5.setRespuestaCorrecta(p5c);
-            preguntaRepository.save(p5);
-
-            // Pregunta 6
-            Pregunta p6 = new Pregunta("¿Qué bloque se ejecuta siempre, haya o no excepción?", lecturaJava);
-            preguntaRepository.save(p6);
-            Opcion p6a = new Opcion("try", p6);
-            Opcion p6b = new Opcion("catch", p6);
-            Opcion p6c = new Opcion("finally", p6);
-            Opcion p6d = new Opcion("throw", p6);
-            opcionRepository.save(p6a); opcionRepository.save(p6b); opcionRepository.save(p6c); opcionRepository.save(p6d);
-            p6.setRespuestaCorrecta(p6c);
-            preguntaRepository.save(p6);
-
-            // Pregunta 7
-            Pregunta p7 = new Pregunta("Desde qué versión de Java se introdujeron las expresiones lambda?", lecturaJava);
-            preguntaRepository.save(p7);
-            Opcion p7a = new Opcion("Java 5", p7);
-            Opcion p7b = new Opcion("Java 7", p7);
-            Opcion p7c = new Opcion("Java 8", p7);
-            Opcion p7d = new Opcion("Java 11", p7);
-            opcionRepository.save(p7a); opcionRepository.save(p7b); opcionRepository.save(p7c); opcionRepository.save(p7d);
-            p7.setRespuestaCorrecta(p7c);
-            preguntaRepository.save(p7);
-
-            // Pregunta 8
-            Pregunta p8 = new Pregunta("¿Qué permite la abstracción en Java?", lecturaJava);
-            preguntaRepository.save(p8);
-            Opcion p8a = new Opcion("Ocultar la complejidad", p8);
-            Opcion p8b = new Opcion("Reutilizar código", p8);
-            Opcion p8c = new Opcion("Crear múltiples instancias", p8);
-            Opcion p8d = new Opcion("Mejorar el rendimiento", p8);
-            opcionRepository.save(p8a); opcionRepository.save(p8b); opcionRepository.save(p8c); opcionRepository.save(p8d);
-            p8.setRespuestaCorrecta(p8a);
-            preguntaRepository.save(p8);
-
-            // Pregunta 9
-            Pregunta p9 = new Pregunta("¿Cuál es la clase padre de todas las clases en Java?", lecturaJava);
-            preguntaRepository.save(p9);
-            Opcion p9a = new Opcion("Object", p9);
-            Opcion p9b = new Opcion("Class", p9);
-            Opcion p9c = new Opcion("Main", p9);
-            Opcion p9d = new Opcion("System", p9);
-            opcionRepository.save(p9a); opcionRepository.save(p9b); opcionRepository.save(p9c); opcionRepository.save(p9d);
-            p9.setRespuestaCorrecta(p9a);
-            preguntaRepository.save(p9);
-
-            // Pregunta 10
-            Pregunta p10 = new Pregunta("¿Qué método se usa para iniciar un hilo en Java?", lecturaJava);
-            preguntaRepository.save(p10);
-            Opcion p10a = new Opcion("run()", p10);
-            Opcion p10b = new Opcion("start()", p10);
-            Opcion p10c = new Opcion("init()", p10);
-            Opcion p10d = new Opcion("execute()", p10);
-            opcionRepository.save(p10a); opcionRepository.save(p10b); opcionRepository.save(p10c); opcionRepository.save(p10d);
-            p10.setRespuestaCorrecta(p10b);
-            preguntaRepository.save(p10);
-
-            // Pregunta 11
-            Pregunta p11 = new Pregunta("¿Qué permite la palabra clave 'super'?", lecturaJava);
-            preguntaRepository.save(p11);
-            Opcion p11a = new Opcion("Acceder a métodos de la clase hija", p11);
-            Opcion p11b = new Opcion("Acceder a miembros de la clase padre", p11);
-            Opcion p11c = new Opcion("Crear una nueva instancia", p11);
-            Opcion p11d = new Opcion("Finalizar un objeto", p11);
-            opcionRepository.save(p11a); opcionRepository.save(p11b); opcionRepository.save(p11c); opcionRepository.save(p11d);
-            p11.setRespuestaCorrecta(p11b);
-            preguntaRepository.save(p11);
-
-            // Pregunta 12
-            Pregunta p12 = new Pregunta("¿Cuál es la diferencia entre ArrayList y LinkedList?", lecturaJava);
-            preguntaRepository.save(p12);
-            Opcion p12a = new Opcion("ArrayList es más rápido para inserciones en medio", p12);
-            Opcion p12b = new Opcion("LinkedList implementa List y Deque", p12);
-            Opcion p12c = new Opcion("ArrayList usa memoria contigua", p12);
-            Opcion p12d = new Opcion("Todas las anteriores son correctas", p12);
-            opcionRepository.save(p12a); opcionRepository.save(p12b); opcionRepository.save(p12c); opcionRepository.save(p12d);
-            p12.setRespuestaCorrecta(p12d);
-            preguntaRepository.save(p12);
-
-            // Pregunta 13
-            Pregunta p13 = new Pregunta("¿Qué excepción se lanza al acceder a un índice fuera del rango en un array?", lecturaJava);
-            preguntaRepository.save(p13);
-            Opcion p13a = new Opcion("NullPointerException", p13);
-            Opcion p13b = new Opcion("ArrayIndexOutOfBoundsException", p13);
-            Opcion p13c = new Opcion("IndexOutOfBoundsException", p13);
-            Opcion p13d = new Opcion("IllegalArgumentException", p13);
-            opcionRepository.save(p13a); opcionRepository.save(p13b); opcionRepository.save(p13c); opcionRepository.save(p13d);
-            p13.setRespuestaCorrecta(p13b);
-            preguntaRepository.save(p13);
-
-            // Pregunta 14
-            Pregunta p14 = new Pregunta("¿Cuál es el propósito de la interfaz 'Runnable'?", lecturaJava);
-            preguntaRepository.save(p14);
-            Opcion p14a = new Opcion("Definir una tarea ejecutable en un hilo", p14);
-            Opcion p14b = new Opcion("Manejar eventos de teclado", p14);
-            Opcion p14c = new Opcion("Serializar objetos", p14);
-            Opcion p14d = new Opcion("Conectar a bases de datos", p14);
-            opcionRepository.save(p14a); opcionRepository.save(p14b); opcionRepository.save(p14c); opcionRepository.save(p14d);
-            p14.setRespuestaCorrecta(p14a);
-            preguntaRepository.save(p14);
-
-            // Pregunta 15
-            Pregunta p15 = new Pregunta("¿Qué método de Stream se usa para filtrar elementos?", lecturaJava);
-            preguntaRepository.save(p15);
-            Opcion p15a = new Opcion("map()", p15);
-            Opcion p15b = new Opcion("filter()", p15);
-            Opcion p15c = new Opcion("reduce()", p15);
-            Opcion p15d = new Opcion("collect()", p15);
-            opcionRepository.save(p15a); opcionRepository.save(p15b); opcionRepository.save(p15c); opcionRepository.save(p15d);
-            p15.setRespuestaCorrecta(p15b);
-            preguntaRepository.save(p15);
-
-            // ========== LECTURA 2: Bases de Datos SQL ==========
-            String textoLargo2 =
-                    " Fundamentos de Bases de Datos SQL\n\n" +
-                            "SQL (Structured Query Language) es el lenguaje estándar para gestionar bases de datos relacionales. Permite consultar, insertar, actualizar y eliminar datos.\n\n" +
-                            "**Principales comandos DDL (Data Definition Language):**\n" +
-                            "- CREATE: crear tablas, índices, vistas.\n" +
-                            "- ALTER: modificar la estructura de una tabla.\n" +
-                            "- DROP: eliminar objetos de la base de datos.\n\n" +
-                            "**Comandos DML (Data Manipulation Language):**\n" +
-                            "- SELECT: recuperar datos de una o más tablas.\n" +
-                            "- INSERT: agregar nuevas filas.\n" +
-                            "- UPDATE: modificar datos existentes.\n" +
-                            "- DELETE: eliminar filas.\n\n" +
-                            "**Cláusulas importantes:**\n" +
-                            "- WHERE: filtrar registros.\n" +
-                            "- JOIN: combinar tablas relacionadas (INNER JOIN, LEFT JOIN, RIGHT JOIN).\n" +
-                            "- GROUP BY: agrupar filas con valores idénticos.\n" +
-                            "- ORDER BY: ordenar resultados.\n\n" +
-                            "**Restricciones de integridad:** PRIMARY KEY, FOREIGN KEY, UNIQUE, NOT NULL, CHECK.\n\n" +
-                            "Las **transacciones** (BEGIN, COMMIT, ROLLBACK) garantizan atomicidad, consistencia, aislamiento y durabilidad (ACID).\n\n" +
-                            "Un buen dominio de SQL es esencial para cualquier desarrollador o administrador de bases de datos.";
-
-            Lectura lecturaSQL = new Lectura("Fundamentos de Bases de Datos SQL", textoLargo2, informatica);
-            lecturaRepository.save(lecturaSQL);
-
-            // Crear 15 preguntas para Lectura 2
-            // Pregunta 1
-            Pregunta sql1 = new Pregunta("¿Qué comando SQL se usa para eliminar una tabla completa?", lecturaSQL);
-            preguntaRepository.save(sql1);
-            Opcion sql1a = new Opcion("DELETE TABLE", sql1);
-            Opcion sql1b = new Opcion("DROP TABLE", sql1);
-            Opcion sql1c = new Opcion("REMOVE TABLE", sql1);
-            Opcion sql1d = new Opcion("TRUNCATE TABLE", sql1);
-            opcionRepository.save(sql1a); opcionRepository.save(sql1b); opcionRepository.save(sql1c); opcionRepository.save(sql1d);
-            sql1.setRespuestaCorrecta(sql1b);
-            preguntaRepository.save(sql1);
-
-            // Pregunta 2
-            Pregunta sql2 = new Pregunta("¿Cuál de las siguientes es una restricción de integridad referencial?", lecturaSQL);
-            preguntaRepository.save(sql2);
-            Opcion sql2a = new Opcion("PRIMARY KEY", sql2);
-            Opcion sql2b = new Opcion("FOREIGN KEY", sql2);
-            Opcion sql2c = new Opcion("UNIQUE", sql2);
-            Opcion sql2d = new Opcion("CHECK", sql2);
-            opcionRepository.save(sql2a); opcionRepository.save(sql2b); opcionRepository.save(sql2c); opcionRepository.save(sql2d);
-            sql2.setRespuestaCorrecta(sql2b);
-            preguntaRepository.save(sql2);
-
-            // Pregunta 3
-            Pregunta sql3 = new Pregunta("¿Qué cláusula se usa para filtrar grupos después de GROUP BY?", lecturaSQL);
-            preguntaRepository.save(sql3);
-            Opcion sql3a = new Opcion("WHERE", sql3);
-            Opcion sql3b = new Opcion("HAVING", sql3);
-            Opcion sql3c = new Opcion("FILTER", sql3);
-            Opcion sql3d = new Opcion("GROUP FILTER", sql3);
-            opcionRepository.save(sql3a); opcionRepository.save(sql3b); opcionRepository.save(sql3c); opcionRepository.save(sql3d);
-            sql3.setRespuestaCorrecta(sql3b);
-            preguntaRepository.save(sql3);
-
-            // Pregunta 4
-            Pregunta sql4 = new Pregunta("¿Qué tipo de JOIN devuelve solo los registros que coinciden en ambas tablas?", lecturaSQL);
-            preguntaRepository.save(sql4);
-            Opcion sql4a = new Opcion("LEFT JOIN", sql4);
-            Opcion sql4b = new Opcion("RIGHT JOIN", sql4);
-            Opcion sql4c = new Opcion("INNER JOIN", sql4);
-            Opcion sql4d = new Opcion("FULL OUTER JOIN", sql4);
-            opcionRepository.save(sql4a); opcionRepository.save(sql4b); opcionRepository.save(sql4c); opcionRepository.save(sql4d);
-            sql4.setRespuestaCorrecta(sql4c);
-            preguntaRepository.save(sql4);
-
-            // Pregunta 5
-            Pregunta sql5 = new Pregunta("¿Cuál comando se usa para deshacer una transacción?", lecturaSQL);
-            preguntaRepository.save(sql5);
-            Opcion sql5a = new Opcion("COMMIT", sql5);
-            Opcion sql5b = new Opcion("SAVEPOINT", sql5);
-            Opcion sql5c = new Opcion("ROLLBACK", sql5);
-            Opcion sql5d = new Opcion("UNDO", sql5);
-            opcionRepository.save(sql5a); opcionRepository.save(sql5b); opcionRepository.save(sql5c); opcionRepository.save(sql5d);
-            sql5.setRespuestaCorrecta(sql5c);
-            preguntaRepository.save(sql5);
-
-            // Pregunta 6
-            Pregunta sql6 = new Pregunta("¿Qué operador se usa para buscar un patrón en una columna de texto?", lecturaSQL);
-            preguntaRepository.save(sql6);
-            Opcion sql6a = new Opcion("=", sql6);
-            Opcion sql6b = new Opcion("LIKE", sql6);
-            Opcion sql6c = new Opcion("IN", sql6);
-            Opcion sql6d = new Opcion("BETWEEN", sql6);
-            opcionRepository.save(sql6a); opcionRepository.save(sql6b); opcionRepository.save(sql6c); opcionRepository.save(sql6d);
-            sql6.setRespuestaCorrecta(sql6b);
-            preguntaRepository.save(sql6);
-
-            // Pregunta 7
-            Pregunta sql7 = new Pregunta("¿Cuál es la función de agregación que cuenta el número de filas?", lecturaSQL);
-            preguntaRepository.save(sql7);
-            Opcion sql7a = new Opcion("SUM()", sql7);
-            Opcion sql7b = new Opcion("AVG()", sql7);
-            Opcion sql7c = new Opcion("COUNT()", sql7);
-            Opcion sql7d = new Opcion("MAX()", sql7);
-            opcionRepository.save(sql7a); opcionRepository.save(sql7b); opcionRepository.save(sql7c); opcionRepository.save(sql7d);
-            sql7.setRespuestaCorrecta(sql7c);
-            preguntaRepository.save(sql7);
-
-            // Pregunta 8
-            Pregunta sql8 = new Pregunta("¿Qué comando DDL modifica la estructura de una tabla?", lecturaSQL);
-            preguntaRepository.save(sql8);
-            Opcion sql8a = new Opcion("UPDATE", sql8);
-            Opcion sql8b = new Opcion("MODIFY", sql8);
-            Opcion sql8c = new Opcion("ALTER", sql8);
-            Opcion sql8d = new Opcion("CHANGE", sql8);
-            opcionRepository.save(sql8a); opcionRepository.save(sql8b); opcionRepository.save(sql8c); opcionRepository.save(sql8d);
-            sql8.setRespuestaCorrecta(sql8c);
-            preguntaRepository.save(sql8);
-
-            // Pregunta 9
-            Pregunta sql9 = new Pregunta("¿Cuál de estos comandos pertenece a DML?", lecturaSQL);
-            preguntaRepository.save(sql9);
-            Opcion sql9a = new Opcion("CREATE", sql9);
-            Opcion sql9b = new Opcion("DROP", sql9);
-            Opcion sql9c = new Opcion("INSERT", sql9);
-            Opcion sql9d = new Opcion("ALTER", sql9);
-            opcionRepository.save(sql9a); opcionRepository.save(sql9b); opcionRepository.save(sql9c); opcionRepository.save(sql9d);
-            sql9.setRespuestaCorrecta(sql9c);
-            preguntaRepository.save(sql9);
-
-            // Pregunta 10
-            Pregunta sql10 = new Pregunta("¿Qué propiedad ACID garantiza que una transacción se ejecute completamente o no se ejecute?", lecturaSQL);
-            preguntaRepository.save(sql10);
-            Opcion sql10a = new Opcion("Consistencia", sql10);
-            Opcion sql10b = new Opcion("Atomicidad", sql10);
-            Opcion sql10c = new Opcion("Aislamiento", sql10);
-            Opcion sql10d = new Opcion("Durabilidad", sql10);
-            opcionRepository.save(sql10a); opcionRepository.save(sql10b); opcionRepository.save(sql10c); opcionRepository.save(sql10d);
-            sql10.setRespuestaCorrecta(sql10b);
-            preguntaRepository.save(sql10);
-
-            // Pregunta 11
-            Pregunta sql11 = new Pregunta("¿Qué cláusula ordena los resultados de forma ascendente por defecto?", lecturaSQL);
-            preguntaRepository.save(sql11);
-            Opcion sql11a = new Opcion("ORDER BY", sql11);
-            Opcion sql11b = new Opcion("GROUP BY", sql11);
-            Opcion sql11c = new Opcion("SORT BY", sql11);
-            Opcion sql11d = new Opcion("ARRANGE BY", sql11);
-            opcionRepository.save(sql11a); opcionRepository.save(sql11b); opcionRepository.save(sql11c); opcionRepository.save(sql11d);
-            sql11.setRespuestaCorrecta(sql11a);
-            preguntaRepository.save(sql11);
-
-            // Pregunta 12
-            Pregunta sql12 = new Pregunta("¿Qué operador permite comparar un valor con una lista de valores?", lecturaSQL);
-            preguntaRepository.save(sql12);
-            Opcion sql12a = new Opcion("BETWEEN", sql12);
-            Opcion sql12b = new Opcion("LIKE", sql12);
-            Opcion sql12c = new Opcion("IN", sql12);
-            Opcion sql12d = new Opcion("EXISTS", sql12);
-            opcionRepository.save(sql12a); opcionRepository.save(sql12b); opcionRepository.save(sql12c); opcionRepository.save(sql12d);
-            sql12.setRespuestaCorrecta(sql12c);
-            preguntaRepository.save(sql12);
-
-            // Pregunta 13
-            Pregunta sql13 = new Pregunta("¿Cuál es la función de agregación que devuelve el valor más alto?", lecturaSQL);
-            preguntaRepository.save(sql13);
-            Opcion sql13a = new Opcion("MIN()", sql13);
-            Opcion sql13b = new Opcion("MAX()", sql13);
-            Opcion sql13c = new Opcion("TOP()", sql13);
-            Opcion sql13d = new Opcion("HIGHEST()", sql13);
-            opcionRepository.save(sql13a); opcionRepository.save(sql13b); opcionRepository.save(sql13c); opcionRepository.save(sql13d);
-            sql13.setRespuestaCorrecta(sql13b);
-            preguntaRepository.save(sql13);
-
-            // Pregunta 14
-            Pregunta sql14 = new Pregunta("¿Qué comando elimina todas las filas de una tabla sin registrar cada eliminación?", lecturaSQL);
-            preguntaRepository.save(sql14);
-            Opcion sql14a = new Opcion("DELETE", sql14);
-            Opcion sql14b = new Opcion("DROP", sql14);
-            Opcion sql14c = new Opcion("TRUNCATE", sql14);
-            Opcion sql14d = new Opcion("REMOVE", sql14);
-            opcionRepository.save(sql14a); opcionRepository.save(sql14b); opcionRepository.save(sql14c); opcionRepository.save(sql14d);
-            sql14.setRespuestaCorrecta(sql14c);
-            preguntaRepository.save(sql14);
-
-            // Pregunta 15
-            Pregunta sql15 = new Pregunta("¿Qué tipo de JOIN devuelve todos los registros de la tabla izquierda y los coincidentes de la derecha?", lecturaSQL);
-            preguntaRepository.save(sql15);
-            Opcion sql15a = new Opcion("INNER JOIN", sql15);
-            Opcion sql15b = new Opcion("RIGHT JOIN", sql15);
-            Opcion sql15c = new Opcion("FULL JOIN", sql15);
-            Opcion sql15d = new Opcion("LEFT JOIN", sql15);
-            opcionRepository.save(sql15a); opcionRepository.save(sql15b); opcionRepository.save(sql15c); opcionRepository.save(sql15d);
-            sql15.setRespuestaCorrecta(sql15d);
-            preguntaRepository.save(sql15);
-
-            // ========== LECTURA 3: Redes de Computadoras ==========
-            String textoLargo3 =
-                    " Introducción a Redes de Computadoras\n\n" +
-                            "Una red de computadoras es un conjunto de dispositivos interconectados que comparten recursos e información.\n\n" +
-                            "**Modelo OSI (7 capas):**\n" +
-                            "1. Física: bits, cables, señales.\n" +
-                            "2. Enlace de datos: tramas, direcciones MAC.\n" +
-                            "3. Red: paquetes, direcciones IP, enrutamiento.\n" +
-                            "4. Transporte: segmentos, puertos, TCP/UDP.\n" +
-                            "5. Sesión: gestión de diálogos.\n" +
-                            "6. Presentación: cifrado, compresión.\n" +
-                            "7. Aplicación: HTTP, FTP, SMTP, DNS.\n\n" +
-                            "**Modelo TCP/IP (4 capas):**\n" +
-                            "- Capa de Acceso a Red\n" +
-                            "- Capa de Internet (IP)\n" +
-                            "- Capa de Transporte (TCP, UDP)\n" +
-                            "- Capa de Aplicación\n\n" +
-                            "**Protocolos importantes:**\n" +
-                            "- HTTP/HTTPS: web.\n" +
-                            "- FTP: transferencia de archivos.\n" +
-                            "- DNS: resolución de nombres.\n" +
-                            "- DHCP: asignación dinámica de IP.\n" +
-                            "- ARP: resolución de direcciones MAC.\n\n" +
-                            "**Direccionamiento IP:** IPv4 (32 bits, ej. 192.168.1.1) e IPv6 (128 bits).\n\n" +
-                            "Las redes se clasifican por tamaño: PAN, LAN, MAN, WAN.\n\n" +
-                            "Conocer estos fundamentos es clave para administrar infraestructura de TI.";
-
-            Lectura lecturaRedes = new Lectura("Introducción a Redes de Computadoras", textoLargo3, informatica);
-            lecturaRepository.save(lecturaRedes);
-
-            // 15 preguntas para Redes
-            Pregunta red1 = new Pregunta("¿Cuál es la capa del modelo OSI encargada del direccionamiento IP y el enrutamiento?", lecturaRedes);
-            preguntaRepository.save(red1);
-            Opcion red1a = new Opcion("Capa de Transporte", red1);
-            Opcion red1b = new Opcion("Capa de Red", red1);
-            Opcion red1c = new Opcion("Capa de Enlace", red1);
-            Opcion red1d = new Opcion("Capa de Sesión", red1);
-            opcionRepository.save(red1a); opcionRepository.save(red1b); opcionRepository.save(red1c); opcionRepository.save(red1d);
-            red1.setRespuestaCorrecta(red1b);
-            preguntaRepository.save(red1);
-
-            Pregunta red2 = new Pregunta("¿Qué protocolo se usa para la transferencia de páginas web?", lecturaRedes);
-            preguntaRepository.save(red2);
-            Opcion red2a = new Opcion("FTP", red2);
-            Opcion red2b = new Opcion("SMTP", red2);
-            Opcion red2c = new Opcion("HTTP", red2);
-            Opcion red2d = new Opcion("SSH", red2);
-            opcionRepository.save(red2a); opcionRepository.save(red2b); opcionRepository.save(red2c); opcionRepository.save(red2d);
-            red2.setRespuestaCorrecta(red2c);
-            preguntaRepository.save(red2);
-
-            Pregunta red3 = new Pregunta("¿Cuántos bits tiene una dirección IPv4?", lecturaRedes);
-            preguntaRepository.save(red3);
-            Opcion red3a = new Opcion("16 bits", red3);
-            Opcion red3b = new Opcion("32 bits", red3);
-            Opcion red3c = new Opcion("64 bits", red3);
-            Opcion red3d = new Opcion("128 bits", red3);
-            opcionRepository.save(red3a); opcionRepository.save(red3b); opcionRepository.save(red3c); opcionRepository.save(red3d);
-            red3.setRespuestaCorrecta(red3b);
-            preguntaRepository.save(red3);
-
-            Pregunta red4 = new Pregunta("¿Qué protocolo de transporte es orientado a conexión y confiable?", lecturaRedes);
-            preguntaRepository.save(red4);
-            Opcion red4a = new Opcion("UDP", red4);
-            Opcion red4b = new Opcion("IP", red4);
-            Opcion red4c = new Opcion("TCP", red4);
-            Opcion red4d = new Opcion("ICMP", red4);
-            opcionRepository.save(red4a); opcionRepository.save(red4b); opcionRepository.save(red4c); opcionRepository.save(red4d);
-            red4.setRespuestaCorrecta(red4c);
-            preguntaRepository.save(red4);
-
-            Pregunta red5 = new Pregunta("¿Qué comando se usa en Windows para probar conectividad mediante ICMP?", lecturaRedes);
-            preguntaRepository.save(red5);
-            Opcion red5a = new Opcion("netstat", red5);
-            Opcion red5b = new Opcion("ipconfig", red5);
-            Opcion red5c = new Opcion("tracert", red5);
-            Opcion red5d = new Opcion("ping", red5);
-            opcionRepository.save(red5a); opcionRepository.save(red5b); opcionRepository.save(red5c); opcionRepository.save(red5d);
-            red5.setRespuestaCorrecta(red5d);
-            preguntaRepository.save(red5);
-
-            Pregunta red6 = new Pregunta("¿Cuál es la dirección MAC?", lecturaRedes);
-            preguntaRepository.save(red6);
-            Opcion red6a = new Opcion("Dirección lógica de la capa de red", red6);
-            Opcion red6b = new Opcion("Dirección física de la tarjeta de red", red6);
-            Opcion red6c = new Opcion("Dirección de puerto de transporte", red6);
-            Opcion red6d = new Opcion("Dirección de sesión", red6);
-            opcionRepository.save(red6a); opcionRepository.save(red6b); opcionRepository.save(red6c); opcionRepository.save(red6d);
-            red6.setRespuestaCorrecta(red6b);
-            preguntaRepository.save(red6);
-
-            Pregunta red7 = new Pregunta("¿Qué capa del modelo OSI se encarga de la compresión y el cifrado?", lecturaRedes);
-            preguntaRepository.save(red7);
-            Opcion red7a = new Opcion("Sesión", red7);
-            Opcion red7b = new Opcion("Presentación", red7);
-            Opcion red7c = new Opcion("Aplicación", red7);
-            Opcion red7d = new Opcion("Transporte", red7);
-            opcionRepository.save(red7a); opcionRepository.save(red7b); opcionRepository.save(red7c); opcionRepository.save(red7d);
-            red7.setRespuestaCorrecta(red7b);
-            preguntaRepository.save(red7);
-
-            Pregunta red8 = new Pregunta("¿Qué dispositivo conecta redes diferentes y funciona en la capa de red?", lecturaRedes);
-            preguntaRepository.save(red8);
-            Opcion red8a = new Opcion("Switch", red8);
-            Opcion red8b = new Opcion("Hub", red8);
-            Opcion red8c = new Opcion("Router", red8);
-            Opcion red8d = new Opcion("Bridge", red8);
-            opcionRepository.save(red8a); opcionRepository.save(red8b); opcionRepository.save(red8c); opcionRepository.save(red8d);
-            red8.setRespuestaCorrecta(red8c);
-            preguntaRepository.save(red8);
-
-            Pregunta red9 = new Pregunta("¿Qué protocolo asigna direcciones IP automáticamente?", lecturaRedes);
-            preguntaRepository.save(red9);
-            Opcion red9a = new Opcion("DNS", red9);
-            Opcion red9b = new Opcion("DHCP", red9);
-            Opcion red9c = new Opcion("ARP", red9);
-            Opcion red9d = new Opcion("NAT", red9);
-            opcionRepository.save(red9a); opcionRepository.save(red9b); opcionRepository.save(red9c); opcionRepository.save(red9d);
-            red9.setRespuestaCorrecta(red9b);
-            preguntaRepository.save(red9);
-
-            Pregunta red10 = new Pregunta("¿Qué rango de puertos es considerado 'bien conocido' (well-known)?", lecturaRedes);
-            preguntaRepository.save(red10);
-            Opcion red10a = new Opcion("0-1023", red10);
-            Opcion red10b = new Opcion("1024-49151", red10);
-            Opcion red10c = new Opcion("49152-65535", red10);
-            Opcion red10d = new Opcion("1-255", red10);
-            opcionRepository.save(red10a); opcionRepository.save(red10b); opcionRepository.save(red10c); opcionRepository.save(red10d);
-            red10.setRespuestaCorrecta(red10a);
-            preguntaRepository.save(red10);
-
-            Pregunta red11 = new Pregunta("¿Qué tipo de red abarca una ciudad?", lecturaRedes);
-            preguntaRepository.save(red11);
-            Opcion red11a = new Opcion("LAN", red11);
-            Opcion red11b = new Opcion("MAN", red11);
-            Opcion red11c = new Opcion("WAN", red11);
-            Opcion red11d = new Opcion("PAN", red11);
-            opcionRepository.save(red11a); opcionRepository.save(red11b); opcionRepository.save(red11c); opcionRepository.save(red11d);
-            red11.setRespuestaCorrecta(red11b);
-            preguntaRepository.save(red11);
-
-            Pregunta red12 = new Pregunta("¿Qué protocolo resuelve nombres de dominio a direcciones IP?", lecturaRedes);
-            preguntaRepository.save(red12);
-            Opcion red12a = new Opcion("HTTP", red12);
-            Opcion red12b = new Opcion("DNS", red12);
-            Opcion red12c = new Opcion("FTP", red12);
-            Opcion red12d = new Opcion("SMTP", red12);
-            opcionRepository.save(red12a); opcionRepository.save(red12b); opcionRepository.save(red12c); opcionRepository.save(red12d);
-            red12.setRespuestaCorrecta(red12b);
-            preguntaRepository.save(red12);
-
-            Pregunta red13 = new Pregunta("¿Cuál es la unidad de datos en la capa de transporte?", lecturaRedes);
-            preguntaRepository.save(red13);
-            Opcion red13a = new Opcion("Bits", red13);
-            Opcion red13b = new Opcion("Tramas", red13);
-            Opcion red13c = new Opcion("Paquetes", red13);
-            Opcion red13d = new Opcion("Segmentos", red13);
-            opcionRepository.save(red13a); opcionRepository.save(red13b); opcionRepository.save(red13c); opcionRepository.save(red13d);
-            red13.setRespuestaCorrecta(red13d);
-            preguntaRepository.save(red13);
-
-            Pregunta red14 = new Pregunta("¿Qué comando muestra la tabla de enrutamiento en Windows?", lecturaRedes);
-            preguntaRepository.save(red14);
-            Opcion red14a = new Opcion("ipconfig /all", red14);
-            Opcion red14b = new Opcion("route print", red14);
-            Opcion red14c = new Opcion("net view", red14);
-            Opcion red14d = new Opcion("arp -a", red14);
-            opcionRepository.save(red14a); opcionRepository.save(red14b); opcionRepository.save(red14c); opcionRepository.save(red14d);
-            red14.setRespuestaCorrecta(red14b);
-            preguntaRepository.save(red14);
-
-            Pregunta red15 = new Pregunta("¿Qué topología de red conecta cada nodo a dos vecinos formando un círculo?", lecturaRedes);
-            preguntaRepository.save(red15);
-            Opcion red15a = new Opcion("Bus", red15);
-            Opcion red15b = new Opcion("Estrella", red15);
-            Opcion red15c = new Opcion("Anillo", red15);
-            Opcion red15d = new Opcion("Malla", red15);
-            opcionRepository.save(red15a); opcionRepository.save(red15b); opcionRepository.save(red15c); opcionRepository.save(red15d);
-            red15.setRespuestaCorrecta(red15c);
-            preguntaRepository.save(red15);
-
-            // ========== LECTURA 4: Desarrollo Web con Spring Boot ==========
-            String textoLargo4 =
-                    " Desarrollo Web con Spring Boot\n\n" +
-                            "Spring Boot es un framework Java que simplifica la creación de aplicaciones web y microservicios. Ofrece configuración automática, servidor embebido (Tomcat) y starter dependencies.\n\n" +
-                            "**Anotaciones clave:**\n" +
-                            "- `@SpringBootApplication`: combina @Configuration, @EnableAutoConfiguration, @ComponentScan.\n" +
-                            "- `@RestController`: indica que la clase maneja peticiones REST.\n" +
-                            "- `@RequestMapping`, `@GetMapping`, `@PostMapping`, etc.\n" +
-                            "- `@Autowired`: inyección de dependencias.\n" +
-                            "- `@Entity`, `@Table`, `@Id`: para JPA.\n\n" +
-                            "**Arquitectura por capas:**\n" +
-                            "- Controlador (presentación)\n" +
-                            "- Servicio (lógica de negocio)\n" +
-                            "- Repositorio (acceso a datos)\n\n" +
-                            "**Persistencia:** Spring Data JPA permite trabajar con bases de datos relacionales usando interfaces Repository.\n\n" +
-                            "**Seguridad:** Spring Security proporciona autenticación y autorización.\n\n" +
-                            "Spring Boot es ideal para construir APIs REST, aplicaciones web y sistemas empresariales de manera rápida y eficiente.";
-
-            Lectura lecturaSpring = new Lectura("Desarrollo Web con Spring Boot", textoLargo4, informatica);
-            lecturaRepository.save(lecturaSpring);
-
-            // 15 preguntas para Spring Boot
-            Pregunta spr1 = new Pregunta("¿Qué anotación combina @Configuration, @EnableAutoConfiguration y @ComponentScan?", lecturaSpring);
-            preguntaRepository.save(spr1);
-            Opcion spr1a = new Opcion("@SpringBootApplication", spr1);
-            Opcion spr1b = new Opcion("@SpringApplication", spr1);
-            Opcion spr1c = new Opcion("@EnableSpringBoot", spr1);
-            Opcion spr1d = new Opcion("@BootApplication", spr1);
-            opcionRepository.save(spr1a); opcionRepository.save(spr1b); opcionRepository.save(spr1c); opcionRepository.save(spr1d);
-            spr1.setRespuestaCorrecta(spr1a);
-            preguntaRepository.save(spr1);
-
-            Pregunta spr2 = new Pregunta("¿Qué servidor web embebido usa Spring Boot por defecto?", lecturaSpring);
-            preguntaRepository.save(spr2);
-            Opcion spr2a = new Opcion("Jetty", spr2);
-            Opcion spr2b = new Opcion("Undertow", spr2);
-            Opcion spr2c = new Opcion("Tomcat", spr2);
-            Opcion spr2d = new Opcion("Netty", spr2);
-            opcionRepository.save(spr2a); opcionRepository.save(spr2b); opcionRepository.save(spr2c); opcionRepository.save(spr2d);
-            spr2.setRespuestaCorrecta(spr2c);
-            preguntaRepository.save(spr2);
-
-            Pregunta spr3 = new Pregunta("¿Qué anotación se usa para inyectar dependencias en Spring?", lecturaSpring);
-            preguntaRepository.save(spr3);
-            Opcion spr3a = new Opcion("@Inject", spr3);
-            Opcion spr3b = new Opcion("@Resource", spr3);
-            Opcion spr3c = new Opcion("@Autowired", spr3);
-            Opcion spr3d = new Opcion("@Component", spr3);
-            opcionRepository.save(spr3a); opcionRepository.save(spr3b); opcionRepository.save(spr3c); opcionRepository.save(spr3d);
-            spr3.setRespuestaCorrecta(spr3c);
-            preguntaRepository.save(spr3);
-
-            Pregunta spr4 = new Pregunta("¿Qué anotación convierte una clase en un bean de servicio?", lecturaSpring);
-            preguntaRepository.save(spr4);
-            Opcion spr4a = new Opcion("@Repository", spr4);
-            Opcion spr4b = new Opcion("@Service", spr4);
-            Opcion spr4c = new Opcion("@Controller", spr4);
-            Opcion spr4d = new Opcion("@Component", spr4);
-            opcionRepository.save(spr4a); opcionRepository.save(spr4b); opcionRepository.save(spr4c); opcionRepository.save(spr4d);
-            spr4.setRespuestaCorrecta(spr4b);
-            preguntaRepository.save(spr4);
-
-            Pregunta spr5 = new Pregunta("¿Qué anotación mapea peticiones HTTP GET a un método?", lecturaSpring);
-            preguntaRepository.save(spr5);
-            Opcion spr5a = new Opcion("@RequestMapping(method=GET)", spr5);
-            Opcion spr5b = new Opcion("@GetMapping", spr5);
-            Opcion spr5c = new Opcion("@PostMapping", spr5);
-            Opcion spr5d = new Opcion("@RequestParam", spr5);
-            opcionRepository.save(spr5a); opcionRepository.save(spr5b); opcionRepository.save(spr5c); opcionRepository.save(spr5d);
-            spr5.setRespuestaCorrecta(spr5b);
-            preguntaRepository.save(spr5);
-
-            Pregunta spr6 = new Pregunta("¿Cuál es el archivo de configuración principal de Spring Boot?", lecturaSpring);
-            preguntaRepository.save(spr6);
-            Opcion spr6a = new Opcion("application.properties", spr6);
-            Opcion spr6b = new Opcion("spring.xml", spr6);
-            Opcion spr6c = new Opcion("boot.properties", spr6);
-            Opcion spr6d = new Opcion("config.yml", spr6);
-            opcionRepository.save(spr6a); opcionRepository.save(spr6b); opcionRepository.save(spr6c); opcionRepository.save(spr6d);
-            spr6.setRespuestaCorrecta(spr6a);
-            preguntaRepository.save(spr6);
-
-            Pregunta spr7 = new Pregunta("¿Qué anotación indica que una clase es una entidad JPA?", lecturaSpring);
-            preguntaRepository.save(spr7);
-            Opcion spr7a = new Opcion("@Document", spr7);
-            Opcion spr7b = new Opcion("@Table", spr7);
-            Opcion spr7c = new Opcion("@Entity", spr7);
-            Opcion spr7d = new Opcion("@Model", spr7);
-            opcionRepository.save(spr7a); opcionRepository.save(spr7b); opcionRepository.save(spr7c); opcionRepository.save(spr7d);
-            spr7.setRespuestaCorrecta(spr7c);
-            preguntaRepository.save(spr7);
-
-            Pregunta spr8 = new Pregunta("¿Qué interfaz de Spring Data JPA proporciona métodos CRUD básicos?", lecturaSpring);
-            preguntaRepository.save(spr8);
-            Opcion spr8a = new Opcion("JpaRepository", spr8);
-            Opcion spr8b = new Opcion("CrudRepository", spr8);
-            Opcion spr8c = new Opcion("PagingAndSortingRepository", spr8);
-            Opcion spr8d = new Opcion("Repository", spr8);
-            opcionRepository.save(spr8a); opcionRepository.save(spr8b); opcionRepository.save(spr8c); opcionRepository.save(spr8d);
-            spr8.setRespuestaCorrecta(spr8b);
-            preguntaRepository.save(spr8);
-
-            Pregunta spr9 = new Pregunta("¿Qué anotación se usa para definir una consulta personalizada en un repositorio?", lecturaSpring);
-            preguntaRepository.save(spr9);
-            Opcion spr9a = new Opcion("@Query", spr9);
-            Opcion spr9b = new Opcion("@SQL", spr9);
-            Opcion spr9c = new Opcion("@NamedQuery", spr9);
-            Opcion spr9d = new Opcion("@Select", spr9);
-            opcionRepository.save(spr9a); opcionRepository.save(spr9b); opcionRepository.save(spr9c); opcionRepository.save(spr9d);
-            spr9.setRespuestaCorrecta(spr9a);
-            preguntaRepository.save(spr9);
-
-            Pregunta spr10 = new Pregunta("¿Qué anotación permite inyectar el valor de una propiedad del archivo application.properties?", lecturaSpring);
-            preguntaRepository.save(spr10);
-            Opcion spr10a = new Opcion("@PropertySource", spr10);
-            Opcion spr10b = new Opcion("@Value", spr10);
-            Opcion spr10c = new Opcion("@ConfigurationProperties", spr10);
-            Opcion spr10d = new Opcion("@Environment", spr10);
-            opcionRepository.save(spr10a); opcionRepository.save(spr10b); opcionRepository.save(spr10c); opcionRepository.save(spr10d);
-            spr10.setRespuestaCorrecta(spr10b);
-            preguntaRepository.save(spr10);
-
-            Pregunta spr11 = new Pregunta("¿Cuál es la anotación para manejar excepciones globalmente en Spring?", lecturaSpring);
-            preguntaRepository.save(spr11);
-            Opcion spr11a = new Opcion("@ExceptionHandler", spr11);
-            Opcion spr11b = new Opcion("@ControllerAdvice", spr11);
-            Opcion spr11c = new Opcion("@ResponseStatus", spr11);
-            Opcion spr11d = new Opcion("@Throw", spr11);
-            opcionRepository.save(spr11a); opcionRepository.save(spr11b); opcionRepository.save(spr11c); opcionRepository.save(spr11d);
-            spr11.setRespuestaCorrecta(spr11b);
-            preguntaRepository.save(spr11);
-
-            Pregunta spr12 = new Pregunta("¿Qué dependencia starter se usa para desarrollar aplicaciones web REST?", lecturaSpring);
-            preguntaRepository.save(spr12);
-            Opcion spr12a = new Opcion("spring-boot-starter-data-jpa", spr12);
-            Opcion spr12b = new Opcion("spring-boot-starter-web", spr12);
-            Opcion spr12c = new Opcion("spring-boot-starter-security", spr12);
-            Opcion spr12d = new Opcion("spring-boot-starter-thymeleaf", spr12);
-            opcionRepository.save(spr12a); opcionRepository.save(spr12b); opcionRepository.save(spr12c); opcionRepository.save(spr12d);
-            spr12.setRespuestaCorrecta(spr12b);
-            preguntaRepository.save(spr12);
-
-            Pregunta spr13 = new Pregunta("¿Qué anotación se coloca sobre un método para que Spring lo ejecute al iniciar la aplicación?", lecturaSpring);
-            preguntaRepository.save(spr13);
-            Opcion spr13a = new Opcion("@PostConstruct", spr13);
-            Opcion spr13b = new Opcion("@EventListener", spr13);
-            Opcion spr13c = new Opcion("@Bean", spr13);
-            Opcion spr13d = new Opcion("@Component", spr13);
-            opcionRepository.save(spr13a); opcionRepository.save(spr13b); opcionRepository.save(spr13c); opcionRepository.save(spr13d);
-            spr13.setRespuestaCorrecta(spr13a);
-            preguntaRepository.save(spr13);
-
-            Pregunta spr14 = new Pregunta("¿Qué anotación se usa para indicar que un parámetro de método debe extraerse de la URL?", lecturaSpring);
-            preguntaRepository.save(spr14);
-            Opcion spr14a = new Opcion("@RequestParam", spr14);
-            Opcion spr14b = new Opcion("@PathVariable", spr14);
-            Opcion spr14c = new Opcion("@RequestBody", spr14);
-            Opcion spr14d = new Opcion("@ModelAttribute", spr14);
-            opcionRepository.save(spr14a); opcionRepository.save(spr14b); opcionRepository.save(spr14c); opcionRepository.save(spr14d);
-            spr14.setRespuestaCorrecta(spr14b);
-            preguntaRepository.save(spr14);
-
-            Pregunta spr15 = new Pregunta("¿Qué archivo de construcción se usa comúnmente en proyectos Spring Boot?", lecturaSpring);
-            preguntaRepository.save(spr15);
-            Opcion spr15a = new Opcion("build.gradle", spr15);
-            Opcion spr15b = new Opcion("pom.xml", spr15);
-            Opcion spr15c = new Opcion("settings.gradle", spr15);
-            Opcion spr15d = new Opcion("project.xml", spr15);
-            opcionRepository.save(spr15a); opcionRepository.save(spr15b); opcionRepository.save(spr15c); opcionRepository.save(spr15d);
-            spr15.setRespuestaCorrecta(spr15b);
-            preguntaRepository.save(spr15);
-
-            // ========== LECTURA 5: Estructuras de Datos ==========
-            String textoLargo5 =
-                    " Estructuras de Datos Fundamentales\n\n" +
-                            "Las estructuras de datos organizan y almacenan datos eficientemente. Su elección impacta el rendimiento de los algoritmos.\n\n" +
-                            "**Arreglos (Arrays):** Colección de elementos del mismo tipo, acceso por índice O(1). Tamaño fijo.\n\n" +
-                            "**Listas enlazadas (Linked List):** Nodos con datos y punteros al siguiente/anterior. Inserción/eliminación eficiente O(1) en cabeza/cola.\n\n" +
-                            "**Pilas (Stack):** LIFO (Last In, First Out). Operaciones: push, pop, peek.\n\n" +
-                            "**Colas (Queue):** FIFO (First In, First Out). Operaciones: enqueue, dequeue.\n\n" +
-                            "**Árboles (Trees):** Estructura jerárquica. Árbol binario: cada nodo tiene hasta dos hijos. Árbol binario de búsqueda (BST): izquierda < raíz < derecha.\n\n" +
-                            "**Grafos (Graphs):** Nodos (vértices) y aristas. Pueden ser dirigidos/no dirigidos, ponderados. Recorridos: BFS (amplitud) y DFS (profundidad).\n\n" +
-                            "**Tablas hash (HashMap):** Almacenan pares clave-valor. Función hash para índice. Búsqueda promedio O(1).\n\n" +
-                            "**Heaps (Montículos):** Árbol binario completo. Max-heap: raíz mayor que hijos; min-heap: raíz menor. Usado en colas de prioridad.\n\n" +
-                            "Dominar estas estructuras es crucial para programación competitiva y sistemas eficientes.";
-
-            Lectura lecturaEstructuras = new Lectura("Estructuras de Datos Fundamentales", textoLargo5, informatica);
-            lecturaRepository.save(lecturaEstructuras);
-
-            // 15 preguntas para Estructuras de Datos
-            Pregunta est1 = new Pregunta("¿Qué estructura de datos opera bajo el principio LIFO?", lecturaEstructuras);
-            preguntaRepository.save(est1);
-            Opcion est1a = new Opcion("Cola", est1);
-            Opcion est1b = new Opcion("Pila", est1);
-            Opcion est1c = new Opcion("Lista enlazada", est1);
-            Opcion est1d = new Opcion("Árbol", est1);
-            opcionRepository.save(est1a); opcionRepository.save(est1b); opcionRepository.save(est1c); opcionRepository.save(est1d);
-            est1.setRespuestaCorrecta(est1b);
-            preguntaRepository.save(est1);
-
-            Pregunta est2 = new Pregunta("¿Cuál es la complejidad temporal de acceso por índice en un arreglo?", lecturaEstructuras);
-            preguntaRepository.save(est2);
-            Opcion est2a = new Opcion("O(n)", est2);
-            Opcion est2b = new Opcion("O(log n)", est2);
-            Opcion est2c = new Opcion("O(1)", est2);
-            Opcion est2d = new Opcion("O(n log n)", est2);
-            opcionRepository.save(est2a); opcionRepository.save(est2b); opcionRepository.save(est2c); opcionRepository.save(est2d);
-            est2.setRespuestaCorrecta(est2c);
-            preguntaRepository.save(est2);
-
-            Pregunta est3 = new Pregunta("¿En una lista enlazada simple, cada nodo contiene?", lecturaEstructuras);
-            preguntaRepository.save(est3);
-            Opcion est3a = new Opcion("Dato y puntero al nodo anterior", est3);
-            Opcion est3b = new Opcion("Dato y puntero al siguiente nodo", est3);
-            Opcion est3c = new Opcion("Solo el dato", est3);
-            Opcion est3d = new Opcion("Dato y dos punteros", est3);
-            opcionRepository.save(est3a); opcionRepository.save(est3b); opcionRepository.save(est3c); opcionRepository.save(est3d);
-            est3.setRespuestaCorrecta(est3b);
-            preguntaRepository.save(est3);
-
-            Pregunta est4 = new Pregunta("¿Qué estructura de datos se usa típicamente para implementar una cola de prioridad?", lecturaEstructuras);
-            preguntaRepository.save(est4);
-            Opcion est4a = new Opcion("Pila", est4);
-            Opcion est4b = new Opcion("Heap", est4);
-            Opcion est4c = new Opcion("Árbol binario de búsqueda", est4);
-            Opcion est4d = new Opcion("Lista enlazada", est4);
-            opcionRepository.save(est4a); opcionRepository.save(est4b); opcionRepository.save(est4c); opcionRepository.save(est4d);
-            est4.setRespuestaCorrecta(est4b);
-            preguntaRepository.save(est4);
-
-            Pregunta est5 = new Pregunta("¿Qué recorrido de árbol binario visita primero la raíz, luego izquierdo, luego derecho?", lecturaEstructuras);
-            preguntaRepository.save(est5);
-            Opcion est5a = new Opcion("Inorden", est5);
-            Opcion est5b = new Opcion("Preorden", est5);
-            Opcion est5c = new Opcion("Postorden", est5);
-            Opcion est5d = new Opcion("Nivel", est5);
-            opcionRepository.save(est5a); opcionRepository.save(est5b); opcionRepository.save(est5c); opcionRepository.save(est5d);
-            est5.setRespuestaCorrecta(est5b);
-            preguntaRepository.save(est5);
-
-            Pregunta est6 = new Pregunta("¿En un HashMap, la función hash se usa para?", lecturaEstructuras);
-            preguntaRepository.save(est6);
-            Opcion est6a = new Opcion("Ordenar las claves", est6);
-            Opcion est6b = new Opcion("Calcular el índice del arreglo", est6);
-            Opcion est6c = new Opcion("Encriptar los valores", est6);
-            Opcion est6d = new Opcion("Comparar claves", est6);
-            opcionRepository.save(est6a); opcionRepository.save(est6b); opcionRepository.save(est6c); opcionRepository.save(est6d);
-            est6.setRespuestaCorrecta(est6b);
-            preguntaRepository.save(est6);
-
-            Pregunta est7 = new Pregunta("¿Qué algoritmo de recorrido de grafos usa una cola?", lecturaEstructuras);
-            preguntaRepository.save(est7);
-            Opcion est7a = new Opcion("DFS", est7);
-            Opcion est7b = new Opcion("BFS", est7);
-            Opcion est7c = new Opcion("Dijkstra", est7);
-            Opcion est7d = new Opcion("Prim", est7);
-            opcionRepository.save(est7a); opcionRepository.save(est7b); opcionRepository.save(est7c); opcionRepository.save(est7d);
-            est7.setRespuestaCorrecta(est7b);
-            preguntaRepository.save(est7);
-
-            Pregunta est8 = new Pregunta("¿Qué propiedad cumple un árbol binario de búsqueda (BST)?", lecturaEstructuras);
-            preguntaRepository.save(est8);
-            Opcion est8a = new Opcion("Todos los nodos tienen dos hijos", est8);
-            Opcion est8b = new Opcion("Para cada nodo, los valores izquierdos son menores y los derechos mayores", est8);
-            Opcion est8c = new Opcion("Los nodos están ordenados por nivel", est8);
-            Opcion est8d = new Opcion("Es completamente balanceado", est8);
-            opcionRepository.save(est8a); opcionRepository.save(est8b); opcionRepository.save(est8c); opcionRepository.save(est8d);
-            est8.setRespuestaCorrecta(est8b);
-            preguntaRepository.save(est8);
-
-            Pregunta est9 = new Pregunta("¿Qué operación tiene complejidad O(1) en una pila?", lecturaEstructuras);
-            preguntaRepository.save(est9);
-            Opcion est9a = new Opcion("Buscar un elemento", est9);
-            Opcion est9b = new Opcion("Insertar al inicio (push)", est9);
-            Opcion est9c = new Opcion("Insertar en medio", est9);
-            Opcion est9d = new Opcion("Ordenar", est9);
-            opcionRepository.save(est9a); opcionRepository.save(est9b); opcionRepository.save(est9c); opcionRepository.save(est9d);
-            est9.setRespuestaCorrecta(est9b);
-            preguntaRepository.save(est9);
-
-            Pregunta est10 = new Pregunta("¿Qué estructura de datos permite almacenar pares clave-valor con búsqueda rápida?", lecturaEstructuras);
-            preguntaRepository.save(est10);
-            Opcion est10a = new Opcion("Lista enlazada", est10);
-            Opcion est10b = new Opcion("Árbol binario", est10);
-            Opcion est10c = new Opcion("Tabla hash", est10);
-            Opcion est10d = new Opcion("Cola", est10);
-            opcionRepository.save(est10a); opcionRepository.save(est10b); opcionRepository.save(est10c); opcionRepository.save(est10d);
-            est10.setRespuestaCorrecta(est10c);
-            preguntaRepository.save(est10);
-
-            Pregunta est11 = new Pregunta("¿Cuál es la complejidad promedio de búsqueda en una tabla hash bien diseñada?", lecturaEstructuras);
-            preguntaRepository.save(est11);
-            Opcion est11a = new Opcion("O(n)", est11);
-            Opcion est11b = new Opcion("O(log n)", est11);
-            Opcion est11c = new Opcion("O(1)", est11);
-            Opcion est11d = new Opcion("O(n^2)", est11);
-            opcionRepository.save(est11a); opcionRepository.save(est11b); opcionRepository.save(est11c); opcionRepository.save(est11d);
-            est11.setRespuestaCorrecta(est11c);
-            preguntaRepository.save(est11);
-
-            Pregunta est12 = new Pregunta("¿Qué estructura de datos se recomienda para implementar un sistema de deshacer (undo)?", lecturaEstructuras);
-            preguntaRepository.save(est12);
-            Opcion est12a = new Opcion("Cola", est12);
-            Opcion est12b = new Opcion("Lista", est12);
-            Opcion est12c = new Opcion("Pila", est12);
-            Opcion est12d = new Opcion("Árbol", est12);
-            opcionRepository.save(est12a); opcionRepository.save(est12b); opcionRepository.save(est12c); opcionRepository.save(est12d);
-            est12.setRespuestaCorrecta(est12c);
-            preguntaRepository.save(est12);
-
-            Pregunta est13 = new Pregunta("¿En un grafo no dirigido, las aristas son?", lecturaEstructuras);
-            preguntaRepository.save(est13);
-            Opcion est13a = new Opcion("Unidireccionales", est13);
-            Opcion est13b = new Opcion("Bidireccionales", est13);
-            Opcion est13c = new Opcion("Con peso", est13);
-            Opcion est13d = new Opcion("Sin dirección", est13);
-            opcionRepository.save(est13a); opcionRepository.save(est13b); opcionRepository.save(est13c); opcionRepository.save(est13d);
-            est13.setRespuestaCorrecta(est13b);
-            preguntaRepository.save(est13);
-
-            Pregunta est14 = new Pregunta("¿Qué estructura de datos es ideal para implementar una cola de impresión?", lecturaEstructuras);
-            preguntaRepository.save(est14);
-            Opcion est14a = new Opcion("Pila", est14);
-            Opcion est14b = new Opcion("Heap", est14);
-            Opcion est14c = new Opcion("Cola FIFO", est14);
-            Opcion est14d = new Opcion("Lista doblemente enlazada", est14);
-            opcionRepository.save(est14a); opcionRepository.save(est14b); opcionRepository.save(est14c); opcionRepository.save(est14d);
-            est14.setRespuestaCorrecta(est14c);
-            preguntaRepository.save(est14);
-
-            Pregunta est15 = new Pregunta("¿Cuál es la altura de un árbol con un solo nodo?", lecturaEstructuras);
-            preguntaRepository.save(est15);
-            Opcion est15a = new Opcion("0", est15);
-            Opcion est15b = new Opcion("1", est15);
-            Opcion est15c = new Opcion("2", est15);
-            Opcion est15d = new Opcion("No definida", est15);
-            opcionRepository.save(est15a); opcionRepository.save(est15b); opcionRepository.save(est15c); opcionRepository.save(est15d);
-            est15.setRespuestaCorrecta(est15a);
-            preguntaRepository.save(est15);
-
-            System.out.println("Datos iniciales cargados: 5 lecturas con 15 preguntas cada una.");
+            Carrera mecanica = new Carrera("Mecánica Automotriz",
+                    "Estudio de la mecánica de vehículos, motores diésel y gasolina, diagnóstico y reparación.");
+            carreraRepository.save(mecanica);
+
+            Carrera electricidad = new Carrera("Electricidad",
+                    "Fundamentos de electricidad, circuitos, ley de Ohm, corriente alterna y continua, seguridad eléctrica.");
+            carreraRepository.save(electricidad);
+
+            // ==================== LECTURAS INFORMÁTICA ====================
+            crearLecturaJava(informatica);
+            crearLecturaHTML(informatica);
+            crearLecturaPython(informatica);
+            crearLecturaInformaticaGeneral(informatica);
+            crearLecturaAlgoritmos(informatica);
+            crearLecturaIA(informatica);
+
+            // ==================== LECTURAS MECÁNICA ====================
+            crearLecturaMecanicaGeneral(mecanica);
+            crearLecturaMecanicaDiesel(mecanica);
+            crearLecturaMecanicaGasolina(mecanica);
+
+            // ==================== LECTURAS ELECTRICIDAD ====================
+            crearLecturaElectricidad1(electricidad);
+            crearLecturaElectricidad2(electricidad);
+            crearLecturaElectricidad3(electricidad);
+            crearLecturaElectricidad4(electricidad);
+            crearLecturaElectricidad5(electricidad);
+
+            System.out.println("Datos iniciales cargados correctamente.");
         }
+    }
+
+    // ================================================================
+    // MÉTODOS AUXILIARES PARA CADA LECTURA
+    // ================================================================
+
+    private void crearLecturaJava(Carrera c) {
+        String texto = "Introducción a Java: El Lenguaje Universal\n\n" +
+                "Java es un lenguaje de programación de alto nivel, orientado a objetos y diseñado para tener la menor cantidad posible de dependencias de implementación. " +
+                "Lanzado originalmente por Sun Microsystems en 1995, su filosofía principal se resume en la frase: \"Write Once, Run Anywhere\" (Escríbelo una vez, ejecútalo en cualquier lugar). " +
+                "Esto significa que el código compilado de Java puede ejecutarse en todas las plataformas que admitan Java sin necesidad de volver a compilarlo.\n\n" +
+                "¿Qué es Java técnicamente?\n\n" +
+                "A diferencia de otros lenguajes que se compilan directamente a código máquina (específico para un procesador), Java se compila en un formato intermedio llamado Bytecode. " +
+                "Este Bytecode no es ejecutado directamente por el hardware, sino por la Máquina Virtual de Java (JVM). La JVM actúa como un intérprete o traductor en tiempo real, lo que otorga a Java su característica de portabilidad. " +
+                "Además, es un lenguaje fuertemente tipado y cuenta con un \"Recolector de Basura\" (Garbage Collector), que gestiona la memoria automáticamente, evitando errores comunes de programación.\n\n" +
+                "¿Para qué sirve?\n\n" +
+                "Java es uno de los lenguajes más versátiles y utilizados en el mundo tecnológico actual. Sus usos principales incluyen:\n" +
+                "Aplicaciones Móviles: Es el lenguaje nativo histórico de Android.\n" +
+                "Desarrollo Empresarial: Grandes corporaciones y bancos lo usan por su robustez y seguridad.\n" +
+                "Sistemas Embebidos: Se encuentra en tarjetas SIM, televisores inteligentes y electrodomésticos.\n" +
+                "Big Data y Ciencia: Herramientas como Apache Hadoop están escritas en Java.\n" +
+                "Computación en la Nube: Fundamental para servicios de alta disponibilidad.\n\n" +
+                "En resumen, Java no es solo un lenguaje, sino una plataforma tecnológica completa.";
+        Lectura l = new Lectura("Introducción a Java", texto, c);
+        lecturaRepository.save(l);
+
+        // 10 preguntas
+        agregarPregunta(l, "El lema \"Write Once, Run Anywhere\" sugiere principalmente que:",
+                new String[]{"El código de Java es imposible de hackear.",
+                        "Java elimina la necesidad de adaptar el software a diferentes sistemas operativos.",
+                        "Java es el único lenguaje que existe para computadoras Mac.",
+                        "El programador solo debe escribir el código una vez porque no permite correcciones."}, 1);
+        agregarPregunta(l, "¿Cuál es la función estratégica de la Máquina Virtual de Java (JVM)?",
+                new String[]{"Funcionar como un antivirus integrado dentro del código.",
+                        "Traducir el código directamente a lenguaje humano.",
+                        "Actuar como un puente que permite la portabilidad entre hardware distinto.",
+                        "Almacenar de forma permanente los archivos del usuario en la nube."}, 2);
+        agregarPregunta(l, "Si una empresa decide usar Java para su sistema bancario, ¿cuál es la razón crítica más probable?",
+                new String[]{"Es el lenguaje más nuevo y moderno del mercado.",
+                        "Su gestión automática de memoria y robustez ofrecen mayor estabilidad y seguridad.",
+                        "Java es el lenguaje más barato de instalar.",
+                        "Es el único lenguaje que permite usar colores en la interfaz."}, 1);
+        agregarPregunta(l, "¿Qué se puede inferir sobre el \"Bytecode\" en el proceso de ejecución?",
+                new String[]{"Es un lenguaje que solo los humanos pueden leer con facilidad.",
+                        "Es el paso final antes de que el programa se borre.",
+                        "Es un estado intermedio que permite que el código sea universal antes de llegar a la JVM.",
+                        "Es el código que se descarga directamente de la Play Store."}, 2);
+        agregarPregunta(l, "El uso de Java en electrodomésticos y tarjetas SIM demuestra que:",
+                new String[]{"Java requiere computadoras muy potentes para funcionar.",
+                        "El lenguaje es lo suficientemente eficiente para ejecutarse en dispositivos con recursos limitados.",
+                        "Los electrodomésticos ahora pueden navegar por internet como una PC.",
+                        "Java pronto reemplazará a todos los demás lenguajes."}, 1);
+        agregarPregunta(l, "¿Cuál es el impacto del \"Garbage Collector\" en el desarrollo de software a gran escala?",
+                new String[]{"Elimina archivos que el usuario ya no necesita en su disco duro.",
+                        "Previene errores críticos de sistema al gestionar automáticamente los recursos de memoria.",
+                        "Hace que el programa sea más pesado y difícil de descargar.",
+                        "Permite que el programador escriba código sin seguir ninguna regla."}, 1);
+        agregarPregunta(l, "Al ser un lenguaje \"fuertemente tipado\", se deduce que Java:",
+                new String[]{"Permite escribir código muy rápido sin preocuparse por los detalles.",
+                        "Es ideal para personas que no saben nada de lógica de programación.",
+                        "Exige una estructura rigurosa que ayuda a detectar errores antes de que el programa se ejecute.",
+                        "Solo funciona si el usuario escribe muy rápido en el teclado."}, 2);
+        agregarPregunta(l, "En el contexto de Android, ¿qué importancia tiene Java para la economía digital?",
+                new String[]{"Es irrelevante, ya que existen otros lenguajes para teléfonos.",
+                        "Es un pilar fundamental, pues la mayoría de la infraestructura de apps móviles se construyó con él.",
+                        "Sirve únicamente para juegos, pero no para aplicaciones de trabajo.",
+                        "Solo sirve para el diseño visual de los iconos."}, 1);
+        agregarPregunta(l, "¿Qué relación hay entre el concepto \"Orientado a Objetos\" y el trabajo en equipo?",
+                new String[]{"Impide que dos personas trabajen en el mismo proyecto al mismo tiempo.",
+                        "Facilita la división del trabajo al permitir crear componentes independientes y reutilizables.",
+                        "Obliga a todos los programadores a pensar exactamente de la misma manera.",
+                        "No tiene ninguna relación con el trabajo humano, solo con las máquinas."}, 1);
+        agregarPregunta(l, "¿Cuál es la conclusión más lógica sobre el futuro de Java según el texto?",
+                new String[]{"Desaparecerá pronto porque es un lenguaje viejo de los años 90.",
+                        "Seguirá siendo vital debido a su presencia en la infraestructura crítica (bancos, servidores, nubes).",
+                        "Solo se usará en escuelas para enseñar a niños, pero no en empresas.",
+                        "Se convertirá en un sistema operativo que reemplazará a Windows."}, 1);
+    }
+
+    private void crearLecturaHTML(Carrera c) {
+        String texto = "EL ESQUELETO DE LA WEB: COMPRENDIENDO HTML\n\n" +
+                "HTML (HyperText Markup Language o Lenguaje de Marcado de Hipertexto) es el estándar universal que define la estructura y el contenido de las páginas web. " +
+                "A diferencia de lo que muchos creen, no es un lenguaje de programación, sino un lenguaje de marcado. " +
+                "Esto significa que utiliza una serie de \"etiquetas\" para indicarle al navegador cómo debe organizar la información: qué es un título, qué es un párrafo, dónde va una imagen o un enlace.\n\n" +
+                "¿Qué es HTML técnicamente? El lenguaje funciona mediante una jerarquía de etiquetas que encierran el contenido. " +
+                "Por ejemplo, una etiqueta <h1> le dice al navegador: \"Este texto es el título principal\". " +
+                "Una de las características más importantes de HTML es el hipertexto, que permite conectar un documento con otro a través de enlaces, creando la red interconectada que hoy conocemos como Internet.\n\n" +
+                "¿Para qué sirve? HTML es la base indispensable de cualquier sitio en línea. Sus funciones principales son:\n" +
+                "Estructuración de contenido, Accesibilidad, Optimización en buscadores (SEO), Integración multimedia, Interoperabilidad. " +
+                "Sin HTML, la web no sería más que un conjunto de archivos aislados sin orden ni conexión.";
+        Lectura l = new Lectura("HTML: El esqueleto de la web", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "Si HTML no es un lenguaje de programación, ¿cuál es su función principal frente a una computadora?",
+                new String[]{"Realizar cálculos matemáticos complejos.",
+                        "Dar órdenes directas al procesador para ejecutar programas.",
+                        "Organizar y etiquetar los datos para que el navegador sepa cómo presentarlos.",
+                        "Crear bases de datos para guardar contraseñas."}, 2);
+        agregarPregunta(l, "¿Qué se puede inferir sobre una página web que no utiliza etiquetas HTML correctamente?",
+                new String[]{"No tendrá colores ni fuentes bonitas.",
+                        "Los buscadores como Google tendrán dificultades para entender su contenido y clasificarla.",
+                        "El sitio web será más rápido de cargar.",
+                        "La página se borrará automáticamente de internet."}, 1);
+        agregarPregunta(l, "¿Por qué el concepto de \"Hipertexto\" es vital para la existencia de la World Wide Web?",
+                new String[]{"Porque permite que el texto sea de color azul.",
+                        "Porque permite la conexión entre documentos distintos, creando una red global de información.",
+                        "Porque hace que el texto sea más fácil de leer en pantallas pequeñas.",
+                        "Porque permite traducir el texto a diferentes idiomas."}, 1);
+        agregarPregunta(l, "Si comparamos un edificio con una página web, el HTML representaría:",
+                new String[]{"La pintura y la decoración de las paredes.",
+                        "La instalación eléctrica y los ascensores en movimiento.",
+                        "Los planos, los cimientos y las vigas estructurales.",
+                        "El terreno donde se construye el edificio."}, 2);
+        agregarPregunta(l, "¿Cómo beneficia el uso correcto de HTML a una persona con discapacidad visual?",
+                new String[]{"Hace que la pantalla brille más para que vea mejor.",
+                        "Permite que los lectores de pantalla identifiquen qué partes son títulos y cuáles son párrafos.",
+                        "Corrige automáticamente la visión del usuario.",
+                        "No tiene ningún beneficio para estas personas."}, 1);
+        agregarPregunta(l, "Se afirma que HTML es \"indispensable\". ¿Qué sucedería si un navegador intentara abrir un archivo que solo tiene texto pero no HTML?",
+                new String[]{"El navegador mostraría una imagen en lugar de texto.",
+                        "El texto aparecería como una masa desorganizada sin jerarquía ni formato.",
+                        "El navegador se cerraría por un error de seguridad.",
+                        "El texto se convertiría automáticamente en un video."}, 1);
+        agregarPregunta(l, "¿Qué relación se deduce entre HTML, CSS y JavaScript a partir del texto?",
+                new String[]{"HTML es el líder y los otros dos ya no son necesarios.",
+                        "Son tecnologías independientes que nunca deben usarse juntas.",
+                        "Son complementarias: HTML pone la estructura, mientras las otras ponen el diseño y la acción.",
+                        "Son exactamente lo mismo con diferentes nombres."}, 2);
+        agregarPregunta(l, "Si un desarrollador quiere mejorar el SEO de su página, ¿en qué debería enfocarse respecto al HTML?",
+                new String[]{"En usar la mayor cantidad de imágenes posibles.",
+                        "En usar las etiquetas de forma lógica para que Google sepa qué es lo más importante del sitio.",
+                        "En ocultar el código para que nadie lo pueda ver.",
+                        "En hacer que el código HTML sea lo más largo posible."}, 1);
+        agregarPregunta(l, "¿Por qué es importante la \"Interoperabilidad\" mencionada en el texto?",
+                new String[]{"Para que las empresas puedan cobrar más por sus sitios web.",
+                        "Para asegurar que la información llegue a cualquier usuario, sin importar el dispositivo que use.",
+                        "Para evitar que las personas usen computadoras viejas.",
+                        "Para que las páginas solo funcionen en teléfonos celulares."}, 1);
+        agregarPregunta(l, "De la frase \"cada página web es un documento de texto plano\", se puede concluir que:",
+                new String[]{"Crear una web básica no requiere de herramientas de software extremadamente complejas o pesadas.",
+                        "El texto plano es más seguro que cualquier otro tipo de archivo.",
+                        "Las páginas web no pueden contener fotos ni sonidos.",
+                        "HTML es un lenguaje obsoleto que ya no se usa."}, 0);
+    }
+
+    private void crearLecturaPython(Carrera c) {
+        String texto = "PYTHON: EL LENGUAJE DE LA SIMPLICIDAD Y EL PODER\n\n" +
+                "Python es un lenguaje de programación de alto nivel, interpretado y de propósito general que se ha convertido en uno de los pilares de la tecnología moderna. " +
+                "Fue creado por Guido van Rossum y lanzado en 1991 con una filosofía clara: la legibilidad del código es fundamental. " +
+                "A diferencia de otros lenguajes que utilizan símbolos complejos (como llaves o puntos y coma), Python utiliza la sangría (espaciado) para definir la estructura del código.\n\n" +
+                "¿Qué es Python técnicamente? Es un lenguaje interpretado, lo que significa que el código se ejecuta línea por línea por un intérprete. " +
+                "También es multiparadigma, permitiendo trabajar con diferentes estilos (objetos, funcional). " +
+                "Su gran ventaja es su extenso ecosistema de bibliotecas.\n\n" +
+                "¿Para qué sirve? Inteligencia Artificial y Ciencia de Datos, Desarrollo Web (Backend), Automatización de Tareas, Educación, Prototipado. " +
+                "En esencia, Python ha democratizado la programación.";
+        Lectura l = new Lectura("Python: El lenguaje de la simplicidad y el poder", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Por qué se dice que Python tiene una sintaxis \"limpia\"?",
+                new String[]{"Porque el código se borra automáticamente después de ser ejecutado.",
+                        "Debido a que utiliza espacios y palabras simples en lugar de símbolos complejos.",
+                        "Porque requiere que el programador limpie la memoria de la computadora manualmente.",
+                        "Porque no permite que se escriban errores en el código."}, 1);
+        agregarPregunta(l, "Si Python es un lenguaje \"interpretado\", ¿qué se puede inferir sobre su ejecución?",
+                new String[]{"Es el lenguaje más rápido del mundo para videojuegos de alta resolución.",
+                        "El código se traduce a lenguaje máquina antes de que el usuario lo compre.",
+                        "Permite probar cambios rápidamente, ya que se ejecuta línea por línea.",
+                        "Requiere de un traductor humano para que la computadora lo entienda."}, 2);
+        agregarPregunta(l, "El uso de Python en la Inteligencia Artificial sugiere que:",
+                new String[]{"Python es capaz de pensar por sí mismo sin ayuda humana.",
+                        "Su sintaxis es tan compleja que solo las máquinas la entienden.",
+                        "Sus bibliotecas facilitan el manejo de cálculos matemáticos avanzados.",
+                        "Fue inventado específicamente para crear robots humanoides."}, 2);
+        agregarPregunta(l, "¿Qué ventaja ofrece a una empresa el uso de Python para \"prototipado rápido\"?",
+                new String[]{"Ahorro de tiempo y dinero al validar ideas antes de su desarrollo final.",
+                        "Que el programa final nunca tendrá errores de ningún tipo.",
+                        "La capacidad de vender el producto sin haberlo terminado realmente.",
+                        "Que no es necesario contratar programadores expertos."}, 0);
+        agregarPregunta(l, "¿Cómo influye la \"sangría\" (identación) en el trabajo de un programador de Python?",
+                new String[]{"Es opcional y solo sirve para que el código se vea más ordenado.",
+                        "Es obligatoria para que el código funcione y sea legible.",
+                        "Hace que el código sea mucho más difícil de leer para otros humanos.",
+                        "Sirve para que la computadora sepa qué color ponerle al texto."}, 1);
+        agregarPregunta(l, "Se afirma que Python es \"multiparadigma\". Esto significa que el lenguaje es:",
+                new String[]{"Único.", "Rígido.", "Flexible.", "Lento."}, 2);
+        agregarPregunta(l, "Si un administrativo usa Python para organizar archivos, está aprovechando su función de:",
+                new String[]{"Inteligencia Artificial.", "Desarrollo Web.", "Automatización.", "Ciencia de Datos."}, 2);
+        agregarPregunta(l, "¿Qué se puede deducir del gran \"ecosistema de bibliotecas\" que posee Python?",
+                new String[]{"Que los programadores de Python suelen leer muchos libros de tecnología.",
+                        "Que el lenguaje es incompleto y siempre necesita parches externos.",
+                        "Que permite solucionar problemas complejos usando soluciones ya probadas.",
+                        "Que es obligatorio pagar una suscripción para usar cada función extra."}, 2);
+        agregarPregunta(l, "¿Por qué Python es ideal para personas que no son ingenieros de software?",
+                new String[]{"Porque no requiere el uso de una computadora para aprenderlo.",
+                        "Debido a que su estructura es similar al lenguaje natural.",
+                        "Porque es un lenguaje que se programa solo.",
+                        "Porque es totalmente gratuito para quienes no tienen título."}, 1);
+        agregarPregunta(l, "Del texto se infiere que la filosofía de Python prioriza:",
+                new String[]{"La velocidad de la máquina por encima de todo.",
+                        "El bienestar del programador y la claridad del código.",
+                        "El uso de símbolos matemáticos oscuros.",
+                        "El desarrollo exclusivo de aplicaciones para teléfonos."}, 1);
+    }
+
+    private void crearLecturaInformaticaGeneral(Carrera c) {
+        String texto = "LA INFORMÁTICA: EL MOTOR DE LA ERA DIGITAL\n\n" +
+                "La informática es la ciencia que estudia el tratamiento automático y racional de la información mediante sistemas computacionales. " +
+                "La palabra proviene de la contracción de los términos información y automática. " +
+                "No se limita solo a las computadoras físicas, sino que abarca el desarrollo de software, la gestión de redes, la inteligencia artificial y la arquitectura de los datos.\n\n" +
+                "Breve recorrido histórico: La Máquina Analítica de Charles Babbage, Ada Lovelace considerada la primera programadora, " +
+                "Alan Turing y el concepto de algoritmo, las generaciones de computadoras desde los tubos al vacío hasta el microprocesador.\n\n" +
+                "¿Para qué sirve? Optimizar el tiempo, Gestión de conocimiento, Comunicación global, Simulación y Ciencia. " +
+                "En conclusión, la informática transforma datos crudos en decisiones inteligentes y soluciones prácticas.";
+        Lectura l = new Lectura("La Informática: El motor de la era digital", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "El término \"Informática\" sugiere que la información debe ser tratada de forma:",
+                new String[]{"Manual.", "Lógica.", "Lenta.", "Visual."}, 1);
+        agregarPregunta(l, "¿Qué se puede inferir sobre el papel de Ada Lovelace en el siglo XIX?",
+                new String[]{"Que las mujeres no tenían interés en la ciencia.",
+                        "Que la programación existía antes que las computadoras electrónicas.",
+                        "Que ella inventó la electricidad para las máquinas.",
+                        "Que su trabajo no tuvo importancia hasta la llegada de internet."}, 1);
+        agregarPregunta(l, "¿Cuál fue el impacto más directo de la invención del transistor?",
+                new String[]{"El aumento del precio de los componentes.",
+                        "La miniaturización y eficiencia de los equipos.",
+                        "La invención de la primera pantalla táctil.",
+                        "La prohibición de las máquinas mecánicas."}, 1);
+        agregarPregunta(l, "Según el texto, un algoritmo es comparable a:",
+                new String[]{"Una pieza de hardware de metal.",
+                        "Una serie de instrucciones lógicas.",
+                        "Un tipo de cable para internet.",
+                        "El monitor de una computadora."}, 1);
+        agregarPregunta(l, "Si la informática ayuda a predecir el clima, se infiere que su ventaja principal es:",
+                new String[]{"El control sobre la naturaleza.",
+                        "La capacidad de procesamiento de datos.",
+                        "La invención de satélites artificiales.",
+                        "Que las computadoras nunca se equivocan."}, 1);
+        agregarPregunta(l, "¿Qué significa que la informática sea una herramienta \"transversal\"?",
+                new String[]{"Que solo se usa en ingeniería.",
+                        "Que se aplica en todas las áreas.",
+                        "Que es difícil de aprender.",
+                        "Que se usa de lado."}, 1);
+        agregarPregunta(l, "¿Por qué el microprocesador cambió la sociedad en los años 70?",
+                new String[]{"Porque hizo las computadoras más grandes.",
+                        "Porque permitió la computación personal.",
+                        "Porque eliminó la necesidad de usar software.",
+                        "Porque fue el fin de la era digital."}, 1);
+        agregarPregunta(l, "De la relación entre \"datos crudos\" y \"decisiones inteligentes\", se deduce que:",
+                new String[]{"Los datos por sí solos no tienen valor sin procesamiento.",
+                        "Una computadora puede tomar decisiones sin necesidad de datos.",
+                        "Los datos siempre son inteligentes desde que se crean.",
+                        "Las decisiones humanas son menos valiosas que las de una PC."}, 0);
+        agregarPregunta(l, "¿Qué habría ocurrido con la informática si Alan Turing no hubiera definido el \"algoritmo\"?",
+                new String[]{"La informática no tendría una base lógica sólida.",
+                        "Las computadoras serían exclusivamente de madera.",
+                        "El hardware funcionaría más rápido de lo normal.",
+                        "Internet se habría inventado mucho antes."}, 0);
+        agregarPregunta(l, "La frase \"tratamiento automático y racional\" implica que la computadora:",
+                new String[]{"Tiene sentimientos.", "Sigue reglas.", "Es humana.", "Piensa sola."}, 1);
+    }
+
+    private void crearLecturaAlgoritmos(Carrera c) {
+        String texto = "ALGORITMOS Y ESTRUCTURAS DE DATOS: EL CORAZÓN DE LA COMPUTACIÓN\n\n" +
+                "En el mundo de la informática, si el hardware es el cuerpo de una máquina, los algoritmos y las estructuras de datos son su cerebro y su memoria organizada. " +
+                "Estos dos conceptos son inseparables: mientras que los algoritmos dictan los pasos para resolver un problema, " +
+                "las estructuras de datos definen cómo se organiza la información para que esos pasos sean lo más eficientes posible.\n\n" +
+                "¿Qué es un Algoritmo? Una secuencia lógica, finita y definida de pasos destinados a resolver un problema o realizar una tarea. " +
+                "No es exclusivo de las computadoras; una receta de cocina o las instrucciones para armar un mueble son algoritmos.\n\n" +
+                "¿Qué son las Estructuras de Datos? Formas específicas de organizar y almacenar datos en una computadora para que puedan ser utilizados de manera eficiente. " +
+                "Lista, Árbol, Tabla Hash, etc.\n\n" +
+                "¿Para qué sirven? Optimizar recursos, Escalabilidad, Resolución de problemas complejos. " +
+                "Dominar estos conceptos es lo que diferencia a un verdadero ingeniero de software.";
+        Lectura l = new Lectura("Algoritmos y Estructuras de Datos", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "Si un algoritmo es \"definido\", esto implica que:",
+                new String[]{"Siempre es muy largo.", "No admite ambigüedad.", "Nunca puede fallar.", "Se escribe en inglés."}, 1);
+        agregarPregunta(l, "¿Cuál es la relación principal entre un algoritmo y una estructura de datos?",
+                new String[]{"Son enemigos naturales.", "El algoritmo organiza el hardware.", "Son herramientas complementarias.", "La estructura de datos es un algoritmo."}, 2);
+        agregarPregunta(l, "Un algoritmo que nunca termina violaría la característica de ser:",
+                new String[]{"Preciso.", "Eficiente.", "Finito.", "Útil."}, 2);
+        agregarPregunta(l, "¿Por qué elegir la estructura de datos correcta afecta la \"escalabilidad\"?",
+                new String[]{"Porque permite que el sistema crezca sin colapsar.", "Porque hace que el monitor se vea más grande.", "Porque borra los datos que ya no sirven.", "Porque el código se escribe más rápido."}, 0);
+        agregarPregunta(l, "¿Qué se infiere sobre el uso de un GPS al leer este texto?",
+                new String[]{"El GPS solo usa mapas, no algoritmos.", "Usa algoritmos para calcular la ruta más rápida.", "Los datos se guardan sin ningún orden.", "Solo funciona con estructuras de datos de tipo \"Lista\"."}, 1);
+        agregarPregunta(l, "Si un programa funciona pero es extremadamente lento, el problema es de:",
+                new String[]{"Hardware.", "Eficiencia.", "Color.", "Memoria."}, 1);
+        agregarPregunta(l, "Una \"jerarquía de carpetas\" en tu PC es un ejemplo de:",
+                new String[]{"Algoritmo de cocina.", "Estructura de datos.", "Pasos lógicos finitos.", "Memoria RAM vacía."}, 1);
+        agregarPregunta(l, "Del texto se deduce que los algoritmos existen:",
+                new String[]{"Solo desde 1990.", "Únicamente en Python.", "Fuera de las computadoras.", "Solo para matemáticos."}, 2);
+        agregarPregunta(l, "¿Qué pasaría si intentamos procesar millones de datos con una estructura inadecuada?",
+                new String[]{"La computadora explotará.", "El proceso será ineficiente.", "Los datos se volverán falsos.", "El algoritmo se volverá infinito."}, 1);
+        agregarPregunta(l, "La \"elegancia\" en una solución informática mencionada al final se refiere a:",
+                new String[]{"Que el código tenga colores bonitos.", "La simplicidad y eficacia del diseño.", "Usar el lenguaje más caro del mundo.", "Que el programador use traje al trabajar."}, 1);
+    }
+
+    private void crearLecturaIA(Carrera c) {
+        String texto = "INTELIGENCIA ARTIFICIAL Y APRENDIZAJE AUTOMÁTICO: LA NUEVA FRONTERA\n\n" +
+                "La Inteligencia Artificial (IA) es la rama de las ciencias de la computación que busca crear sistemas capaces de realizar tareas que, normalmente, requerirían de la inteligencia humana. " +
+                "El Aprendizaje Automático (Machine Learning) es una disciplina específica que permite que las computadoras \"aprendan\" a partir de datos sin ser programadas explícitamente.\n\n" +
+                "Un poco de historia: El concepto nació formalmente en 1956. En sus inicios se basaba en reglas lógicas rígidas. " +
+                "En la década de 2010, gracias al Big Data y a la potencia de procesamiento, el Aprendizaje Automático despegó.\n\n" +
+                "¿Para qué sirve? Asistentes virtuales, Medicina, Transporte (vehículos autónomos), Recomendaciones.\n\n" +
+                "Pros y Contras: Aumenta la productividad, elimina tareas peligrosas, reduce errores. " +
+                "Pero puede causar desplazamiento de empleos, dilemas éticos de privacidad y decisiones sesgadas.\n\n" +
+                "En conclusión, la IA no busca reemplazar al ser humano, sino ampliar sus capacidades, y exige una regulación ética responsable.";
+        Lectura l = new Lectura("Inteligencia Artificial y Aprendizaje Automático", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Cuál es la diferencia fundamental entre la IA de 1956 y el Aprendizaje Automático actual?",
+                new String[]{"La IA actual no necesita electricidad para funcionar.",
+                        "El Aprendizaje Automático depende de patrones en datos, no solo de reglas fijas.",
+                        "La IA antigua era más inteligente que la actual.",
+                        "No hay diferencia; ambos funcionan exactamente igual."}, 1);
+        agregarPregunta(l, "Si una IA aprende de datos \"sesgados\" o con prejuicios, se infiere que:",
+                new String[]{"La máquina corregirá los errores por su cuenta.",
+                        "El sistema se apagará para no cometer injusticias.",
+                        "Los resultados serán discriminatorios.",
+                        "La IA dejará de ser una tecnología digital."}, 2);
+        agregarPregunta(l, "¿Por qué el \"Big Data\" fue clave para el desarrollo del Aprendizaje Automático?",
+                new String[]{"Porque ocupa mucho espacio físico.",
+                        "Proporciona el volumen de ejemplos necesario para que la máquina aprenda.",
+                        "Permite que las computadoras sean más baratas.",
+                        "Es el nombre del primer robot que aprendió solo."}, 1);
+        agregarPregunta(l, "El uso de IA en la medicina sugiere que esta tecnología:",
+                new String[]{"Reemplazará a todos los médicos pronto.",
+                        "Es una herramienta de apoyo al diagnóstico.",
+                        "Solo sirve para tomar fotografías.",
+                        "Es menos precisa que un humano."}, 1);
+        agregarPregunta(l, "Un \"pro\" de la IA relacionado con la seguridad laboral es:",
+                new String[]{"Que las máquinas no cobran sueldo.",
+                        "Que pueden realizar labores riesgosas.",
+                        "Que las computadoras nunca se rompen.",
+                        "El aumento de vacaciones para los jefes."}, 1);
+        agregarPregunta(l, "¿Qué significa que la IA \"amplía las capacidades humanas\"?",
+                new String[]{"Que nos convierte en robots.",
+                        "Que nos permite hacer más cosas en menos tiempo.",
+                        "Que ya no necesitaremos estudiar.",
+                        "Que mejora nuestra visión física."}, 1);
+        agregarPregunta(l, "Del texto se deduce que los vehículos autónomos:",
+                new String[]{"No necesitan mapas para circular.",
+                        "Usan IA para tomar decisiones en el camino.",
+                        "Son imposibles de chocar.",
+                        "Funcionan con reglas de 1956."}, 1);
+        agregarPregunta(l, "Una crítica ética que se menciona en el texto sobre la IA es:",
+                new String[]{"El alto costo de las computadoras.",
+                        "La posible pérdida de privacidad.",
+                        "Que las máquinas son muy lentas.",
+                        "El color de los cables utilizados."}, 1);
+        agregarPregunta(l, "Si una tarea es repetitiva y aburrida, se infiere que:",
+                new String[]{"Es ideal para ser automatizada con IA.",
+                        "Ninguna máquina podrá hacerla jamás.",
+                        "Solo un científico de 1956 podría resolverla.",
+                        "La IA se aburrirá y dejará de funcionar."}, 0);
+        agregarPregunta(l, "La conclusión del texto enfatiza que el futuro de la IA debe ser:",
+                new String[]{"Libre y sin reglas.", "Ético y regulado.", "Solo para expertos.", "Controlado por máquinas."}, 1);
+    }
+
+    // ==================== MECÁNICA AUTOMOTRIZ ====================
+    private void crearLecturaMecanicaGeneral(Carrera c) {
+        String texto = "QUÉ ES LA MECÁNICA AUTOMOTRIZ\n\n" +
+                "La mecánica automotriz es una de las ramas de la mecánica que se encarga de estudiar las formas de generación y transmisión del movimiento de un vehículo. " +
+                "Para lograr este propósito aplica los principios propios de la física y la mecánica para optimizar el proceso de movimiento en todo vehículo motorizado. " +
+                "Este movimiento o movimientos se generan gracias al diseño de una diversidad de autopartes que conforman la estructura del vehículo.\n\n" +
+                "HISTORIA DE LA MECÁNICA AUTOMOTRIZ\n\n" +
+                "Desde Arquímedes en la antigua Grecia, Herón de Alejandría con la primera máquina de vapor, Ma Jung con el diferencial de engranajes, " +
+                "los ingenieros musulmanes como Al Jazarí, hasta Isaac Newton con sus tres leyes.\n\n" +
+                "ELEMENTOS QUE ESTUDIA LA MECÁNICA AUTOMOTRIZ: Motor, Árbol de levas, Embrague, Cigüeñal, Correa de distribución.\n\n" +
+                "IMPORTANCIA DE LA MECÁNICA AUTOMOTRIZ: Inspeccionar, diagnosticar y reparar.\n\n" +
+                "QUÉ HACE UN MECÁNICO AUTOMOTRIZ: Diagnosticar, presupuestar, desmontar, reemplazar, ensamblar, orientar al cliente.";
+        Lectura l = new Lectura("Qué es la Mecánica Automotriz", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "Si la mecánica automotriz aplica principios de la física para optimizar el movimiento, se puede inferir que:",
+                new String[]{"El movimiento de un auto es un proceso puramente azaroso.",
+                        "La eficiencia del vehículo depende del cumplimiento de leyes naturales.",
+                        "La física solo se aplica cuando el motor está apagado.",
+                        "Un mecánico no necesita entender de ciencia, solo de herramientas."}, 1);
+        agregarPregunta(l, "A partir de los aportes de Herón de Alejandría y Ma Jung, se deduce que la mecánica automotriz:",
+                new String[]{"Fue inventada por una sola persona en un año específico.",
+                        "Es el resultado de una evolución tecnológica acumulativa de siglos.",
+                        "Solo empezó a existir cuando se inventó la gasolina.",
+                        "Es una ciencia moderna que no tiene raíces en la antigüedad."}, 1);
+        agregarPregunta(l, "¿Qué importancia crítica tienen las Leyes de Newton para un mecánico hoy en día?",
+                new String[]{"Permiten entender las fuerzas que generan y detienen el movimiento.",
+                        "Sirven para calcular el costo de los repuestos en el taller.",
+                        "Son reglas obsoletas que ya no se aplican a los motores nuevos.",
+                        "Ayudan exclusivamente a decorar el manual de usuario del vehículo."}, 0);
+        agregarPregunta(l, "El texto describe al motor como el \"corazón\" del vehículo. Bajo esta analogía, el embrague funcionaría como:",
+                new String[]{"El combustible que alimenta al cuerpo.",
+                        "Un interruptor que controla el flujo de energía hacia las extremidades.",
+                        "Los pulmones que permiten la entrada de aire al sistema.",
+                        "La estructura ósea que sostiene todo el peso del coche."}, 1);
+        agregarPregunta(l, "¿Qué sucedería si el cigüeñal no pudiera convertir el movimiento alternativo en giratorio?",
+                new String[]{"El vehículo se movería más rápido en línea recta.",
+                        "El motor funcionaría pero las ruedas no girarían.",
+                        "El auto solo podría encenderse con electricidad.",
+                        "El combustible se gastaría de forma más lenta."}, 1);
+        agregarPregunta(l, "Si un mecánico nota que las válvulas no abren ni cierran en el momento exacto, ¿qué pieza debería inspeccionar primero según el texto?",
+                new String[]{"El embrague.", "El cigüeñal.", "La correa de distribución.", "El chasis."}, 2);
+        agregarPregunta(l, "Del texto se infiere que la mecánica automotriz es \"preventiva\" porque:",
+                new String[]{"Solo actúa cuando el motor ya ha dejado de funcionar.",
+                        "Permite anticiparse a fallas antes de que ocurran daños mayores.",
+                        "Es una disciplina que prohíbe el uso de vehículos antiguos.",
+                        "Obliga al conductor a comprar un auto nuevo cada año."}, 1);
+        agregarPregunta(l, "¿Cuál de las siguientes funciones del mecánico requiere de mayor capacidad de comunicación y ética?",
+                new String[]{"Desmontar las partes del motor.",
+                        "Orientar al cliente sobre el funcionamiento del vehículo.",
+                        "Reemplazar partes dañadas de forma segura.",
+                        "Elaborar el presupuesto de las reparaciones."}, 1);
+        agregarPregunta(l, "Si la mecánica automotriz abarca una \"diversidad de elementos que funcionan como uno mismo\", esto significa que:",
+                new String[]{"Si una pieza falla, el sistema integral se ve comprometido.",
+                        "Todas las piezas de un auto hacen exactamente la misma función.",
+                        "Se puede quitar cualquier pieza sin que el auto deje de moverse.",
+                        "El motor puede trabajar solo, sin necesidad de otras partes."}, 0);
+        agregarPregunta(l, "¿Por qué se considera la mecánica automotriz como una \"excelente área de emprendimiento\"?",
+                new String[]{"Porque los mecánicos no necesitan estudiar para trabajar.",
+                        "Por la necesidad constante de mantenimiento en el transporte moderno.",
+                        "Porque las piezas de los autos son regaladas por las fábricas.",
+                        "Debido a que ya no existen talleres mecánicos en el mundo."}, 1);
+    }
+
+    private void crearLecturaMecanicaDiesel(Carrera c) {
+        String texto = "LA MECÁNICA DIÉSEL: POTENCIA, EFICIENCIA Y ROBUSTEZ\n\n" +
+                "La mecánica diésel es la rama especializada de la ingeniería automotriz que se ocupa del estudio, diagnóstico, mantenimiento y reparación de los motores de encendido por compresión. " +
+                "A diferencia de los motores de gasolina (que utilizan una chispa para iniciar la combustión), el motor diésel opera bajo un principio físico distinto.\n\n" +
+                "El Principio de Funcionamiento: Encendido por Compresión (Admisión, Compresión, Combustión, Escape). " +
+                "La alta relación de compresión otorga torque.\n\n" +
+                "Componentes Clave: Sistema de Inyección Common Rail, Bomba de Inyección, Turbocompresor, Bujías de Precalentamiento.\n\n" +
+                "Importancia y Aplicaciones: Transporte Pesado, Maquinaria Pesada, Sector Marítimo, Generación Eléctrica.\n\n" +
+                "Ventajas y Desafíos: Eficiencia térmica, larga vida útil, pero emisiones contaminantes; se usan DPF y AdBlue.";
+        Lectura l = new Lectura("La Mecánica Diésel", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿A qué temperatura aproximada llega el aire dentro del cilindro debido a la compresión extrema?",
+                new String[]{"100°C", "500°C", "1,000°C", "250°C"}, 1);
+        agregarPregunta(l, "¿Qué componente se encarga de aprovechar los gases de escape para aumentar la potencia?",
+                new String[]{"Inyector", "Common Rail", "Turbocompresor", "AdBlue"}, 2);
+        agregarPregunta(l, "¿Cuál es la función principal de las bujías incandescentes en un motor diésel?",
+                new String[]{"Generar la chispa.", "Enfriar el motor.", "Precalentar el aire.", "Filtrar el hollín."}, 2);
+        agregarPregunta(l, "Si un motor diésel consume menos combustible que uno de gasolina para mover la misma carga, se deduce que:",
+                new String[]{"El diésel es más barato.", "Tiene mayor eficiencia térmica.", "El motor es más ligero.", "No utiliza pistones."}, 1);
+        agregarPregunta(l, "¿Por qué es necesario que las piezas de un motor diésel sean más robustas que las de uno de gasolina?",
+                new String[]{"Por el peso del combustible.", "Para evitar el óxido.", "Por la alta presión interna.", "Para correr más rápido."}, 2);
+        agregarPregunta(l, "¿Qué efecto tendría en el medio ambiente un motor diésel que tiene el filtro DPF dañado?",
+                new String[]{"Mayor ahorro de diésel.", "Aumento de gases y hollín.", "Menor ruido del motor.", "El motor no encendería."}, 1);
+        agregarPregunta(l, "Un motor diésel que no logra encender en una mañana muy fría probablemente tiene un fallo en:",
+                new String[]{"El turbocompresor.", "El sistema AdBlue.", "Las bujías de precalentamiento.", "El tanque de combustible."}, 2);
+        agregarPregunta(l, "Ante la crisis climática actual, ¿cuál es el mayor desafío ético de la mecánica diésel?",
+                new String[]{"Fabricar motores más pequeños.", "Reducir las emisiones tóxicas.", "Aumentar la velocidad del transporte.", "Eliminar el uso de computadoras."}, 1);
+        agregarPregunta(l, "¿Qué opinión se puede formar sobre la importancia de la mecánica diésel en la economía mundial?",
+                new String[]{"Es una tecnología obsoleta.", "Es el pilar del transporte logístico.", "Solo sirve para autos de lujo.", "No influye en el comercio actual."}, 1);
+        agregarPregunta(l, "Al comparar un sistema de inyección antiguo con un Common Rail moderno, ¿cuál es la mejora más significativa?",
+                new String[]{"El uso de más metal.", "La precisión electrónica.", "El tamaño del tanque.", "El color de las piezas."}, 1);
+    }
+
+    private void crearLecturaMecanicaGasolina(Carrera c) {
+        String texto = "LA MECÁNICA DE GASOLINA: VELOCIDAD, PRECISIÓN Y CHISPA\n\n" +
+                "La mecánica de gasolina es la especialidad de la ingeniería automotriz que se dedica al estudio y mantenimiento de los motores de combustión interna que funcionan bajo el ciclo Otto. " +
+                "A diferencia de los motores diésel, que priorizan la fuerza bruta, los motores de gasolina están diseñados para ofrecer un funcionamiento más suave, mayores revoluciones y una respuesta más ágil.\n\n" +
+                "El Ciclo Otto: Admisión, Compresión, Explosión (chispa de bujía), Escape.\n\n" +
+                "Componentes Vitales: Sistema de Encendido (bobinas y bujías), Inyectores, Cuerpo de Aceleración, Sensores y ECU.\n\n" +
+                "Ventajas y Evolución: Más silenciosos, menos vibración, mantenimiento menos costoso. " +
+                "Evolución hacia la hibridación y materiales ligeros como el aluminio.";
+        Lectura l = new Lectura("La Mecánica de Gasolina", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Qué componente es el responsable de generar la chispa para iniciar la combustión?",
+                new String[]{"El inyector.", "La bujía.", "El pistón.", "La batería."}, 1);
+        agregarPregunta(l, "¿Cómo se llama el ciclo de funcionamiento de los motores de gasolina?",
+                new String[]{"Ciclo Diésel.", "Ciclo de Vapor.", "Ciclo Otto.", "Ciclo de Newton."}, 2);
+        agregarPregunta(l, "¿Qué sucede durante el tiempo de \"Compresión\" en el cilindro?",
+                new String[]{"Se expulsan los gases.", "Entra aire fresco.", "Se aprieta la mezcla.", "Se genera la chispa."}, 2);
+        agregarPregunta(l, "Si un motor de gasolina pierde fuerza y consume mucho combustible, se deduce un fallo en:",
+                new String[]{"El sistema de audio.", "La mezcla aire-gasolina.", "El color del aceite.", "La presión de llantas."}, 1);
+        agregarPregunta(l, "¿Por qué los motores de gasolina alcanzan mayores RPM que los motores diésel?",
+                new String[]{"Son más grandes.", "Tienen piezas ligeras.", "Usan mucha agua.", "Tienen más cables."}, 1);
+        agregarPregunta(l, "¿Qué pasaría si la chispa de la bujía ocurre antes de que el pistón termine de subir?",
+                new String[]{"El auto corre más.", "Daño interno al motor.", "El motor se apaga solo.", "Se ahorra gasolina."}, 1);
+        agregarPregunta(l, "El uso de sensores de oxígeno en el escape permite que el motor sea:",
+                new String[]{"Más ruidoso.", "Menos contaminante.", "Mucho más pesado.", "De color brillante."}, 1);
+        agregarPregunta(l, "Ante el aumento del precio del combustible, ¿qué técnica mecánica es más crítica hoy?",
+                new String[]{"Pintar el motor.", "La inyección directa.", "Usar llantas grandes.", "Quitar los sensores."}, 1);
+        agregarPregunta(l, "¿Qué juicio se puede hacer sobre la suavidad de un motor de gasolina frente a un diésel?",
+                new String[]{"Es mejor para carga.", "Ideal para uso urbano.", "No sirve para viajar.", "Es tecnología fallida."}, 1);
+        agregarPregunta(l, "Al evaluar un motor moderno, ¿qué pesa más: la mecánica pura o la electrónica?",
+                new String[]{"La mecánica pura.", "La electrónica de control.", "Los adornos plásticos.", "El tamaño del chasis."}, 1);
+    }
+
+    // ==================== ELECTRICIDAD ====================
+    // Textos del 1 al 5 con sus preguntas (algunas V/F)
+    private void crearLecturaElectricidad1(Carrera c) {
+        String texto = "Fundamentos de la Corriente Eléctrica y el Circuito de Carga\n\n" +
+                "La electricidad no es una invención humana, sino una fuerza fundamental de la naturaleza que hemos aprendido a canalizar...";
+        Lectura l = new Lectura("Fundamentos de la Corriente Eléctrica", texto, c);
+        lecturaRepository.save(l);
+
+        // Preguntas (basadas en la tabla: 1C,2B,3V,4F,5B,6C,7F,8B,9V,10F)
+        agregarPreguntaVF(l, "¿Cuál es la partícula subatómica cuyo flujo ordenado genera la corriente eléctrica?",
+                new String[]{"Protón", "Neutrón", "Electrón", "Átomo"}, 2);
+        agregarPreguntaVF(l, "El componente encargado de gestionar el paso de la corriente (abrir o cerrar el circuito) es:",
+                new String[]{"El receptor", "El dispositivo de control", "La fuente de energía", "El fusible"}, 1);
+        agregarPreguntaVF(l, "El aluminio es mencionado como un buen conductor debido a su baja resistencia.",
+                new String[]{"Verdadero", "Falso"}, 0); // V
+        agregarPreguntaVF(l, "La \"fuerza electromotriz\" es proporcionada por el receptor del circuito.",
+                new String[]{"Verdadero", "Falso"}, 1); // F
+        agregarPreguntaVF(l, "Si en la analogía hidráulica el voltaje es la presión, ¿qué representa un cable con mucha resistencia?",
+                new String[]{"Un motor potente", "Una tubería con el diámetro muy reducido", "Un tanque de agua lleno", "Una llave de paso abierta"}, 1);
+        agregarPreguntaVF(l, "El \"Efecto Joule\" se menciona en relación con la protección. ¿Qué fenómeno físico genera este efecto en los cables?",
+                new String[]{"Enfriamiento por flujo", "Magnetismo", "Generación de calor", "Aumento de voltaje"}, 2);
+        agregarPreguntaVF(l, "Según el texto, un circuito abierto permite el flujo de electrones libremente.",
+                new String[]{"Verdadero", "Falso"}, 1); // F
+        agregarPreguntaVF(l, "¿Por qué se considera que la protección es el elemento más crítico en una instalación profesional?",
+                new String[]{"Porque es el más caro de comprar", "Porque previene la destrucción de la infraestructura ante fallos", "Porque mejora el brillo de las bombillas", "Porque sustituye a la fuente de energía"}, 1);
+        agregarPreguntaVF(l, "Un técnico que comprende la analogía hidráulica tiene mejores bases para predecir el comportamiento del circuito.",
+                new String[]{"Verdadero", "Falso"}, 0); // V
+        agregarPreguntaVF(l, "En un taller rural, ¿es válido sustituir un fusible quemado por un trozo de alambre de cobre?",
+                new String[]{"Verdadero", "Falso"}, 1); // F
+    }
+
+    private void crearLecturaElectricidad2(Carrera c) {
+        String texto = "LA LEY DE OHM Y LA EFICIENCIA EN INSTALACIONES\n\n" +
+                "La Ley de Ohm es la regla de oro para cualquier técnico en electricidad...";
+        Lectura l = new Lectura("La Ley de Ohm y la Eficiencia en Instalaciones", texto, c);
+        lecturaRepository.save(l);
+
+        // Tabla: 1B,2C,3V,4F,5B,6C,7V,8B,9V,10F
+        agregarPreguntaVF(l, "En la fórmula V = I * R, ¿qué representa la letra I?",
+                new String[]{"Inductancia", "Intensidad de corriente", "Impedancia interna", "Interruptor"}, 1);
+        agregarPreguntaVF(l, "La Ley de Ohm establece que la intensidad es proporcional al voltaje de forma:",
+                new String[]{"Inversa", "Aleatoria", "Directa", "Negativa"}, 2);
+        agregarPreguntaVF(l, "Si la resistencia de un circuito aumenta y el voltaje se mantiene igual, la corriente disminuye.",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "La caída de tensión es un problema deseado para ahorrar energía.",
+                new String[]{"Verdadero", "Falso"}, 1);
+        agregarPreguntaVF(l, "Un motor que aumenta su consumo de corriente (A) sin cambiar su voltaje suele tener un problema de:",
+                new String[]{"Exceso de aislamiento", "Disminución de su resistencia interna", "Aumento de su vida útil", "Voltaje demasiado alto"}, 1);
+        agregarPreguntaVF(l, "¿Cuál es la consecuencia directa de intentar pasar mucha intensidad por un cable muy delgado?",
+                new String[]{"El cable se enfría", "La resistencia baja a cero", "Generación de calor peligroso por alta resistencia", "El voltaje aumenta automáticamente"}, 2);
+        agregarPreguntaVF(l, "El multímetro es la herramienta mencionada para comprobar los cálculos de la Ley de Ohm.",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "¿A qué se refiere el autor con desarrollar un \"sentido técnico\"?",
+                new String[]{"A memorizar todas las fórmulas de física", "A ser capaz de predecir el comportamiento eléctrico antes de medir", "A usar las manos para sentir la electricidad", "A comprar las herramientas más caras del mercado"}, 1);
+        agregarPreguntaVF(l, "Aplicar la Ley de Ohm ayuda a que los dispositivos duren más tiempo.",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "¿Es la Ley de Ohm útil para un técnico que solo hace reparaciones estéticas?",
+                new String[]{"Verdadero", "Falso"}, 1);
+    }
+
+    private void crearLecturaElectricidad3(Carrera c) {
+        String texto = "Arquitectura de Circuitos: Serie y Paralelo\n\n" +
+                "La disposición física y eléctrica de los componentes determina el comportamiento de toda la red...";
+        Lectura l = new Lectura("Arquitectura de Circuitos: Serie y Paralelo", texto, c);
+        lecturaRepository.save(l);
+
+        // Tabla: 1C,2B,3F,4V,5B,6B,7V,8B,9V,10V
+        agregarPreguntaVF(l, "¿Qué sucede si se quema una bombilla en un circuito en serie?",
+                new String[]{"El resto brilla más", "Solo fallan las bombillas que están después", "Todo el circuito deja de funcionar", "La fuente de energía explota"}, 2);
+        agregarPreguntaVF(l, "En un circuito en paralelo, el voltaje en cada receptor es:",
+                new String[]{"Dividido entre el número de focos", "El mismo de la fuente", "Cero", "Variable según el interruptor"}, 1);
+        agregarPreguntaVF(l, "Las instalaciones domésticas se realizan mayoritariamente en serie.",
+                new String[]{"Verdadero", "Falso"}, 1);
+        agregarPreguntaVF(l, "En un circuito en serie, la intensidad de corriente es la misma en todos los puntos.",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "Si agregamos más electrodomésticos a un multicontacto (en paralelo), el riesgo técnico principal es:",
+                new String[]{"Que baje el voltaje de la calle", "Una sobrecarga por exceso de intensidad total", "Que los aparatos se vuelvan más lentos", "Que la resistencia total aumente"}, 1);
+        agregarPreguntaVF(l, "¿Por qué las lámparas brillan menos al conectarse en serie?",
+                new String[]{"Porque hay menos electrones", "Porque el voltaje de la fuente se reparte entre todas", "Porque el cable es más largo", "Porque la resistencia disminuye"}, 1);
+        agregarPreguntaVF(l, "Un interruptor de seguridad suele colocarse en serie con la carga que desea proteger.",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "Para un sistema de luces de emergencia donde se requiere que si una falla, las demás sigan encendidas, usted instalaría un circuito en:",
+                new String[]{"Serie", "Paralelo", "Abierto", "Simple"}, 1);
+        agregarPreguntaVF(l, "El circuito paralelo ofrece mayor autonomía e independencia a los dispositivos.",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "En serie, la resistencia total del circuito es la suma de todas las resistencias individuales.",
+                new String[]{"Verdadero", "Falso"}, 0);
+    }
+
+    private void crearLecturaElectricidad4(Carrera c) {
+        String texto = "La Guerra de las Corrientes: CA versus CC\n\n" +
+                "La historia de la electricidad está marcada por la competencia entre la Corriente Continua (CC) y la Corriente Alterna (CA)...";
+        Lectura l = new Lectura("La Guerra de las Corrientes: CA versus CC", texto, c);
+        lecturaRepository.save(l);
+
+        // Tabla: 1B,2C,3F,4V,5B,6B,7V,8B,9V,10V
+        agregarPreguntaVF(l, "¿Cuál es el tipo de corriente que generan las baterías y paneles solares?",
+                new String[]{"Alterna", "Continua", "Bifásica", "Inducida"}, 1);
+        agregarPreguntaVF(l, "La principal ventaja de la CA para las ciudades es que puede usarse con:",
+                new String[]{"Bombillas de Edison", "Motores de vapor", "Transformadores", "Imanes permanentes"}, 2);
+        agregarPreguntaVF(l, "Nikola Tesla fue un fuerte defensor de la Corriente Continua.",
+                new String[]{"Verdadero", "Falso"}, 1);
+        agregarPreguntaVF(l, "Los cargadores de celulares convierten la CA en CC.",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "Si un dispositivo electrónico dice \"Entrada: 100-240V CA\", pero funciona internamente con CC, ¿qué componente debe tener adentro?",
+                new String[]{"Un motor de arranque", "Un rectificador/transformador", "Un cable de cobre más grueso", "Una batería de emergencia"}, 1);
+        agregarPreguntaVF(l, "¿Por qué fue necesario elevar el voltaje para transportar electricidad a largas distancias?",
+                new String[]{"Para que llegara más rápido", "Para reducir las pérdidas de energía por calor", "Para que los cables fueran más pesados", "Para evitar los rayos"}, 1);
+        agregarPreguntaVF(l, "La frecuencia de la corriente eléctrica se mide en Hertz (Hz).",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "El término \"mundo híbrido\" en el texto se refiere a:",
+                new String[]{"Que los carros ahora son eléctricos", "El uso combinado de CA para transporte y CC para electrónica", "Que la electricidad se mezcla con el agua", "Que Tesla y Edison finalmente trabajaron juntos"}, 1);
+        agregarPreguntaVF(l, "Sin la invención del transformador, la electricidad sería mucho más cara en las casas.",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "La Corriente Alterna cambia de dirección muchas veces por segundo.",
+                new String[]{"Verdadero", "Falso"}, 0);
+    }
+
+    private void crearLecturaElectricidad5(Carrera c) {
+        String texto = "Seguridad: La Prevención como Herramienta Técnica\n\n" +
+                "En electricidad, el error suele pagarse caro. El riesgo eléctrico no es solo el choque directo...";
+        Lectura l = new Lectura("Seguridad Eléctrica: La Prevención como Herramienta Técnica", texto, c);
+        lecturaRepository.save(l);
+
+        // Tabla: 1B,2B,3F,4V,5D,6B,7F,8B,9V,10F
+        agregarPreguntaVF(l, "¿Cuál es el objetivo principal de la \"puesta a tierra\"?",
+                new String[]{"Ahorrar energía eléctrica", "Desviar corrientes de falla hacia el suelo", "Hacer que los equipos pesen más", "Mejorar la señal de radio"}, 1);
+        agregarPreguntaVF(l, "El calzado de seguridad para un electricista debe ser:",
+                new String[]{"Con punta de acero descubierta", "Dieléctrico (aislante)", "De tela cómoda", "Sandalias de goma"}, 1);
+        agregarPreguntaVF(l, "Las \"Cinco Reglas de Oro\" son sugerencias opcionales para ganar tiempo.",
+                new String[]{"Verdadero", "Falso"}, 1);
+        agregarPreguntaVF(l, "El cuerpo humano es un buen conductor de electricidad.",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "¿Por qué es fundamental \"verificar la ausencia de tensión\" antes de tocar un cable, aunque ya hayamos bajado el interruptor?",
+                new String[]{"Porque el interruptor podría estar defectuoso", "Porque el cable podría tener carga estática o retorno", "Para cumplir con el protocolo legal", "Todas las anteriores son correctas"}, 3); // D
+        agregarPreguntaVF(l, "Según el texto, ¿por qué la corriente \"prefiere\" ir por un cable de tierra que por una persona?",
+                new String[]{"Porque el cobre es de color rojo", "Porque la corriente siempre busca el camino de menor resistencia", "Porque la tierra atrae a los electrones como un imán", "Porque el cable de tierra es más corto"}, 1);
+        agregarPreguntaVF(l, "Un arco eléctrico solo ocurre cuando hay contacto físico directo.",
+                new String[]{"Verdadero", "Falso"}, 1);
+        agregarPreguntaVF(l, "Un técnico que decide no usar guantes porque \"le quitan sensibilidad\" para trabajar está siendo:",
+                new String[]{"Muy profesional y experimentado", "Negligente, poniendo en riesgo su vida", "Eficiente, al terminar más rápido", "Valiente ante el peligro"}, 1);
+        agregarPreguntaVF(l, "Bloquear los dispositivos de mando impide que alguien más energice el circuito mientras trabajamos.",
+                new String[]{"Verdadero", "Falso"}, 0);
+        agregarPreguntaVF(l, "El uso de agua es el método más seguro para apagar incendios eléctricos.",
+                new String[]{"Verdadero", "Falso"}, 1);
+    }
+
+    private void agregarPregunta(Lectura lectura, String enunciado, String[] textosOpciones, int indiceCorrecta) {
+        Pregunta p = new Pregunta(enunciado, lectura);
+        preguntaRepository.save(p);
+        Opcion[] opciones = new Opcion[textosOpciones.length];
+        for (int i = 0; i < textosOpciones.length; i++) {
+            opciones[i] = new Opcion(textosOpciones[i], p);
+            opcionRepository.save(opciones[i]);
+        }
+        p.setRespuestaCorrecta(opciones[indiceCorrecta]);
+        preguntaRepository.save(p);
+    }
+
+    // Versión para preguntas de Verdadero/Falso (dos opciones)
+    private void agregarPreguntaVF(Lectura lectura, String enunciado, String[] textosOpciones, int indiceCorrecta) {
+        // Si solo hay 2 opciones usamos el mismo método, funciona igual
+        agregarPregunta(lectura, enunciado, textosOpciones, indiceCorrecta);
     }
 }
