@@ -9,20 +9,23 @@
         <div class="breadcrumb">
             <a th:href="@{/carreras}"><i class="fas fa-graduation-cap me-1"></i> Carreras</a>
             <i class="fas fa-chevron-right" style="font-size:.6rem"></i>
-            <span th:text="${carrera.nombre}"></span>
+            <span th:text="${carrera?.nombre} ?: 'Carrera'"></span>
         </div>
-        <h1>Lecturas de <span class="text-kinal-red" th:text="${carrera.nombre}"></span></h1>
-        <p style="font-size:.85rem;color:var(--muted);margin:0">Selecciona una lectura, estúdiala y luego realiza el test de comprensión.</p>
+        <h1>Lecturas de <span class="text-kinal-red" th:text="${carrera?.nombre} ?: ''"></span></h1>
+        <p style="font-size:.85rem;color:var(--muted);margin:0">
+            Selecciona una lectura, estúdiala y luego realiza el test de comprensión.
+        </p>
     </div>
 </div>
 
 <div class="lecturas-grid">
     <div class="container-custom">
-        <div th:if="${lecturas.empty}" class="empty-state">
+        <!-- Si la lista es null o vacía -->
+        <div th:if="${lecturas == null || lecturas.empty}" class="empty-state">
             <i class="fas fa-book-open"></i>
             <p>Aún no hay lecturas disponibles para esta carrera.</p>
         </div>
-        <div class="row g-4" th:unless="${lecturas.empty}">
+        <div class="row g-4" th:unless="${lecturas == null || lecturas.empty}">
             <div class="col-md-6 col-lg-4" th:each="l, iterStat : ${lecturas}">
                 <div class="lectura-card">
                     <div class="lectura-card-top">
@@ -31,7 +34,7 @@
                     </div>
                     <div class="lectura-card-body">
                         <p class="lectura-preview" th:text="${#strings.abbreviate(l.contenido, 130)}"></p>
-                        <a th:href="@{/lectura/{id} (id=${l.id})}" class="btn-lectura">
+                        <a th:href="@{/lectura/{id}(id=${l.id})}" class="btn-lectura">
                             <i class="fas fa-book-reader" style="font-size:.7rem"></i> Leer contenido
                         </a>
                     </div>
