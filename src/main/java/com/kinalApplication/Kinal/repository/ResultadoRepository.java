@@ -12,9 +12,6 @@ import java.util.Optional;
 @Repository
 public interface ResultadoRepository extends JpaRepository<ResultadoTest, Long> {
     List<ResultadoTest> findByEstudianteOrderByFechaDesc(Estudiante estudiante);
-
-    // Verifica si el estudiante ya completó el test de una lectura específica
     Optional<ResultadoTest> findByEstudianteAndLectura(Estudiante estudiante, Lectura lectura);
-
     boolean existsByEstudianteAndLectura(Estudiante estudiante, Lectura lectura);
 }
