@@ -21,7 +21,9 @@ public class CarreraController {
 
     @GetMapping
     public String listarCarreras(Model model) {
-        model.addAttribute("carreras", carreraRepository.findAll());
+        // Usar findAllWithLecturas() para cargar las lecturas en la misma query
+        // y evitar LazyInitializationException con open-in-view=false
+        model.addAttribute("carreras", carreraRepository.findAllWithLecturas());
         return "carreras";
     }
 
