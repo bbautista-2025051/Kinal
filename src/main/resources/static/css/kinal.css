@@ -103,6 +103,88 @@ body::before {
   background: rgba(255,255,255,.12);
 }
 
+/* ==========================================================================
+   NUEVAS SECCIONES Y GALERÍA EN MOVIMIENTO (MARQUEE)
+   ========================================================================== */
+
+/* Clases utilitarias */
+.text-center { text-align: center; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+/* Contenedor de la sección de la galería */
+.k-student-marquee-section {
+  padding: 5rem 0;
+  background: var(--k-surface);
+  border-top: 1px solid var(--k-border);
+  border-bottom: 1px solid var(--k-border);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Efecto de sombra a los lados de la galería para que desaparezca suavemente */
+.k-student-marquee-section::before,
+.k-student-marquee-section::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 150px; z-index: 2;
+  pointer-events: none;
+}
+.k-student-marquee-section::before {
+  left: 0; background: linear-gradient(to right, var(--k-surface) 0%, transparent 100%);
+}
+.k-student-marquee-section::after {
+  right: 0; background: linear-gradient(to left, var(--k-surface) 0%, transparent 100%);
+}
+
+/* Contenedor del track */
+.k-marquee-container {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* El carril que se mueve infinitamente */
+.k-marquee-track {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  animation: scroll-marquee 30s linear infinite;
+}
+
+/* Al pasar el mouse, la galería se pausa para poder ver las fotos */
+.k-marquee-container:hover .k-marquee-track {
+  animation-play-state: paused;
+}
+
+/* Estilos de las fotos de los estudiantes */
+.k-marquee-track img {
+  height: 280px;
+  width: 400px;
+  object-fit: cover;
+  border-radius: var(--k-radius-lg);
+  box-shadow: var(--k-shadow-sm);
+  transition: transform var(--k-transition), box-shadow var(--k-transition);
+  filter: grayscale(20%); /* Un toque más institucional */
+}
+
+.k-marquee-track img:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: var(--k-shadow-lg);
+  filter: grayscale(0%);
+}
+
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  /* Se desplaza el 50% ya que tenemos las imágenes duplicadas para que sea infinito */
+  100% { transform: translateX(calc(-50% - 0.75rem)); }
+}
+
+/* Ajustes de responsividad para la galería */
+@media (max-width: 768px) {
+  .k-marquee-track img { height: 200px; width: 280px; }
+  .k-student-marquee-section::before,
+  .k-student-marquee-section::after { width: 50px; }
+}
+
+
 /* ── HERO SLIDESHOW (INDEX) ────────────────────── */
  .hero-slideshow {
    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
