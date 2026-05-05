@@ -88,6 +88,9 @@ public class SecurityConfig {
         // CookieCsrfTokenRepository.withHttpOnlyFalse() permite que JS lea la cookie
         // para incluirla en requests AJAX, y Thymeleaf la lee del request attribute.
         CookieCsrfTokenRepository tokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        // En desarrollo local (HTTP) la cookie CSRF no debe requerir Secure
+        // En producción Railway el forward-headers-strategy=framework se encarga del HTTPS
+        tokenRepository.setCookieCustomizer(cookie -> cookie.secure(false));
 
         http
                 .csrf(csrf -> csrf
