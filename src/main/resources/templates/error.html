@@ -1,22 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout :: head}"></head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Error · Kinal</title>
+    <meta name="theme-color" content="#0b0e1a"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
+</head>
 <body>
-<div th:replace="~{layout :: navbar}"></div>
 
-<div class="error-page">
-    <div class="error-box">
-        <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
-        <div class="error-status" th:text="'Error ' + ${status}">Error</div>
-        <h2 th:text="${error}">Algo salió mal</h2>
-        <p th:text="${message}">Ocurrió un error inesperado. Por favor intenta de nuevo o regresa al inicio.</p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a th:href="@{/}" class="btn-kinal-red"><i class="fas fa-home"></i> Inicio</a>
-            <a th:href="@{/carreras}" class="btn-kinal-outline">Ver carreras</a>
+<nav class="k-nav">
+    <a href="/carreras" class="k-nav-brand">
+        <span class="brand-dot"></span>
+        <span>Fundación <strong>Kinal</strong></span>
+    </a>
+</nav>
+
+<div class="k-page" style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 64px)">
+    <div class="k-glow k-glow-indigo" style="width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+
+    <div style="text-align:center;position:relative;z-index:1" class="fade-up">
+        <!-- Error code -->
+        <div style="font-family:var(--k-font-display);font-size:8rem;font-weight:800;color:rgba(255,255,255,.04);line-height:1;user-select:none"
+             th:text="${status ?: '404'}">404</div>
+
+        <div style="margin-top:-3rem;position:relative;z-index:1">
+            <div class="k-badge k-badge-red" style="margin-bottom:1rem;display:inline-flex">
+                <i class="fa fa-triangle-exclamation"></i>
+                Error <span th:text="${status ?: '404'}">404</span>
+            </div>
+
+            <h1 class="k-heading" style="margin-bottom:.75rem">
+                <span th:if="${status == 404}">Página no encontrada</span>
+                <span th:if="${status == 403}">Acceso denegado</span>
+                <span th:if="${status == 500}">Error del servidor</span>
+                <span th:unless="${status == 404 or status == 403 or status == 500}">Algo salió mal</span>
+            </h1>
+
+            <p class="k-subtext" style="max-width:400px;margin:0 auto 2rem">
+                <span th:if="${status == 404}">La página que buscas no existe o fue movida.</span>
+                <span th:if="${status == 403}">No tienes permisos para acceder a este recurso.</span>
+                <span th:unless="${status == 404 or status == 403}">
+          <span th:text="${message ?: 'Ocurrió un error inesperado. Por favor intenta de nuevo.'}"></span>
+        </span>
+            </p>
+
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+                <a href="/carreras" class="k-btn k-btn-primary k-btn-lg">
+                    <i class="fa fa-house"></i> Ir al inicio
+                </a>
+                <button onclick="history.back()" class="k-btn k-btn-ghost k-btn-lg">
+                    <i class="fa fa-arrow-left"></i> Volver
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
-<div th:replace="~{layout :: footer}"></div>
+<script th:src="@{/js/kinal.js}" defer></script>
 </body>
 </html>

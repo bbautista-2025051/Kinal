@@ -25,6 +25,11 @@ public class AuthController {
     @Autowired private EstudianteService estudianteService;
     @Autowired private CarreraRepository carreraRepository;
 
+    @GetMapping("/")
+    public String root() {
+        return "redirect:/login";
+    }
+
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model) {
         String ip = SecurityConfig.getClientIp(request);

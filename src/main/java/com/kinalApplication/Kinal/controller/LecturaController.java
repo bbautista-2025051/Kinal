@@ -53,6 +53,8 @@ public class LecturaController {
         session.setAttribute("lecturaUrlToken_" + id, urlToken);
 
         session.setAttribute("lecturaInicio_" + id, System.currentTimeMillis());
+        // Almacenar también con la clave que usa TestController para compatibilidad
+        session.setAttribute("tiempoLectura_" + id, 0L); // Se actualizará vía cookie/JS
 
         String testUrl = "/test/" + id + "?token=" + urlToken;
         model.addAttribute("testUrl",   testUrl);

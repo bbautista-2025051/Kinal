@@ -32,8 +32,12 @@ public class ResultadoController {
         if (!resultados.isEmpty()) {
             double mejorNota = resultados.stream().mapToDouble(ResultadoTest::getNota).max().orElse(0);
             double promedio  = resultados.stream().mapToDouble(ResultadoTest::getNota).average().orElse(0);
+            long   aprobados = resultados.stream().filter(r -> r.getNota() >= 60).count();
             model.addAttribute("mejorNota", (int) mejorNota);
             model.addAttribute("promedio",  Math.round(promedio));
+            model.addAttribute("aprobados", aprobados);
+        } else {
+            model.addAttribute("aprobados", 0);
         }
 
         return "misNotas";

@@ -1,105 +1,61 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout :: head}"></head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Kinal — Comprensión Lectora</title>
+    <meta name="theme-color" content="#0b0e1a"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
+</head>
 <body>
-<div th:replace="~{layout :: navbar}"></div>
 
-<!-- Hero -->
-<section class="hero">
-    <div class="container-custom">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6">
-                <div class="hero-label"><i class="fas fa-star"></i> Plataforma educativa Kinal</div>
-                <h1>Mejora tu comprensión lectora <span>técnica</span></h1>
-                <p>Desarrolla habilidades de lectura con contenido especializado en tu carrera. Practica con textos reales y pon a prueba tus conocimientos.</p>
-                <div class="d-flex flex-wrap gap-3">
-                    <a th:href="@{/login}" class="btn-kinal-red px-4 py-2" style="border-radius:var(--radius);font-size:.9rem;">
-                        <i class="fas fa-arrow-right-to-bracket"></i> Iniciar sesión
-                    </a>
-                    <a th:href="@{/registro}" class="btn-kinal-outline px-4 py-2" style="border-radius:var(--radius);font-size:.9rem;border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.8);">
-                        Crear cuenta
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="hero-img">
-                    <img src="https://static.wixstatic.com/media/128120_d85e94e94f1048659b09fa09c476764b~mv2.jpg/v1/fill/w_640,h_446,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/128120_d85e94e94f1048659b09fa09c476764b~mv2.jpg" alt="Estudiantes Kinal">
-                </div>
-            </div>
+<nav class="k-nav">
+    <a href="/carreras" class="k-nav-brand">
+        <span class="brand-dot"></span>
+        <span>Fundación <strong>Kinal</strong></span>
+    </a>
+    <ul class="k-nav-links">
+        <li><a href="/login" class="k-btn k-btn-ghost k-btn-sm">Ingresar</a></li>
+        <li><a href="/registro" class="k-btn k-btn-primary k-btn-sm">Registrarse</a></li>
+    </ul>
+</nav>
+
+<div class="k-page">
+    <div class="k-glow k-glow-indigo" style="width:700px;height:700px;top:-200px;right:-150px;"></div>
+    <div class="k-glow k-glow-amber"  style="width:400px;height:400px;bottom:-100px;left:-100px;"></div>
+
+    <div class="k-container" style="position:relative;z-index:1;text-align:center;padding-top:5rem">
+        <div class="k-badge k-badge-indigo fade-up" style="margin-bottom:1.5rem;display:inline-flex">
+            <i class="fa fa-graduation-cap"></i> Plataforma Educativa Kinal
         </div>
-    </div>
-</section>
+        <h1 class="k-display fade-up stagger-1" style="margin-bottom:1.5rem;max-width:700px;margin-left:auto;margin-right:auto">
+            Lee. Comprende.<br><span class="accent">Crece.</span>
+        </h1>
+        <p class="k-subtext fade-up stagger-2" style="font-size:1.0625rem;max-width:500px;margin:0 auto 2.5rem;line-height:1.75">
+            Desarrolla tu habilidad lectora con textos especializados en tu carrera y mide tu comprensión en tiempo real.
+        </p>
+        <div class="fade-up stagger-3" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+            <a href="/login"    class="k-btn k-btn-primary k-btn-lg"><i class="fa fa-arrow-right-to-bracket"></i> Iniciar sesión</a>
+            <a href="/registro" class="k-btn k-btn-ghost k-btn-lg"><i class="fa fa-user-plus"></i> Crear cuenta</a>
+        </div>
 
-<!-- Stats -->
-<div class="stats-bar">
-    <div class="container-custom">
-        <div class="row g-3 justify-content-center">
-            <div class="col-6 col-md-3 stat-item">
-                <span class="stat-num">5+</span>
-                <span class="stat-label">Carreras técnicas</span>
-            </div>
-            <div class="col-6 col-md-3 stat-item">
-                <span class="stat-num">50+</span>
-                <span class="stat-label">Lecturas disponibles</span>
-            </div>
-            <div class="col-6 col-md-3 stat-item">
-                <span class="stat-num">100%</span>
-                <span class="stat-label">Contenido técnico</span>
-            </div>
-            <div class="col-6 col-md-3 stat-item">
-                <span class="stat-num">Gratis</span>
-                <span class="stat-label">Para estudiantes Kinal</span>
-            </div>
+        <div class="k-grid-4 fade-up stagger-4" style="margin-top:5rem;text-align:center">
+            <div class="k-stat"><div class="k-stat-value">+200</div><div class="k-stat-label">Lecturas</div></div>
+            <div class="k-stat"><div class="k-stat-value">98%</div><div class="k-stat-label">Satisfacción</div></div>
+            <div class="k-stat"><div class="k-stat-value">12</div><div class="k-stat-label">Carreras</div></div>
+            <div class="k-stat"><div class="k-stat-value">Gratis</div><div class="k-stat-label">Para estudiantes</div></div>
         </div>
     </div>
 </div>
 
-<!-- Features -->
-<section class="features">
-    <div class="container-custom">
-        <div class="text-center mb-5">
-            <p class="section-eyebrow">¿Por qué Kinal Lecturas?</p>
-            <h2 class="section-title">Todo lo que necesitas para mejorar</h2>
-            <p class="text-muted" style="max-width:500px;margin:0 auto;font-size:.9rem;">Una herramienta diseñada específicamente para estudiantes de carreras técnicas del Colegio Kinal.</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-laptop-code"></i></div>
-                    <h5>Lecturas por carrera</h5>
-                    <p>Contenido adaptado a tu especialidad: Informática, Electrónica, Dibujo Técnico y más carreras disponibles.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-shuffle"></i></div>
-                    <h5>Preguntas aleatorias</h5>
-                    <p>Cada test genera 5 preguntas al azar desde un amplio banco, asegurando una evaluación única cada vez.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-                    <h5>Historial de notas</h5>
-                    <p>Consulta tu progreso con fechas, aciertos y calificaciones para identificar áreas de mejora.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<footer class="k-footer">
+    <p>© 2025 Fundación Kinal · Plataforma de Comprensión Lectora</p>
+</footer>
 
-<!-- CTA band -->
-<section class="cta-band">
-    <div class="container-custom">
-        <h2>¿Listo para empezar?</h2>
-        <p>Únete a los estudiantes que ya mejoran su comprensión lectora técnica.</p>
-        <div class="d-flex justify-content-center flex-wrap gap-3">
-            <a th:href="@{/registro}" class="btn-white"><i class="fas fa-user-plus"></i> Crear cuenta gratis</a>
-            <a th:href="@{/login}" class="btn-white-outline">Iniciar sesión</a>
-        </div>
-    </div>
-</section>
-
-<div th:replace="~{layout :: footer}"></div>
+<script th:src="@{/js/kinal.js}" defer></script>
 </body>
 </html>

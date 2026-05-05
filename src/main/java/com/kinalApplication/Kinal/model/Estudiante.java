@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "estudiantes", indexes = {
-    @Index(name = "idx_estudiante_email", columnList = "email")
+        @Index(name = "idx_estudiante_email", columnList = "email")
 })
 public class Estudiante {
 

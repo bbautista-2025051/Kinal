@@ -7,7 +7,7 @@ public class RegistroDTO {
     @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 3, max = 100, message = "El nombre debe tener entre 3 y 100 caracteres")
     @Pattern(regexp = "^[\\p{L} .'-]+$",
-             message = "El nombre solo puede contener letras, espacios, puntos y guiones")
+            message = "El nombre solo puede contener letras, espacios, puntos y guiones")
     private String nombreCompleto;
 
     @Email(message = "Formato de correo inválido")
@@ -18,7 +18,7 @@ public class RegistroDTO {
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 8, max = 128, message = "La contraseña debe tener entre 8 y 128 caracteres")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$",
-             message = "La contraseña debe tener al menos una mayúscula, una minúscula y un número")
+            message = "La contraseña debe tener al menos una mayúscula, una minúscula y un número")
     private String password;
 
     @NotNull(message = "Debe seleccionar una carrera")
