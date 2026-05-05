@@ -16,11 +16,9 @@
 <body>
 
 <!-- ── NAVBAR ────────────────────────────────────── -->
-<nav class="k-nav" th:fragment="navbar">
-    <a href="/carreras" class="k-nav-brand">
-        <span class="brand-dot"></span>
-        <span>Fundación <strong>Kinal</strong></span>
-    </a>
+<a href="/carreras" class="k-nav-brand">
+    <img src="https://static.wixstatic.com/media/128120_32e25aed1e3b488f9f2e834a59aef168~mv2.png/v1/fill/w_313,h_114,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Recurso%208_3x-8%20(3).png" alt="Fundación Kinal">
+</a>
     <ul class="k-nav-links">
         <li sec:authorize="isAuthenticated()">
             <a th:href="@{/carreras}" th:classappend="${currentPage == 'carreras'} ? 'active'">

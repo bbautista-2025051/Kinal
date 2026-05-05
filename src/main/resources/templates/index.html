@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#1B3A6B"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
 </head>
@@ -17,8 +17,7 @@
 
 <nav class="k-nav">
     <a href="/carreras" class="k-nav-brand">
-        <span class="brand-dot"></span>
-        <span>Fundación <strong>Kinal</strong></span>
+        <img src="https://static.wixstatic.com/media/128120_32e25aed1e3b488f9f2e834a59aef168~mv2.png/v1/fill/w_313,h_114,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Recurso%208_3x-8%20(3).png" alt="Fundación Kinal">
     </a>
     <ul class="k-nav-links">
         <li><a href="/login" class="k-btn k-btn-ghost k-btn-sm">Ingresar</a></li>
@@ -27,10 +26,14 @@
 </nav>
 
 <div class="k-page">
-    <div class="k-glow k-glow-indigo" style="width:500px;height:500px;top:-150px;right:-100px;"></div>
-    <div class="k-glow k-glow-amber"  style="width:300px;height:300px;bottom:-50px;left:-80px;"></div>
+    <!-- 🎞️ Slideshow de imágenes de fondo -->
+    <div class="hero-slideshow">
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&auto=format&fit=crop&q=80');"></div>
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=1600&auto=format&fit=crop&q=80');"></div>
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1600&auto=format&fit=crop&q=80');"></div>
+    </div>
 
-    <div class="k-container" style="position:relative;z-index:1;text-align:center;padding-top:5rem">
+    <div class="k-container" style="text-align:center;padding-top:5rem">
         <div class="k-badge k-badge-indigo fade-up" style="margin-bottom:1.5rem;display:inline-flex">
             <i class="fa fa-graduation-cap"></i> Plataforma Educativa Kinal
         </div>
