@@ -4,14 +4,16 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="${lectura.titulo} + ' · Kinal'">Lectura · Kinal</title>
-    <meta name="theme-color" content="#0b0e1a"/>
+    <meta name="theme-color" content="#1B3A6B"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
 </head>
 <body>
+
+<div class="k-inst-strip">Centro Educativo Técnico · Fundación Kinal · Guatemala</div>
 
 <nav class="k-nav">
     <a href="/carreras" class="k-nav-brand">
@@ -33,143 +35,96 @@
 </nav>
 
 <div class="k-page">
-    <div class="k-glow k-glow-indigo" style="width:400px;height:400px;top:-50px;right:-80px;"></div>
+    <div class="k-glow k-glow-indigo" style="width:300px;height:300px;top:-30px;right:-50px;"></div>
 
     <div class="k-container" style="position:relative;z-index:1">
-
         <!-- Breadcrumb -->
         <div class="fade-up" style="display:flex;align-items:center;gap:.5rem;margin-bottom:2rem;font-size:.875rem;color:var(--k-muted)">
-            <a href="/carreras" style="color:var(--k-muted)"><i class="fa fa-house"></i> Carreras</a>
+            <a href="/carreras" style="color:var(--kinal-blue)"><i class="fa fa-house"></i> Carreras</a>
             <i class="fa fa-chevron-right" style="font-size:.65rem;opacity:.5"></i>
-            <a th:href="@{/carreras/{id}/lecturas(id=${lectura.carrera.id})}"
-               style="color:var(--k-muted)" th:text="${lectura.carrera.nombre}">Carrera</a>
+            <a th:href="@{/carreras/{id}/lecturas(id=${lectura.carrera.id})}" style="color:var(--kinal-blue)" th:text="${lectura.carrera.nombre}">Carrera</a>
             <i class="fa fa-chevron-right" style="font-size:.65rem;opacity:.5"></i>
             <span style="color:var(--k-text)" th:text="${lectura.titulo}"></span>
         </div>
 
-        <!-- 2-column layout: reading + sidebar -->
         <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start">
-
-            <!-- READING PANEL -->
             <div>
-                <!-- Header -->
                 <div class="k-card fade-up" style="margin-bottom:1.5rem;padding:2rem">
                     <h1 class="k-heading" style="margin-bottom:1rem;line-height:1.25" th:text="${lectura.titulo}">Título</h1>
-
                     <div style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:center">
-            <span class="k-badge k-badge-amber">
-              <i class="fa fa-graduation-cap"></i>
-              <span th:text="${lectura.carrera.nombre}">Carrera</span>
-            </span>
-                        <span class="k-badge k-badge-indigo">
-              <i class="fa fa-align-left"></i>
-              <span th:text="${palabrasLectura}">0</span> palabras
-            </span>
-                        <span class="k-badge k-badge-indigo">
-              <i class="fa fa-clock"></i>
-              ~<span th:text="${minEstimadoLectura}">1</span> min lectura
-            </span>
+                        <span class="k-badge k-badge-amber"><i class="fa fa-graduation-cap"></i> <span th:text="${lectura.carrera.nombre}">Carrera</span></span>
+                        <span class="k-badge k-badge-indigo"><i class="fa fa-align-left"></i> <span th:text="${palabrasLectura}">0</span> palabras</span>
+                        <span class="k-badge k-badge-indigo"><i class="fa fa-clock"></i> ~<span th:text="${minEstimadoLectura}">1</span> min lectura</span>
                     </div>
                 </div>
 
-                <!-- Reading content -->
                 <div class="k-card fade-up stagger-2" id="readingCard">
-                    <!-- Reading progress bar -->
                     <div style="position:sticky;top:65px;margin:-1.75rem -1.75rem 1.75rem;z-index:10">
                         <div class="k-progress" style="border-radius:0;height:3px">
                             <div class="k-progress-bar" id="readingProgress" style="width:0%;transition:width .1s linear"></div>
                         </div>
                     </div>
-
-                    <div class="k-reading" id="readingContent" th:text="${lectura.contenido}">
-                        Contenido de la lectura...
-                    </div>
-
+                    <div class="k-reading" id="readingContent" th:text="${lectura.contenido}">Contenido de la lectura...</div>
                     <hr class="k-divider"/>
-
-                    <!-- CTA after reading -->
                     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
                         <div>
                             <p style="font-size:.875rem;font-weight:600;color:var(--k-text)">¿Terminaste de leer?</p>
                             <p style="font-size:.8125rem;color:var(--k-muted)">El tiempo de lectura se registra automáticamente</p>
                         </div>
                         <div th:if="${!yaRealizado}">
-                            <a th:href="${testUrl}" class="k-btn k-btn-amber k-btn-lg" id="startTestBtn">
-                                <i class="fa fa-pen-to-square"></i>
-                                Iniciar test
-                            </a>
+                            <a th:href="${testUrl}" class="k-btn k-btn-amber k-btn-lg" id="startTestBtn"><i class="fa fa-pen-to-square"></i> Iniciar test</a>
                         </div>
                         <div th:if="${yaRealizado}">
-                            <div class="k-badge k-badge-green" style="padding:.5rem 1rem;font-size:.875rem">
-                                <i class="fa fa-check-circle"></i> Test completado
-                            </div>
+                            <div class="k-badge k-badge-green" style="padding:.5rem 1rem;font-size:.875rem"><i class="fa fa-check-circle"></i> Test completado</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SIDEBAR -->
             <div style="position:sticky;top:80px" class="fade-up stagger-1">
-
-                <!-- Timer card -->
                 <div class="k-card" style="margin-bottom:1.25rem;text-align:center">
                     <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-muted);margin-bottom:.75rem;font-weight:600">
                         <i class="fa fa-stopwatch"></i> Tiempo de lectura
                     </p>
-                    <div class="k-timer" id="readingTimer" style="font-size:1.75rem;padding:.75rem 1.5rem">
-                        00:00
-                    </div>
-                    <p style="font-size:.75rem;color:var(--k-caption);margin-top:.6rem">
-                        Un buen lector: ~200 ppm
-                    </p>
+                    <div class="k-timer" id="readingTimer" style="font-size:1.75rem;padding:.75rem 1.5rem">00:00</div>
+                    <p style="font-size:.75rem;color:var(--k-caption);margin-top:.6rem">Un buen lector: ~200 ppm</p>
                 </div>
-
-                <!-- Stats -->
                 <div class="k-card" style="margin-bottom:1.25rem">
-                    <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-muted);margin-bottom:1rem;font-weight:600">
-                        Estadísticas
-                    </p>
+                    <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-muted);margin-bottom:1rem;font-weight:600">Estadísticas</p>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
-                        <div style="text-align:center;padding:.75rem;background:var(--k-surface2);border-radius:var(--k-radius-sm)">
-                            <div style="font-family:var(--k-font-display);font-size:1.5rem;font-weight:800;color:#fff" th:text="${palabrasLectura}">0</div>
+                        <div style="text-align:center;padding:.75rem;background:var(--kinal-blue-light);border-radius:var(--k-radius-sm)">
+                            <div style="font-family:var(--k-font-display);font-size:1.5rem;font-weight:800;color:var(--kinal-blue-dark)" th:text="${palabrasLectura}">0</div>
                             <div style="font-size:.7rem;color:var(--k-muted);text-transform:uppercase;letter-spacing:.04em">Palabras</div>
                         </div>
-                        <div style="text-align:center;padding:.75rem;background:var(--k-surface2);border-radius:var(--k-radius-sm)">
+                        <div style="text-align:center;padding:.75rem;background:#fef9ee;border-radius:var(--k-radius-sm)">
                             <div style="font-family:var(--k-font-display);font-size:1.5rem;font-weight:800;color:var(--k-amber)" id="ppmDisplay">—</div>
                             <div style="font-size:.7rem;color:var(--k-muted);text-transform:uppercase;letter-spacing:.04em">PPM</div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Tips -->
-                <div class="k-card" style="border-color:rgba(245,166,35,.2);background:rgba(245,166,35,.04)">
+                <div class="k-card" style="border-color:rgba(245,166,35,.3);background:#fef9ee">
                     <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-amber);margin-bottom:.75rem;font-weight:600">
                         <i class="fa fa-lightbulb"></i> Consejos
                     </p>
                     <ul style="list-style:none;display:flex;flex-direction:column;gap:.65rem">
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
-                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i>
-                            Lee en un lugar tranquilo
+                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> Lee en un lugar tranquilo
                         </li>
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
-                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i>
-                            No te saltes párrafos
+                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> No te saltes párrafos
                         </li>
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
-                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i>
-                            Responder rápido da bonus de puntos
+                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> Responder rápido da bonus de puntos
                         </li>
                     </ul>
                 </div>
-
             </div>
         </div>
-
     </div>
 </div>
 
 <footer class="k-footer">
-    <p>© 2025 Fundación Kinal · Plataforma de Comprensión Lectora</p>
+    <p>© 2025 Fundación Kinal · Centro Educativo Técnico · Guatemala</p>
 </footer>
 
 <script th:src="@{/js/kinal.js}" defer></script>
@@ -177,8 +132,6 @@
     const totalPalabras = [[${palabrasLectura}]];
     let startTime = Date.now();
     let elapsedMs = 0;
-
-    // Timer
     const timerEl  = document.getElementById('readingTimer');
     const ppmEl    = document.getElementById('ppmDisplay');
     const interval = setInterval(() => {
@@ -187,20 +140,14 @@
       const m    = String(Math.floor(secs / 60)).padStart(2,'0');
       const s    = String(secs % 60).padStart(2,'0');
       timerEl.textContent = `${m}:${s}`;
-
-      // Live PPM
       const mins = elapsedMs / 60000;
       if (mins > 0.1) {
         const ppm = Math.round(totalPalabras / mins);
         ppmEl.textContent = ppm;
-        ppmEl.style.color = ppm >= 300 ? 'var(--k-green)' : ppm >= 200 ? 'var(--k-amber)' : 'var(--k-muted)';
+        ppmEl.style.color = ppm >= 300 ? 'var(--k-green)' : ppm >= 200 ? 'var(--k-amber)' : 'var(--k-red)';
       }
-
-      // Store in sessionStorage for server pickup
       sessionStorage.setItem('lecturaTime', elapsedMs);
     }, 1000);
-
-    // Reading progress on scroll
     const content  = document.getElementById('readingContent');
     const progBar  = document.getElementById('readingProgress');
     window.addEventListener('scroll', () => {
@@ -210,29 +157,17 @@
       const pct = Math.min(100, (scrolled / (total + 200)) * 100);
       progBar.style.width = pct + '%';
     });
-
-    // Send time to server via hidden form field on test link click
     const testBtn = document.getElementById('startTestBtn');
     if (testBtn) {
       testBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        const url      = this.href;
-        const form     = document.createElement('form');
-        form.method    = 'GET';
-        const base     = url.split('?')[0];
-        const params   = new URLSearchParams(url.split('?')[1] || '');
-        form.action    = base;
-
-        // Pass time as hidden input via JS redirect with cookie
+        const url = this.href;
         document.cookie = `lecturaMs=${elapsedMs};path=/;SameSite=Strict`;
         window.location.href = url;
       });
     }
-
-    // Responsive: hide sidebar on small screens
     if (window.innerWidth < 900) {
-      document.querySelector('[style*="grid-template-columns:1fr 320px"]')
-        .style.gridTemplateColumns = '1fr';
+      document.querySelector('[style*="grid-template-columns:1fr 320px"]').style.gridTemplateColumns = '1fr';
       document.querySelector('[style*="position:sticky;top:80px"]').style.position = 'relative';
     }
 </script>

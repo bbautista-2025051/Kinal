@@ -4,14 +4,16 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Resultado · Kinal</title>
-    <meta name="theme-color" content="#0b0e1a"/>
+    <meta name="theme-color" content="#1B3A6B"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
 </head>
 <body>
+
+<div class="k-inst-strip">Centro Educativo Técnico · Fundación Kinal · Guatemala</div>
 
 <nav class="k-nav">
     <a href="/carreras" class="k-nav-brand">
@@ -33,36 +35,25 @@
 </nav>
 
 <div class="k-page">
-    <div class="k-glow k-glow-indigo" style="width:600px;height:600px;top:-100px;left:50%;transform:translateX(-50%);"></div>
+    <div class="k-glow k-glow-indigo" style="width:400px;height:400px;top:-50px;left:50%;transform:translateX(-50%);"></div>
 
     <div class="k-container" style="position:relative;z-index:1;max-width:700px;text-align:center">
-
-        <!-- Already done badge -->
-        <div th:if="${yaRealizado}" class="k-alert k-alert-info auto-dismiss fade-up"
-             style="text-align:left;margin-bottom:2rem">
+        <div th:if="${yaRealizado}" class="k-alert k-alert-info auto-dismiss fade-up" style="text-align:left;margin-bottom:2rem">
             <i class="fa fa-circle-info"></i>
             <span>Ya habías completado este test. Aquí está tu resultado registrado.</span>
         </div>
 
-        <!-- Confetti burst (CSS) for good scores -->
         <div id="confettiArea" style="position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden"></div>
 
-        <!-- Score Ring -->
         <div class="fade-up" style="margin-bottom:2rem;display:flex;justify-content:center">
             <div class="k-score-ring" style="width:200px;height:200px">
                 <svg width="200" height="200" viewBox="0 0 200 200">
-                    <circle cx="100" cy="100" r="85" fill="none"
-                            stroke="rgba(255,255,255,.06)" stroke-width="14"/>
-                    <circle cx="100" cy="100" r="85" fill="none"
-                            stroke="url(#scoreGrad)" stroke-width="14"
-                            stroke-linecap="round"
-                            stroke-dasharray="534"
-                            stroke-dashoffset="534"
-                            id="scoreArc"/>
+                    <circle cx="100" cy="100" r="85" fill="none" stroke="#e5e8ed" stroke-width="14"/>
+                    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#scoreGrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="534" id="scoreArc"/>
                     <defs>
                         <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%"   stop-color="#4f6ef7"/>
-                            <stop offset="100%" stop-color="#f5a623"/>
+                            <stop offset="0%" stop-color="#1B3A6B"/>
+                            <stop offset="100%" stop-color="#F5A623"/>
                         </linearGradient>
                     </defs>
                 </svg>
@@ -73,118 +64,63 @@
             </div>
         </div>
 
-        <!-- Grade label -->
-        <div class="fade-up stagger-1" id="gradeBadge" style="display:flex;justify-content:center;margin-bottom:1.5rem">
-            <!-- injected by JS -->
-        </div>
+        <div class="fade-up stagger-1" id="gradeBadge" style="display:flex;justify-content:center;margin-bottom:1.5rem"></div>
 
-        <h1 class="k-heading fade-up stagger-2" style="margin-bottom:.5rem">
-            <span id="resultTitle">Resultado del test</span>
-        </h1>
-        <p class="k-subtext fade-up stagger-3" id="resultSubtitle" style="font-size:1rem">
-            Aquí está tu desempeño detallado
-        </p>
+        <h1 class="k-heading fade-up stagger-2" style="margin-bottom:.5rem"><span id="resultTitle">Resultado del test</span></h1>
+        <p class="k-subtext fade-up stagger-3" id="resultSubtitle" style="font-size:1rem">Aquí está tu desempeño detallado</p>
 
-        <!-- Stats grid -->
         <div class="k-grid-4 fade-up stagger-3" style="margin:2rem 0;text-align:center">
-            <div class="k-stat">
-                <span class="k-stat-value" th:data-count="${aciertos}" th:text="${aciertos}">0</span>
-                <span class="k-stat-label">Aciertos</span>
-            </div>
-            <div class="k-stat">
-                <span class="k-stat-value" th:text="${total}">5</span>
-                <span class="k-stat-label">Total</span>
-            </div>
+            <div class="k-stat"><span class="k-stat-value" th:data-count="${aciertos}" th:text="${aciertos}">0</span><span class="k-stat-label">Aciertos</span></div>
+            <div class="k-stat"><span class="k-stat-value" th:text="${total}">5</span><span class="k-stat-label">Total</span></div>
             <div class="k-stat" th:if="${tiempoTest != null}">
-        <span class="k-stat-value"
-              th:text="${tiempoTest < 60 ? tiempoTest + 's' : (tiempoTest / 60) + ':' + #numbers.formatInteger(tiempoTest % 60, 2, 'DEFAULT')}">0s</span>
+                <span class="k-stat-value" th:text="${tiempoTest < 60 ? tiempoTest + 's' : (tiempoTest / 60) + ':' + #numbers.formatInteger(tiempoTest % 60, 2, 'DEFAULT')}">0s</span>
                 <span class="k-stat-label">Tiempo test</span>
             </div>
-            <div class="k-stat" th:if="${velocidadLectora != null}">
-                <span class="k-stat-value" th:text="${velocidadLectora}">0</span>
-                <span class="k-stat-label">Ppm</span>
-            </div>
+            <div class="k-stat" th:if="${velocidadLectora != null}"><span class="k-stat-value" th:text="${velocidadLectora}">0</span><span class="k-stat-label">Ppm</span></div>
         </div>
 
-        <!-- Bonus card -->
-        <div th:if="${bonusVelocidad != null and bonusVelocidad > 0}"
-             class="k-card fade-up stagger-4"
-             style="border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.05);margin-bottom:1.5rem;text-align:left">
+        <div th:if="${bonusVelocidad != null and bonusVelocidad > 0}" class="k-card fade-up stagger-4" style="border-color:rgba(245,166,35,.3);background:#fef9ee;margin-bottom:1.5rem;text-align:left">
             <div style="display:flex;align-items:center;gap:1rem">
                 <div style="width:48px;height:48px;background:linear-gradient(135deg,var(--k-amber),#e09310);border-radius:var(--k-radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <i class="fa fa-bolt" style="color:#1a1000;font-size:1.25rem"></i>
+                    <i class="fa fa-bolt" style="color:#fff;font-size:1.25rem"></i>
                 </div>
                 <div>
-                    <p style="font-weight:600;color:var(--k-amber-lt);margin-bottom:.2rem">
-                        ¡Bonus por velocidad lectora!
-                    </p>
-                    <p style="font-size:.875rem;color:var(--k-muted)">
-                        Velocidad <strong style="color:var(--k-text)" th:text="${nivelVelocidad}">Buena</strong>
-                        (<span th:text="${velocidadLectora}">0</span> ppm) →
-                        +<span th:text="${bonusVelocidad}">0</span> puntos extra
-                    </p>
+                    <p style="font-weight:600;color:var(--k-amber);margin-bottom:.2rem">¡Bonus por velocidad lectora!</p>
+                    <p style="font-size:.875rem;color:var(--k-muted)">Velocidad <strong style="color:var(--k-text)" th:text="${nivelVelocidad}">Buena</strong> (<span th:text="${velocidadLectora}">0</span> ppm) → +<span th:text="${bonusVelocidad}">0</span> puntos extra</p>
                 </div>
-                <div style="margin-left:auto;font-family:var(--k-font-display);font-size:1.5rem;font-weight:800;color:var(--k-amber)">
-                    +<span th:text="${bonusVelocidad}">0</span>
-                </div>
+                <div style="margin-left:auto;font-family:var(--k-font-display);font-size:1.5rem;font-weight:800;color:var(--k-amber)">+<span th:text="${bonusVelocidad}">0</span></div>
             </div>
         </div>
 
-        <!-- Score breakdown -->
-        <div th:if="${notaBase != null and bonusVelocidad != null and bonusVelocidad > 0}"
-             class="k-card fade-up stagger-4" style="margin-bottom:1.5rem;text-align:left">
+        <div th:if="${notaBase != null and bonusVelocidad != null and bonusVelocidad > 0}" class="k-card fade-up stagger-4" style="margin-bottom:1.5rem;text-align:left">
             <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-muted);margin-bottom:1rem;font-weight:600">Desglose</p>
             <div style="display:flex;flex-direction:column;gap:.6rem">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                    <span style="font-size:.9rem;color:var(--k-muted)">Nota base (comprensión)</span>
-                    <span style="font-weight:600;color:var(--k-text)" th:text="${#numbers.formatDecimal(notaBase, 1, 1)}">0</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                    <span style="font-size:.9rem;color:var(--k-muted)">Bonus velocidad</span>
-                    <span style="font-weight:600;color:var(--k-amber)">+<span th:text="${#numbers.formatDecimal(bonusVelocidad, 1, 1)}">0</span></span>
-                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.9rem;color:var(--k-muted)">Nota base (comprensión)</span><span style="font-weight:600;color:var(--k-text)" th:text="${#numbers.formatDecimal(notaBase, 1, 1)}">0</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.9rem;color:var(--k-muted)">Bonus velocidad</span><span style="font-weight:600;color:var(--k-amber)">+<span th:text="${#numbers.formatDecimal(bonusVelocidad, 1, 1)}">0</span></span></div>
                 <hr class="k-divider" style="margin:.5rem 0"/>
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                    <span style="font-size:.95rem;font-weight:600;color:var(--k-text)">Nota final</span>
-                    <span style="font-family:var(--k-font-display);font-size:1.4rem;font-weight:800;color:#fff"
-                          th:text="${#numbers.formatDecimal(nota, 1, 1)}">0</span>
-                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.95rem;font-weight:600;color:var(--k-text)">Nota final</span><span style="font-family:var(--k-font-display);font-size:1.4rem;font-weight:800;color:var(--kinal-blue-dark)" th:text="${#numbers.formatDecimal(nota, 1, 1)}">0</span></div>
             </div>
         </div>
 
-        <!-- Actions -->
         <div class="fade-up stagger-5" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2rem">
-            <a href="/carreras" class="k-btn k-btn-ghost k-btn-lg">
-                <i class="fa fa-house"></i> Inicio
-            </a>
-            <a href="/mis-notas" class="k-btn k-btn-primary k-btn-lg">
-                <i class="fa fa-chart-line"></i> Ver historial
-            </a>
+            <a href="/carreras" class="k-btn k-btn-ghost k-btn-lg"><i class="fa fa-house"></i> Inicio</a>
+            <a href="/mis-notas" class="k-btn k-btn-primary k-btn-lg"><i class="fa fa-chart-line"></i> Ver historial</a>
         </div>
-
     </div>
 </div>
 
 <footer class="k-footer">
-    <p>© 2025 Fundación Kinal · Plataforma de Comprensión Lectora</p>
+    <p>© 2025 Fundación Kinal · Centro Educativo Técnico · Guatemala</p>
 </footer>
 
 <script th:src="@{/js/kinal.js}" defer></script>
 <script th:inline="javascript">
     const NOTA = [[${nota}]] || 0;
-
     window.addEventListener('load', () => {
-      // Animate score arc
       const arc = document.getElementById('scoreArc');
       const circumference = 534;
       const offset = circumference - (NOTA / 100) * circumference;
-
-      setTimeout(() => {
-        arc.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1)';
-        arc.style.strokeDashoffset = offset;
-      }, 300);
-
-      // Animate number
+      setTimeout(() => { arc.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1)'; arc.style.strokeDashoffset = offset; }, 300);
       const numEl = document.getElementById('scoreDisplay');
       let start = 0;
       const startTime = performance.now();
@@ -195,68 +131,46 @@
         if (progress < 1) requestAnimationFrame(count);
       }
       requestAnimationFrame(count);
-
-      // Grade badge & messages
-      const badge   = document.getElementById('gradeBadge');
-      const title   = document.getElementById('resultTitle');
-      const subtitle= document.getElementById('resultSubtitle');
-
+      const badge = document.getElementById('gradeBadge');
+      const title = document.getElementById('resultTitle');
+      const subtitle = document.getElementById('resultSubtitle');
       let badgeHtml, titleText, subtitleText;
       if (NOTA >= 90) {
-        badgeHtml   = '<span class="k-badge k-badge-green" style="padding:.5rem 1.25rem;font-size:.9rem"><i class="fa fa-trophy"></i> Excelente</span>';
-        titleText   = '¡Resultado sobresaliente!';
-        subtitleText= 'Dominaste la lectura. ¡Sigue así!';
+        badgeHtml = '<span class="k-badge k-badge-green" style="padding:.5rem 1.25rem;font-size:.9rem"><i class="fa fa-trophy"></i> Excelente</span>';
+        titleText = '¡Resultado sobresaliente!';
+        subtitleText = 'Dominaste la lectura. ¡Sigue así!';
         triggerConfetti();
       } else if (NOTA >= 70) {
-        badgeHtml   = '<span class="k-badge k-badge-indigo" style="padding:.5rem 1.25rem;font-size:.9rem"><i class="fa fa-star"></i> Muy Bueno</span>';
-        titleText   = '¡Buen trabajo!';
-        subtitleText= 'Excelente comprensión. Sigue practicando.';
+        badgeHtml = '<span class="k-badge k-badge-indigo" style="padding:.5rem 1.25rem;font-size:.9rem"><i class="fa fa-star"></i> Muy Bueno</span>';
+        titleText = '¡Buen trabajo!';
+        subtitleText = 'Excelente comprensión. Sigue practicando.';
       } else if (NOTA >= 60) {
-        badgeHtml   = '<span class="k-badge k-badge-amber" style="padding:.5rem 1.25rem;font-size:.9rem"><i class="fa fa-thumbs-up"></i> Aprobado</span>';
-        titleText   = 'Test completado';
-        subtitleText= 'Aprobaste. Practica más para mejorar.';
+        badgeHtml = '<span class="k-badge k-badge-amber" style="padding:.5rem 1.25rem;font-size:.9rem"><i class="fa fa-thumbs-up"></i> Aprobado</span>';
+        titleText = 'Test completado';
+        subtitleText = 'Aprobaste. Practica más para mejorar.';
       } else {
-        badgeHtml   = '<span class="k-badge k-badge-red" style="padding:.5rem 1.25rem;font-size:.9rem"><i class="fa fa-circle-xmark"></i> No aprobado</span>';
-        titleText   = 'Sigue intentándolo';
-        subtitleText= 'La práctica hace al maestro. ¡Tú puedes!';
+        badgeHtml = '<span class="k-badge k-badge-red" style="padding:.5rem 1.25rem;font-size:.9rem"><i class="fa fa-circle-xmark"></i> No aprobado</span>';
+        titleText = 'Sigue intentándolo';
+        subtitleText = 'La práctica hace al maestro. ¡Tú puedes!';
       }
-
-      badge.innerHTML  = badgeHtml;
-      title.textContent   = titleText;
-      subtitle.textContent= subtitleText;
+      badge.innerHTML = badgeHtml;
+      title.textContent = titleText;
+      subtitle.textContent = subtitleText;
     });
-
-    // Simple confetti
     function triggerConfetti() {
-      const area   = document.getElementById('confettiArea');
-      const colors = ['#4f6ef7','#f5a623','#34d97b','#f25f5c','#7b96ff','#ffc45e'];
+      const area = document.getElementById('confettiArea');
+      const colors = ['#1B3A6B','#F5A623','#27ae60','#C0392B','#2255A4','#f7b84e'];
       for (let i = 0; i < 80; i++) {
-        const c     = document.createElement('div');
+        const c = document.createElement('div');
         const color = colors[Math.floor(Math.random() * colors.length)];
-        const size  = Math.random() * 8 + 4;
-        c.style.cssText = `
-          position:absolute;
-          left:${Math.random() * 100}%;
-          top:-20px;
-          width:${size}px;
-          height:${size}px;
-          background:${color};
-          border-radius:${Math.random() > .5 ? '50%' : '2px'};
-          opacity:${Math.random() * .7 + .3};
-          animation: confettiFall ${Math.random() * 2 + 2}s ${Math.random() * 1}s ease-out forwards;
-          transform:rotate(${Math.random() * 360}deg);
-        `;
+        const size = Math.random() * 8 + 4;
+        c.style.cssText = `position:absolute;left:${Math.random()*100}%;top:-20px;width:${size}px;height:${size}px;background:${color};border-radius:${Math.random()>.5?'50%':'2px'};opacity:${Math.random()*.7+.3};animation:confettiFall ${Math.random()*2+2}s ${Math.random()*1}s ease-out forwards;transform:rotate(${Math.random()*360}deg);`;
         area.appendChild(c);
       }
       const style = document.createElement('style');
-      style.textContent = `
-        @keyframes confettiFall {
-          to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-      `;
+      style.textContent = '@keyframes confettiFall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }';
       document.head.appendChild(style);
       setTimeout(() => { area.innerHTML = ''; }, 4000);
     }
 </script>
-</body>
-</html>
+</body
