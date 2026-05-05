@@ -98,7 +98,6 @@ public class TestController {
 
         Long tiempoLecturaMs = (Long) session.getAttribute("tiempoLectura_" + lecturaId);
         if (tiempoLecturaMs == null || tiempoLecturaMs <= 0) {
-            // Fallback: calcular desde el timestamp de inicio de lectura
             Long lecturaInicio = (Long) session.getAttribute("lecturaInicio_" + lecturaId);
             if (lecturaInicio != null) {
                 tiempoLecturaMs = System.currentTimeMillis() - lecturaInicio;

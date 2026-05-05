@@ -25,9 +25,13 @@ public class AuthController {
     @Autowired private EstudianteService estudianteService;
     @Autowired private CarreraRepository carreraRepository;
 
+    /**
+     * ✅ Ahora la raíz muestra directamente la página de inicio (index)
+     * en lugar de redirigir a /login.
+     */
     @GetMapping("/")
     public String root() {
-        return "redirect:/login";
+        return "index";
     }
 
     @GetMapping("/login")

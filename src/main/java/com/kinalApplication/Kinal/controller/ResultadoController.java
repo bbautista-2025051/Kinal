@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -21,10 +22,22 @@ public class ResultadoController {
     @Autowired private EstudianteService estudianteService;
 
     @GetMapping
-    public String verHistorial(Authentication auth, Model model) {
-        // Siempre carga los datos del usuario autenticado — nunca de un parámetro externo
+    public String verHistorial(Authentication auth, Model model, RedirectAttributes ra) {
+        // Verificar que el usuario esté autenticado
+        if (auth == null || !auth.isAuthenticated()) {
+            ra.addFlashAttribute("error", "Debes iniciar sesión para ver tus notas.");
+            return "redirect:/login";
+        }
+
+        // Obtener el estudiante autenticado
         Estudiante estudiante = estudianteService.findByEmail(auth.getName())
-                .orElseThrow(() -> new RuntimeException("Estudiante no encontrado"));
+                .orElse(null);
+
+        // Si por alguna razón no se encuentra el estudiante (poco probable)
+        if (estudiante == null) {
+            ra.addFlashAttribute("error", "No se encontró tu cuenta. Contacta al administrador.");
+            return "redirect:/login";
+        }
 
         List<ResultadoTest> resultados = resultadoRepository.findByEstudianteOrderByFechaDesc(estudiante);
         model.addAttribute("resultados", resultados);
@@ -37,7 +50,9 @@ public class ResultadoController {
             model.addAttribute("promedio",  Math.round(promedio));
             model.addAttribute("aprobados", aprobados);
         } else {
-            model.addAttribute("aprobados", 0);
+            model.addAttribute("mejorNota", 0);
+            model.addAttribute("promedio",  0);
+            model.addAttribute("aprobados", 0L);
         }
 
         return "misNotas";
