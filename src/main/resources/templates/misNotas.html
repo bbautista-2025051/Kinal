@@ -165,13 +165,12 @@
                         <td>
                             <div class="mn-score-wrap">
                                 <div class="mn-score-ring">
-                                    <svg width="44" height="44" viewBox="0 0 44 44">
+                                    <svg width="44" height="44" viewBox="0 0 44 44" th:with="offset=${106.8 - (r.nota / 100.0 * 106.8)}">
                                         <circle cx="22" cy="22" r="17" fill="none" stroke="#e5e8ed" stroke-width="3.5"/>
                                         <circle cx="22" cy="22" r="17" fill="none"
-                                                th:attr="stroke=${r.nota >= 90 ? '#22c55e' : (r.nota >= 70 ? '#2255A4' : (r.nota >= 60 ? '#F5A623' : '#C0392B'))}"
+                                                th:attr="stroke=${r.nota >= 90 ? '#22c55e' : (r.nota >= 70 ? '#2255A4' : (r.nota >= 60 ? '#F5A623' : '#C0392B'))},stroke-dashoffset=${offset}"
                                                 stroke-width="3.5" stroke-linecap="round"
                                                 stroke-dasharray="106.8"
-                                                th:style="'stroke-dashoffset:' + (106.8 - (r.nota / 100 * 106.8))"
                                                 transform="rotate(-90 22 22)"/>
                                     </svg>
                                     <div class="mn-score-ring-num" th:text="${#numbers.formatDecimal(r.nota,1,0)}">0</div>
