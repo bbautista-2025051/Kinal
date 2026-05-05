@@ -576,45 +576,74 @@ body::before {
 .k-step-dot.active { background: var(--kinal-blue); border-color: var(--kinal-blue); width: 22px; border-radius: 4px; }
 .k-step-dot.done   { background: var(--k-green); border-color: var(--k-green); }
 
-/* --- CORRECCIÓN DEFINITIVA PANEL IZQUIERDO --- */
+/* ── AUTH LAYOUT CORREGIDO ── */
+.k-auth-layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    background: var(--k-bg);
+}
+
 .k-auth-left {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 5rem;
-  position: relative;
-  /* Fondo degradado sólido para evitar transparencias que oculten el texto */
-  background: #0F2440;
-  background: linear-gradient(160deg, #0F2440 0%, #1B3A6B 100%);
-  overflow: hidden;
-  color: #ffffff !important; /* Forzado de color blanco */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5rem;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, #0F2440 0%, #1B3A6B 100%);
+    color: #ffffff !important; /* Asegura que el texto siempre sea blanco */
 }
 
-/* Elevamos el contenido para que no lo tape ningún pseudo-elemento */
+/* Imagen de fondo con opacidad controlada para no tapar el texto */
+.k-auth-left::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&q=80');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.15;
+}
+
+/* Forzar que el contenido esté por encima del fondo */
 .k-auth-left > div {
-  position: relative;
-  z-index: 5;
+    position: relative;
+    z-index: 2;
 }
 
-/* Ajuste del título para que sea visible y grande */
 .k-auth-left .k-display {
-  color: #ffffff !important;
-  margin-top: 2rem;
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
+    color: #ffffff !important;
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    margin-bottom: 1.5rem;
 }
 
 .k-auth-left .k-subtext {
-  color: rgba(255, 255, 255, 0.8) !important;
-  margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
-/* Ajuste para que el panel derecho ocupe el resto del espacio */
 .k-auth-right {
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--k-bg);
+    padding: 2rem;
+}
+
+.k-auth-form-box {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: var(--k-radius-lg);
+    padding: 3rem;
+    box-shadow: var(--k-shadow-lg);
+    border: 1px solid var(--k-border);
+}
+
+@media (max-width: 992px) {
+    .k-auth-layout { grid-template-columns: 1fr; }
+    .k-auth-left { display: none; }
 }
 
 .k-auth-deco {
