@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Mis Notas · Kinal</title>
-    <meta name="theme-color" content="#0b0e1a"/>
+    <title>Mis Notas · Fundación Kinal</title>
+    <meta name="theme-color" content="#06090f"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Source+Sans+3:ital,opsz,wght@0,8..32,300;0,8..32,400;0,8..32,600;0,8..32,700;1,8..32,300&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
 </head>
 <body>
+
+<!-- Institutional strip -->
+<div class="k-inst-strip">Centro Educativo Técnico · Fundación Kinal · Guatemala</div>
 
 <nav class="k-nav">
     <a href="/carreras" class="k-nav-brand">
@@ -41,17 +44,20 @@
         <!-- Header -->
         <div style="margin-bottom:3rem">
             <div class="k-badge k-badge-indigo fade-up" style="margin-bottom:.75rem;display:inline-flex">
-                <i class="fa fa-chart-line"></i> Mi historial
+                <i class="fa fa-chart-line"></i> Mi historial académico
             </div>
             <h1 class="k-heading fade-up stagger-1" style="margin-bottom:.5rem">Mis Notas</h1>
-            <p class="k-subtext fade-up stagger-2">Tu progreso en comprensión lectora</p>
+            <p class="k-subtext fade-up stagger-2">Tu progreso en comprensión lectora · Fundación Kinal</p>
         </div>
 
         <!-- Stats row (only when there are results) -->
         <div th:if="${!#lists.isEmpty(resultados)}"
              class="k-grid-4 fade-up stagger-2" style="margin-bottom:2.5rem">
             <div class="k-stat">
-                <div class="k-stat-value" th:text="${resultados.size()}">0</div>
+                <!-- BUG FIX: added data-count para animar el contador -->
+                <div class="k-stat-value"
+                     th:data-count="${resultados.size()}"
+                     th:text="${resultados.size()}">0</div>
                 <div class="k-stat-label">Tests completados</div>
             </div>
             <div class="k-stat">
@@ -67,7 +73,9 @@
                 <div class="k-stat-label">Promedio</div>
             </div>
             <div class="k-stat">
+                <!-- BUG FIX: added data-count para animar el contador -->
                 <div class="k-stat-value"
+                     th:data-count="${aprobados}"
                      th:text="${aprobados}">0</div>
                 <div class="k-stat-label">Aprobados</div>
             </div>
@@ -76,10 +84,15 @@
         <!-- Scores table -->
         <div th:if="${!#lists.isEmpty(resultados)}" class="k-card fade-up stagger-3" style="padding:0;overflow:hidden">
             <div style="padding:1.25rem 1.75rem;border-bottom:1px solid var(--k-border);display:flex;align-items:center;justify-content:space-between">
-                <h3 style="font-size:.9375rem;font-weight:600;color:#fff">Historial de tests</h3>
+                <div style="display:flex;align-items:center;gap:.75rem">
+                    <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--k-blue),var(--k-blue-dk));border-radius:var(--k-radius-sm);display:flex;align-items:center;justify-content:center">
+                        <i class="fa fa-table-list" style="color:#fff;font-size:.8rem"></i>
+                    </div>
+                    <h3 style="font-size:.9375rem;font-weight:700;color:#fff;font-family:var(--k-font-display)">Historial de evaluaciones</h3>
+                </div>
                 <span class="k-badge k-badge-indigo" style="font-size:.7rem">
-          <span th:text="${resultados.size()}">0</span> registros
-        </span>
+                    <span th:text="${resultados.size()}">0</span> registros
+                </span>
             </div>
 
             <div style="overflow-x:auto">
@@ -97,7 +110,7 @@
                     <tbody>
                     <tr th:each="r, stat : ${resultados}" class="reveal">
                         <td>
-                <span style="font-weight:500;color:var(--k-text)"
+                <span style="font-weight:600;color:var(--k-text)"
                       th:text="${r.lectura.titulo}">Título</span>
                         </td>
                         <td>
@@ -111,7 +124,7 @@
                                         <circle cx="20" cy="20" r="16" fill="none"
                                                 stroke="rgba(255,255,255,.06)" stroke-width="3"/>
                                         <circle cx="20" cy="20" r="16" fill="none"
-                                                th:attr="stroke=${r.nota >= 90 ? '#34d97b' : (r.nota >= 70 ? '#4f6ef7' : (r.nota >= 60 ? '#f5a623' : '#f25f5c'))}"
+                                                th:attr="stroke=${r.nota >= 90 ? '#2eb86e' : (r.nota >= 70 ? '#0057A8' : (r.nota >= 60 ? '#FF6B00' : '#e84545'))}"
                                                 stroke-width="3"
                                                 stroke-linecap="round"
                                                 stroke-dasharray="100.5"
@@ -153,9 +166,11 @@
         <div th:if="${#lists.isEmpty(resultados)}"
              class="k-card fade-up"
              style="text-align:center;padding:5rem 2rem">
-            <div style="font-size:4rem;margin-bottom:1.25rem;opacity:.3">📊</div>
+            <div style="width:72px;height:72px;background:rgba(0,87,168,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem">
+                <i class="fa fa-chart-line" style="font-size:1.75rem;color:var(--k-blue-lt)"></i>
+            </div>
             <h3 style="font-family:var(--k-font-display);font-size:1.3rem;margin-bottom:.6rem;color:var(--k-text)">
-                Aún no tienes tests completados
+                Aún no tienes evaluaciones completadas
             </h3>
             <p class="k-subtext" style="margin-bottom:1.75rem">
                 Lee una lectura y completa el test para ver tus notas aquí.
@@ -170,7 +185,7 @@
 </div>
 
 <footer class="k-footer">
-    <p>© 2025 Fundación Kinal · Plataforma de Comprensión Lectora</p>
+    <p>© 2025 Fundación Kinal · Centro Educativo Técnico · Guatemala</p>
 </footer>
 
 <script th:src="@{/js/kinal.js}" defer></script>

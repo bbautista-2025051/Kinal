@@ -1,5 +1,6 @@
 /**
  * kinal.js — Utilidades globales de UI para la plataforma Kinal
+ * Fundación Kinal · Guatemala
  */
 (function () {
   'use strict';
@@ -46,19 +47,39 @@
   }
 
   /* ── Stat counter animation ─────────────────────────────────────── */
-  document.querySelectorAll('[data-count]').forEach(function (el) {
+  /* BUG FIX: use IntersectionObserver so counters only animate when
+     the stat card enters the viewport (also fixes timing issues when
+     elements are server-rendered but hidden until JS runs).          */
+  function animateCounter(el) {
     var target = parseFloat(el.getAttribute('data-count')) || 0;
+    if (isNaN(target)) return;
     var duration = 1200;
     var start = null;
     var startVal = 0;
     function step(ts) {
       if (!start) start = ts;
       var progress = Math.min((ts - start) / duration, 1);
-      var val = startVal + (target - startVal) * progress;
+      var ease = 1 - Math.pow(1 - progress, 3);
+      var val = startVal + (target - startVal) * ease;
       el.textContent = Number.isInteger(target) ? Math.round(val) : val.toFixed(1);
       if (progress < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
-  });
+  }
+
+  var statEls = document.querySelectorAll('[data-count]');
+  if ('IntersectionObserver' in window) {
+    var statObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    statEls.forEach(function (el) { statObserver.observe(el); });
+  } else {
+    statEls.forEach(function (el) { animateCounter(el); });
+  }
 
 })();
