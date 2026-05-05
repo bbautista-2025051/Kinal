@@ -7,6 +7,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Escucha eventos de autenticación de Spring Security para actualizar
@@ -23,7 +26,16 @@ public class AuthEventListener {
         String email = event.getAuthentication().getName();
         estudianteService.registrarLoginExitoso(email);
         SecurityAuditLogger.logLoginSuccess(email, "N/A");
-        SecurityConfig.registerSuccess(email);
+        // Limpiar el bloqueo por IP usando la IP real del cliente
+        try {
+            ServletRequestAttributes attrs =
+                    (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (attrs != null) {
+                HttpServletRequest req = attrs.getRequest();
+                String ip = SecurityConfig.getClientIp(req);
+                SecurityConfig.registerSuccess(ip);
+            }
+        } catch (Exception ignored) {}
     }
 
     @EventListener
