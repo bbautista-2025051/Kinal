@@ -247,6 +247,11 @@ public class TestController {
 
     @GetMapping("/resultado")
     public String mostrarResultado(Model model) {
+        // Si no hay datos de resultado (acceso directo sin flash attributes),
+        // redirigir a mis-notas en lugar de mostrar una página en blanco/error
+        if (!model.containsAttribute("nota")) {
+            return "redirect:/mis-notas";
+        }
         return "resultado";
     }
 
