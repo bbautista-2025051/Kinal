@@ -4,125 +4,105 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Iniciar Sesión · Kinal</title>
-    <meta name="theme-color" content="#1B3A6B"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
 </head>
-<body style="margin:0; padding:0;"> <div class="k-auth-layout">
+<body>
+
+<div class="k-auth-layout">
     <div class="k-auth-left">
-        <div class="k-glow k-glow-indigo" style="width:400px;height:400px;top:-50px;left:-60px;"></div>
-        <div class="k-glow k-glow-amber"  style="width:250px;height:250px;bottom:0;right:0;"></div>
+        <div class="k-glow k-glow-indigo" style="width:500px;height:500px;top:-100px;left:-100px;opacity:0.3;"></div>
+
+        <div>
+            <img src="https://static.wixstatic.com/media/128120_32e25aed1e3b488f9f2e834a59aef168~mv2.png/v1/fill/w_313,h_114,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Recurso%208_3x-8%20(3).png"
+                 alt="Kinal" style="height:55px; margin-bottom:3rem; filter: brightness(0) invert(1);">
+
+            <div class="k-badge" style="background:rgba(245,166,35,0.2); color:#f7b84e; border:1px solid rgba(245,166,35,0.3); margin-bottom:1.5rem;">
+                <i class="fa fa-graduation-cap"></i> Plataforma Oficial
+            </div>
+
+            <h1 class="k-display" style="color: white; font-size: 3.5rem; line-height: 1.1; margin-bottom: 1.5rem;">
+                Lee. Comprende.<br><span style="color:var(--kinal-gold)">Crece.</span>
+            </h1>
+
+            <p style="color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 440px; margin-bottom: 3rem;">
+                Desarrolla tu habilidad lectora con textos especializados en tu carrera técnica y mide tu progreso en tiempo real.
+            </p>
+
+            <div style="display:flex; gap:3rem;">
+                <div>
+                    <div style="font-size: 1.8rem; font-weight:800; color: white;">+200</div>
+                    <div style="font-size: .8rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px;">Lecturas</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.8rem; font-weight:800; color: white;">100%</div>
+                    <div style="font-size: .8rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px;">Digital</div>
+                </div>
+            </div>
+        </div>
 
         <div class="k-books">
             <div class="k-book"></div><div class="k-book"></div><div class="k-book"></div>
-            <div class="k-book"></div><div class="k-book"></div>
         </div>
-
-        <div style="position:relative;z-index:1">
-            <img src="https://static.wixstatic.com/media/128120_32e25aed1e3b488f9f2e834a59aef168~mv2.png/v1/fill/w_313,h_114,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Recurso%208_3x-8%20(3).png"
-                 alt="Kinal" style="height:45px; margin-bottom:2rem; filter: brightness(0) invert(1);">
-
-            <div class="k-badge k-badge-amber" style="margin-bottom:1.5rem;background:rgba(245,166,35,.2);color:#f7b84e;border-color:rgba(245,166,35,.3)">
-                <i class="fa fa-graduation-cap"></i> Plataforma Educativa
-            </div>
-
-            <h1 class="k-display" style="margin-bottom:1.25rem;color:#fff; font-size: 3rem;">
-                Lee.<br>Comprende.<br><span class="accent" style="color:var(--kinal-gold)">Crece.</span>
-            </h1>
-
-            <p class="k-subtext" style="font-size:1rem;max-width:360px;line-height:1.7;color:rgba(255,255,255,.7)">
-                Desarrolla tu habilidad lectora con textos especializados en tu carrera y mide tu comprensión en tiempo real.
-            </p>
-
-            <div style="display:flex;gap:2rem;margin-top:2.5rem">
-                <div>
-                    <div style="font-family:var(--k-font-display);font-size:1.75rem;font-weight:800;color:#fff">+20</div>
-                    <div style="font-size:.8rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em">Lecturas</div>
-                </div>
-                <div>
-                    <div style="font-family:var(--k-font-display);font-size:1.75rem;font-weight:800;color:#fff">98%</div>
-                    <div style="font-size:.8rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em">Satisfacción</div>
-                </div>
-            </div>
-        </div>
-        <div class="k-auth-deco">K</div>
     </div>
 
     <div class="k-auth-right">
         <div class="k-auth-form-box fade-up">
-            <div style="text-align:center;margin-bottom:2rem">
-                <div style="width:48px;height:48px;background:linear-gradient(135deg,var(--kinal-blue),var(--kinal-blue-mid));border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem; box-shadow: 0 4px 12px rgba(27,58,107,0.2);">
-                    <i class="fa fa-book-open" style="color:#fff;font-size:1.1rem"></i>
+            <div style="text-align: center; margin-bottom: 2.5rem;">
+                <div style="width:50px; height:50px; background:var(--kinal-blue); border-radius:12px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:1rem; box-shadow: 0 4px 12px rgba(27,58,107,0.2);">
+                    <i class="fa fa-user-lock" style="color:white; font-size:1.2rem;"></i>
                 </div>
-                <h2 class="k-heading" style="font-size:1.4rem;margin-bottom:.25rem">Bienvenido de vuelta</h2>
+                <h2 class="k-heading" style="font-size: 1.5rem;">Bienvenido de vuelta</h2>
                 <p class="k-subtext">Ingresa con tu correo institucional</p>
             </div>
 
-            <div th:if="${param.error}" class="k-alert k-alert-danger" style="margin-bottom:1.25rem">
-                <i class="fa fa-circle-exclamation"></i>
-                <span>Credenciales incorrectas.</span>
-            </div>
-            <div th:if="${param.logout}" class="k-alert k-alert-success" style="margin-bottom:1.25rem">
-                <i class="fa fa-check-circle"></i>
-                <span>Sesión cerrada.</span>
-            </div>
-
             <form th:action="@{/login}" method="post" id="loginForm">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
                 <div class="k-form-group">
                     <label class="k-label">Correo institucional</label>
                     <div style="position:relative">
-                        <i class="fa fa-envelope" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--k-caption);font-size:.85rem"></i>
-                        <input type="email" name="username" class="k-input" style="padding-left:2.5rem" placeholder="usuario@kinal.edu.gt" required/>
+                        <i class="fa fa-envelope" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--k-caption);"></i>
+                        <input type="email" name="username" class="k-input" style="padding-left:2.7rem" placeholder="usuario@kinal.edu.gt" required/>
                     </div>
                 </div>
 
                 <div class="k-form-group">
                     <label class="k-label">Contraseña</label>
                     <div style="position:relative">
-                        <i class="fa fa-lock" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--k-caption);font-size:.85rem"></i>
-                        <input type="password" id="password" name="password" class="k-input" style="padding-left:2.5rem;padding-right:2.8rem;" placeholder="••••••••" required/>
-                        <button type="button" id="togglePwd" style="position:absolute;right:.85rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--k-caption);">
+                        <i class="fa fa-lock" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--k-caption);"></i>
+                        <input type="password" id="password" name="password" class="k-input" style="padding-left:2.7rem" placeholder="••••••••" required/>
+                        <button type="button" id="togglePwd" style="position:absolute; right:1rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--k-caption);">
                             <i class="fa fa-eye" id="eyeIcon"></i>
                         </button>
                     </div>
                 </div>
 
-                <button type="submit" class="k-btn k-btn-primary k-btn-lg" id="submitBtn" style="width:100%;justify-content:center;margin-top:1rem">
-                    <span id="btnText">Iniciar sesión</span>
-                    <i class="fa fa-arrow-right" id="btnIcon"></i>
+                <button type="submit" class="k-btn k-btn-primary k-btn-lg" style="width:100%; justify-content:center; margin-top:1rem;">
+                    <span>Iniciar sesión</span>
+                    <i class="fa fa-arrow-right"></i>
                 </button>
             </form>
 
             <hr class="k-divider"/>
-            <p style="text-align:center;color:var(--k-muted);font-size:.9rem">
-                ¿No tienes cuenta? <a href="/registro" style="color:var(--kinal-blue);font-weight:600">Regístrate aquí</a>
+            <p style="text-align:center; font-size:.9rem; color:var(--k-muted);">
+                ¿No tienes cuenta? <a href="/registro" style="color:var(--kinal-blue); font-weight:700;">Regístrate aquí</a>
             </p>
         </div>
     </div>
 </div>
 
 <script>
-    // Script funcional para visibilidad y estados de carga
     document.getElementById('togglePwd').addEventListener('click', function() {
-      const input = document.getElementById('password');
-      const icon  = document.getElementById('eyeIcon');
-      if (input.type === 'password') {
-          input.type = 'text';
-          icon.classList.replace('fa-eye','fa-eye-slash');
-      } else {
-          input.type = 'password';
-          icon.classList.replace('fa-eye-slash','fa-eye');
-      }
-    });
-
-    document.getElementById('loginForm').addEventListener('submit', function() {
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      document.getElementById('btnText').textContent = 'Validando...';
-      document.getElementById('btnIcon').className = 'fa fa-circle-notch fa-spin';
+        const input = document.getElementById('password');
+        const icon = document.getElementById('eyeIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
     });
 </script>
 </body>

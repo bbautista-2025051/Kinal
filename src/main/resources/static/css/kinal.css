@@ -576,61 +576,63 @@ body::before {
 .k-step-dot.active { background: var(--kinal-blue); border-color: var(--kinal-blue); width: 22px; border-radius: 4px; }
 .k-step-dot.done   { background: var(--k-green); border-color: var(--k-green); }
 
-/* ── AUTH LAYOUT ─────────────────────────────────── */
+/* ── AUTH LAYOUT ── */
 .k-auth-layout {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  position: relative;
+  grid-template-columns: 1.1fr 0.9fr; /* Proporción para dar más peso al lado visual */
   background: var(--k-bg);
-  overflow: hidden; /* Evita scrolls innecesarios */
 }
 
 .k-auth-left {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 4rem;
+  padding: 5rem;
   position: relative;
-  background: linear-gradient(160deg, #0F2440 0%, #1B3A6B 50%, #0d1e36 100%);
-  color: white;
+  background: linear-gradient(160deg, #0F2440 0%, #1B3A6B 100%);
+  overflow: hidden;
+  color: #ffffff; /* Forzamos color blanco para todo el texto interno */
 }
+
+/* Imagen de fondo con mayor presencia para que no se vea vacío */
 .k-auth-left::before {
-  content: ''; position: absolute; inset: 0; z-index: 0;
-  background-image: url('https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=900&auto=format&fit=crop&q=70');
-  background-size: cover; background-position: center;
-  opacity: .12;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&q=80');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2; /* Suficiente para dar textura sin distraer */
+  z-index: 0;
 }
-.k-auth-left::after {
-  content: ''; position: absolute; top: 0; right: 0; z-index: 2;
-  width: 3px; height: 100%;
-  background: linear-gradient(to bottom, var(--kinal-blue), var(--kinal-gold));
+
+.k-auth-left > * {
+  position: relative;
+  z-index: 2; /* Asegura que el texto esté por encima del fondo azul */
 }
-.k-auth-left > * { position: relative; z-index: 1; }
 
 .k-auth-right {
   display: flex;
-  align-items: center;      /* Centra verticalmente */
-  justify-content: center;   /* Centra horizontalmente */
+  align-items: center;
+  justify-content: center;
   padding: 2rem;
   background: var(--k-bg);
-  height: 100vh;            /* Forzamos el alto total */
 }
+
 .k-auth-form-box {
   width: 100%;
   max-width: 420px;
-  background: #fff;
+  background: #ffffff;
   border-radius: var(--k-radius-lg);
   padding: 3rem;
   box-shadow: var(--k-shadow-lg);
   border: 1px solid var(--k-border);
-  /* Eliminamos márgenes automáticos que puedan fallar */
-  margin: 0;
 }
-@media (max-width: 768px) {
+
+@media (max-width: 992px) {
   .k-auth-layout { grid-template-columns: 1fr; }
   .k-auth-left { display: none; }
-  .k-auth-right { height: auto; min-height: 100vh; padding: 1.5rem; }
 }
 
 .k-auth-deco {
