@@ -11,6 +11,213 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
+    <style>
+        /* ── CARRERAS PAGE ENHANCED ── */
+        .carreras-hero {
+            background: linear-gradient(135deg, var(--kinal-blue-dark) 0%, var(--kinal-blue) 60%, #1a4f9e 100%);
+            padding: 4rem 1.5rem 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .carreras-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(245,166,35,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+        .carreras-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0; right: 0;
+            height: 80px;
+            background: var(--k-bg);
+            clip-path: ellipse(55% 100% at 50% 100%);
+        }
+        .carreras-hero-deco {
+            position: absolute; right: -40px; top: 50%; transform: translateY(-50%);
+            font-size: 18rem; font-weight: 800; font-family: var(--k-font-display);
+            color: rgba(255,255,255,0.03); line-height: 1; pointer-events: none;
+            letter-spacing: -0.05em; user-select: none;
+        }
+
+        /* Search bar */
+        .k-search-wrap {
+            max-width: 480px; margin: 2rem auto 0;
+            position: relative;
+        }
+        .k-search-input {
+            width: 100%;
+            background: rgba(255,255,255,0.12);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            border-radius: 50px;
+            color: #fff;
+            font-family: var(--k-font-body); font-size: 0.95rem;
+            padding: .75rem 1.25rem .75rem 3rem;
+            outline: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.25s ease;
+        }
+        .k-search-input::placeholder { color: rgba(255,255,255,0.55); }
+        .k-search-input:focus {
+            background: rgba(255,255,255,0.18);
+            border-color: var(--kinal-gold);
+            box-shadow: 0 0 0 3px rgba(245,166,35,0.2);
+        }
+        .k-search-icon {
+            position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%);
+            color: rgba(255,255,255,0.6); pointer-events: none; font-size: 0.9rem;
+        }
+
+        /* Stats row in hero */
+        .carreras-stats {
+            display: flex; gap: 2.5rem; justify-content: center;
+            margin-top: 2.5rem; flex-wrap: wrap;
+        }
+        .c-stat {
+            text-align: center; color: rgba(255,255,255,0.85);
+        }
+        .c-stat-num {
+            font-family: var(--k-font-display);
+            font-size: 2rem; font-weight: 800;
+            color: var(--kinal-gold); line-height: 1; display: block;
+        }
+        .c-stat-lbl {
+            font-size: .78rem; text-transform: uppercase; letter-spacing: .06em;
+            opacity: .7; margin-top: .2rem; display: block;
+        }
+        .c-stat-divider {
+            width: 1px; background: rgba(255,255,255,0.15);
+            align-self: stretch; min-height: 40px;
+        }
+
+        /* Carreras grid */
+        .carreras-section {
+            padding: 0 1.5rem 5rem;
+            max-width: 1180px; margin: 0 auto;
+            position: relative; z-index: 1;
+        }
+
+        /* Category tabs */
+        .k-tab-bar {
+            display: flex; gap: .5rem; flex-wrap: wrap;
+            margin-bottom: 2.5rem; padding-bottom: 1.25rem;
+            border-bottom: 1.5px solid var(--k-border);
+        }
+        .k-tab {
+            padding: .45rem 1.1rem; border-radius: 50px;
+            font-size: .82rem; font-weight: 600; cursor: pointer;
+            border: 1.5px solid var(--k-border); background: var(--k-surface);
+            color: var(--k-muted); transition: all .2s ease;
+        }
+        .k-tab:hover { border-color: var(--kinal-blue); color: var(--kinal-blue); }
+        .k-tab.active {
+            background: var(--kinal-blue); color: #fff; border-color: var(--kinal-blue);
+            box-shadow: 0 4px 12px rgba(27,58,107,.3);
+        }
+
+        /* Enhanced career cards */
+        .k-carrera-card {
+            background: var(--k-surface);
+            border: 1.5px solid var(--k-border);
+            border-radius: 18px;
+            padding: 0;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+            box-shadow: var(--k-shadow-sm);
+            position: relative;
+            cursor: pointer;
+        }
+        .k-carrera-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(27,58,107,.14);
+            border-color: var(--kinal-blue);
+        }
+        .k-carrera-card-header {
+            height: 10px;
+            background: linear-gradient(90deg, var(--kinal-blue), var(--kinal-gold));
+            transition: height .25s ease;
+        }
+        .k-carrera-card:hover .k-carrera-card-header { height: 6px; }
+
+        .k-carrera-card-body { padding: 1.75rem; }
+
+        .k-carrera-icon-wrap {
+            width: 56px; height: 56px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-bottom: 1.25rem;
+            position: relative; overflow: hidden;
+        }
+
+        /* Icon color variants */
+        .icon-blue  { background: linear-gradient(135deg, #1B3A6B, #2255A4); color: #fff; box-shadow: 0 6px 20px rgba(27,58,107,.3); }
+        .icon-gold  { background: linear-gradient(135deg, #D4891A, #F5A623); color: #fff; box-shadow: 0 6px 20px rgba(245,166,35,.3); }
+        .icon-teal  { background: linear-gradient(135deg, #0e7490, #06b6d4); color: #fff; box-shadow: 0 6px 20px rgba(6,182,212,.3); }
+        .icon-green { background: linear-gradient(135deg, #15803d, #22c55e); color: #fff; box-shadow: 0 6px 20px rgba(34,197,94,.3); }
+        .icon-purple{ background: linear-gradient(135deg, #6d28d9, #8b5cf6); color: #fff; box-shadow: 0 6px 20px rgba(139,92,246,.3); }
+        .icon-red   { background: linear-gradient(135deg, #C0392B, #e74c3c); color: #fff; box-shadow: 0 6px 20px rgba(192,57,43,.3); }
+
+        .k-carrera-name {
+            font-family: var(--k-font-display);
+            font-size: 1.1rem; font-weight: 700;
+            color: var(--kinal-blue-dark); margin-bottom: .5rem;
+            line-height: 1.3;
+        }
+        .k-carrera-desc {
+            font-size: .875rem; color: var(--k-muted); line-height: 1.65;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .k-carrera-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 1.4rem; padding-top: 1.1rem;
+            border-top: 1px solid var(--k-border);
+        }
+        .k-carrera-lecturas {
+            display: flex; align-items: center; gap: .45rem;
+            font-size: .8rem; color: var(--k-muted); font-weight: 500;
+        }
+        .k-carrera-lecturas .dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--k-green); box-shadow: 0 0 0 3px rgba(39,174,96,.15);
+        }
+        .k-carrera-arrow {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: var(--kinal-blue-light); color: var(--kinal-blue);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .8rem; transition: all .2s ease;
+        }
+        .k-carrera-card:hover .k-carrera-arrow {
+            background: var(--kinal-blue); color: #fff;
+            transform: translateX(3px);
+        }
+
+        /* Section label */
+        .section-eyebrow {
+            font-size: .75rem; font-weight: 700; letter-spacing: .1em;
+            text-transform: uppercase; color: var(--kinal-blue);
+            display: flex; align-items: center; gap: .6rem;
+            margin-bottom: .75rem;
+        }
+        .section-eyebrow::after {
+            content: ''; flex: 1; height: 1.5px;
+            background: linear-gradient(to right, var(--kinal-blue-light), transparent);
+        }
+
+        /* Empty state */
+        .k-empty {
+            grid-column: 1/-1; text-align: center;
+            padding: 5rem 2rem;
+            background: var(--k-surface);
+            border: 2px dashed var(--k-border);
+            border-radius: 18px;
+        }
+        .k-empty-icon { font-size: 3.5rem; margin-bottom: 1rem; opacity: .3; }
+    </style>
 </head>
 <body>
 
@@ -32,69 +239,149 @@
     </ul>
 </nav>
 
-<div class="k-page">
-    <div class="k-glow k-glow-indigo" style="width:400px;height:400px;top:-80px;right:-60px;"></div>
-    <div class="k-glow k-glow-amber"  style="width:250px;height:250px;bottom:-60px;left:-50px;"></div>
+<!-- HERO SECTION -->
+<div class="carreras-hero">
+    <div class="carreras-hero-deco">K</div>
+    <div class="k-container" style="position:relative;z-index:2;text-align:center">
+        <div class="k-badge k-badge-glass fade-up" style="margin-bottom:1.25rem;display:inline-flex">
+            <i class="fa fa-graduation-cap"></i>&nbsp; Elige tu carrera
+        </div>
+        <h1 class="k-display fade-up stagger-1" style="color:#fff;margin-bottom:.75rem;max-width:660px;margin-left:auto;margin-right:auto">
+            Lecturas para <span style="color:var(--kinal-gold)">tu especialidad</span>
+        </h1>
+        <p style="color:rgba(255,255,255,.75);font-size:1rem;max-width:480px;margin:0 auto;line-height:1.7" class="fade-up stagger-2">
+            Selecciona tu área de estudio y accede a textos diseñados para fortalecer tu comprensión lectora técnica.
+        </p>
 
-    <div class="k-container" style="position:relative;z-index:1">
-        <div style="text-align:center;padding:3rem 0 4rem;max-width:700px;margin:0 auto" class="fade-up">
-            <div class="k-badge k-badge-indigo" style="margin-bottom:1.25rem;display:inline-flex">
-                <i class="fa fa-graduation-cap"></i> Elige tu carrera
+        <!-- Search -->
+        <div class="k-search-wrap fade-up stagger-3">
+            <i class="fa fa-search k-search-icon"></i>
+            <input type="text" class="k-search-input" id="carreraSearch"
+                   placeholder="Busca tu carrera..." autocomplete="off"/>
+        </div>
+
+        <!-- Stats strip -->
+        <div class="carreras-stats fade-up stagger-4">
+            <div class="c-stat">
+                <span class="c-stat-num">12</span>
+                <span class="c-stat-lbl">Carreras</span>
             </div>
-            <h1 class="k-display" style="margin-bottom:1rem">
-                Lecturas especializadas<br>para <span class="accent">tu carrera</span>
-            </h1>
-            <p class="k-subtext" style="font-size:1.0625rem;line-height:1.7">
-                Selecciona tu área de estudio y accede a textos cuidadosamente seleccionados para mejorar tu comprensión lectora.
-            </p>
-        </div>
-
-        <div th:if="${error}" class="k-alert k-alert-danger auto-dismiss fade-up" style="margin-bottom:2rem;max-width:600px;margin-left:auto;margin-right:auto">
-            <i class="fa fa-circle-exclamation"></i>
-            <span th:text="${error}"></span>
-        </div>
-
-        <div class="k-grid-2">
-            <th:block th:each="carrera, stat : ${carreras}">
-                <a th:href="@{/carreras/{id}/lecturas(id=${carrera.id})}"
-                   class="k-card fade-up"
-                   th:style="'animation-delay:' + ${stat.index * 80} + 'ms'"
-                   style="display:block;text-decoration:none;cursor:pointer">
-                    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
-                        <div class="k-card-icon">
-                            <i class="fa fa-book"></i>
-                        </div>
-                        <div class="k-badge k-badge-indigo" style="font-size:.7rem">
-                            <i class="fa fa-arrow-right"></i> Ver lecturas
-                        </div>
-                    </div>
-                    <h3 style="font-family:var(--k-font-display);font-size:1.2rem;font-weight:700;color:var(--kinal-blue-dark);margin-bottom:.6rem;line-height:1.3"
-                        th:text="${carrera.nombre}">Carrera</h3>
-                    <p class="k-subtext" style="font-size:.875rem;line-height:1.6;-webkit-line-clamp:2;-webkit-box-orient:vertical;display:-webkit-box;overflow:hidden"
-                       th:text="${carrera.descripcion != null ? carrera.descripcion : 'Lecturas especializadas para esta carrera.'}">
-                        Descripción de la carrera
-                    </p>
-                    <div style="margin-top:1.25rem;display:flex;align-items:center;gap:.5rem">
-                        <div style="width:6px;height:6px;border-radius:50%;background:var(--k-green)"></div>
-                        <span style="font-size:.8rem;color:var(--k-muted)">
-              <span th:text="${carrera.lecturas.size()}">0</span> lecturas disponibles
-            </span>
-                    </div>
-                </a>
-            </th:block>
-            <div th:if="${#lists.isEmpty(carreras)}" style="grid-column:1/-1;text-align:center;padding:4rem 2rem" class="fade-up">
-                <div style="font-size:3rem;margin-bottom:1rem;opacity:.3">📚</div>
-                <h3 style="color:var(--k-muted);margin-bottom:.5rem">No hay carreras disponibles</h3>
-                <p class="k-subtext">El sistema aún no tiene carreras configuradas.</p>
+            <div class="c-stat-divider"></div>
+            <div class="c-stat">
+                <span class="c-stat-num">+200</span>
+                <span class="c-stat-lbl">Lecturas</span>
+            </div>
+            <div class="c-stat-divider"></div>
+            <div class="c-stat">
+                <span class="c-stat-num">Gratis</span>
+                <span class="c-stat-lbl">Para estudiantes</span>
             </div>
         </div>
     </div>
 </div>
 
+<!-- CARRERAS GRID -->
+<div class="carreras-section" style="margin-top: -1rem;">
+
+    <div th:if="${error}" class="k-alert k-alert-danger fade-up" style="margin-bottom:2rem">
+        <i class="fa fa-circle-exclamation"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <div class="section-eyebrow reveal">
+        <i class="fa fa-layer-group"></i> Todas las carreras disponibles
+    </div>
+
+    <!-- Icon mapping by index for visual variety -->
+    <div class="k-grid-2" id="carrerasGrid">
+        <th:block th:each="carrera, stat : ${carreras}">
+            <a th:href="@{/carreras/{id}/lecturas(id=${carrera.id})}"
+               class="k-carrera-card fade-up"
+               th:data-nombre="${carrera.nombre}"
+               th:style="'animation-delay:' + ${stat.index * 70} + 'ms'">
+                <div class="k-carrera-card-header"></div>
+                <div class="k-carrera-card-body">
+                    <div class="k-carrera-icon-wrap"
+                         th:classappend="${stat.index % 6 == 0 ? 'icon-blue' :
+                                          stat.index % 6 == 1 ? 'icon-gold' :
+                                          stat.index % 6 == 2 ? 'icon-teal' :
+                                          stat.index % 6 == 3 ? 'icon-green' :
+                                          stat.index % 6 == 4 ? 'icon-purple' : 'icon-red'}">
+                        <i th:class="${stat.index % 5 == 0 ? 'fa fa-laptop-code' :
+                                       stat.index % 5 == 1 ? 'fa fa-wrench' :
+                                       stat.index % 5 == 2 ? 'fa fa-microchip' :
+                                       stat.index % 5 == 3 ? 'fa fa-calculator' : 'fa fa-cogs'}"></i>
+                    </div>
+                    <h3 class="k-carrera-name" th:text="${carrera.nombre}">Carrera</h3>
+                    <p class="k-carrera-desc"
+                       th:text="${carrera.descripcion != null ? carrera.descripcion : 'Lecturas especializadas y cuestionarios diseñados para esta carrera técnica.'}">
+                        Descripción
+                    </p>
+                    <div class="k-carrera-footer">
+                        <div class="k-carrera-lecturas">
+                            <div class="dot"></div>
+                            <span><span th:text="${carrera.lecturas.size()}">0</span> lecturas disponibles</span>
+                        </div>
+                        <div class="k-carrera-arrow">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </th:block>
+
+        <div th:if="${#lists.isEmpty(carreras)}" class="k-empty fade-up">
+            <div class="k-empty-icon">📚</div>
+            <h3 style="color:var(--k-muted);margin-bottom:.5rem;font-size:1.1rem">No hay carreras disponibles</h3>
+            <p class="k-subtext">El sistema aún no tiene carreras configuradas.</p>
+        </div>
+    </div>
+
+    <!-- No results message (hidden by default, shown via JS) -->
+    <div id="noResults" style="display:none;text-align:center;padding:4rem 2rem">
+        <div style="font-size:3rem;margin-bottom:1rem;opacity:.3">🔍</div>
+        <h3 style="color:var(--k-muted);margin-bottom:.5rem">Sin resultados</h3>
+        <p class="k-subtext">Intenta con otro término de búsqueda.</p>
+    </div>
+</div>
+
 <footer class="k-footer">
-    <p>© 2025 Fundación Kinal · Centro Educativo Técnico · Guatemala</p>
+    <p>© 2026 Fundación Kinal · Centro Educativo Técnico · Guatemala</p>
 </footer>
 
 <script th:src="@{/js/kinal.js}" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Scroll reveal
+        const reveals = document.querySelectorAll(".reveal");
+        const revealOnScroll = () => {
+            const wh = window.innerHeight;
+            reveals.forEach(r => {
+                if (r.getBoundingClientRect().top < wh - 120) r.classList.add("visible");
+            });
+        };
+        window.addEventListener("scroll", revealOnScroll);
+        revealOnScroll();
+
+        // Live search
+        const searchInput = document.getElementById("carreraSearch");
+        const cards = document.querySelectorAll(".k-carrera-card");
+        const noResults = document.getElementById("noResults");
+
+        if (searchInput) {
+            searchInput.addEventListener("input", function () {
+                const q = this.value.toLowerCase().trim();
+                let visible = 0;
+                cards.forEach(card => {
+                    const name = (card.dataset.nombre || "").toLowerCase();
+                    const match = !q || name.includes(q);
+                    card.style.display = match ? "" : "none";
+                    if (match) visible++;
+                });
+                noResults.style.display = visible === 0 ? "block" : "none";
+            });
+        }
+    });
+</script>
 </body>
 </html>

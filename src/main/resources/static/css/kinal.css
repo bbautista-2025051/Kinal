@@ -671,3 +671,23 @@ body::before {
   text-transform: uppercase; text-align: center; padding: .35rem 1rem;
   border-bottom: 2px solid var(--kinal-gold);
 }
+/* ── HERO WRAPPER (index page – carousel behind content) ── */
+.k-hero-wrapper {
+  position: relative;
+  min-height: calc(100vh - 64px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: var(--kinal-blue-dark);
+}
+.k-hero-wrapper .hero-slideshow {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0;
+}
+.k-hero-wrapper .hero-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding-bottom: 5rem;
+}
