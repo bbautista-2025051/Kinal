@@ -577,12 +577,23 @@ body::before {
 .k-step-dot.done   { background: var(--k-green); border-color: var(--k-green); }
 
 /* ── AUTH LAYOUT ─────────────────────────────────── */
-.k-auth-layout { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; }
+.k-auth-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  background: var(--k-bg);
+  overflow: hidden; /* Evita scrolls innecesarios */
+}
 
 .k-auth-left {
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 4rem 3rem; position: relative; overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem;
+  position: relative;
   background: linear-gradient(160deg, #0F2440 0%, #1B3A6B 50%, #0d1e36 100%);
+  color: white;
 }
 .k-auth-left::before {
   content: ''; position: absolute; inset: 0; z-index: 0;
@@ -598,23 +609,28 @@ body::before {
 .k-auth-left > * { position: relative; z-index: 1; }
 
 .k-auth-right {
-  display: flex; align-items: center; justify-content: center;
-  padding: 2rem 2rem;              /* reducido para eliminar espacio extra */
+  display: flex;
+  align-items: center;      /* Centra verticalmente */
+  justify-content: center;   /* Centra horizontalmente */
+  padding: 2rem;
   background: var(--k-bg);
+  height: 100vh;            /* Forzamos el alto total */
 }
 .k-auth-form-box {
-  width: 100%; max-width: 420px;
+  width: 100%;
+  max-width: 420px;
   background: #fff;
   border-radius: var(--k-radius-lg);
-  padding: 2.5rem;
+  padding: 3rem;
   box-shadow: var(--k-shadow-lg);
   border: 1px solid var(--k-border);
-  margin: auto;                    /* centrado vertical dentro del contenedor flex */
+  /* Eliminamos márgenes automáticos que puedan fallar */
+  margin: 0;
 }
-
 @media (max-width: 768px) {
   .k-auth-layout { grid-template-columns: 1fr; }
   .k-auth-left { display: none; }
+  .k-auth-right { height: auto; min-height: 100vh; padding: 1.5rem; }
 }
 
 .k-auth-deco {
