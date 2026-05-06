@@ -753,6 +753,24 @@ body::before {
   z-index: 1;
 }
 
+/* Ajuste del buscador para fondo claro */
+.carreras-section .k-search-wrap .k-search-input {
+  background: #ffffff;
+  border: 1.5px solid #dce1e8;
+  color: #1a1f2e;
+}
+.carreras-section .k-search-wrap .k-search-input::placeholder {
+  color: #8b94a3;
+}
+.carreras-section .k-search-wrap .k-search-input:focus {
+  border-color: #1B3A6B;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(27,58,107,.1);
+}
+.carreras-section .k-search-icon {
+  color: #8b94a3; /* color del ícono de lupa */
+}
+
 .section-eyebrow {
   font-size: .8rem;
   font-weight: 600;
