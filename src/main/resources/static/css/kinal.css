@@ -1303,3 +1303,19 @@ body::before {
     .login-right { padding: 2rem 1.25rem; }
     .login-card { padding: 2rem 1.5rem; }
 }
+
+/* ── STATIC GLASS (sin hover) ── */
+.k-stat-glass-static {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+.k-stat-glass-static .k-stat-value { color: #ffffff; }
+.k-stat-glass-static .k-stat-label { color: rgba(255, 255, 255, 0.7); }
+.k-stat-glass-static:hover {
+    transform: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+}

@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
-
 </head>
 <body>
 
@@ -24,9 +23,7 @@
     </ul>
 </nav>
 
-<!-- HERO: carrusel de fondo + contenido encima -->
 <div class="k-hero-wrapper">
-    <!-- Carrusel de fotos Kinal como fondo -->
     <div class="hero-slideshow">
         <div class="hero-slide" style="background-image: url('https://static.wixstatic.com/media/128120_1d93353278314df08258144884930293~mv2.jpg/v1/fill/w_1600,h_900,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/128120_1d93353278314df08258144884930293~mv2.jpg');"></div>
         <div class="hero-slide" style="background-image: url('https://static.wixstatic.com/media/128120_65ca700cddfb4542a1615eccce9da67b~mv2.jpg/v1/fill/w_1600,h_900,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/128120_65ca700cddfb4542a1615eccce9da67b~mv2.jpg');"></div>
@@ -35,7 +32,6 @@
         <div class="hero-slide" style="background-image: url('https://www.corporacionbi.com/gt/bancoindustrial/wp-content/uploads/2024/02/PCP_Kinal_5-1.jpg');"></div>
     </div>
 
-    <!-- Contenido ENCIMA del carrusel -->
     <div class="k-container hero-content" style="text-align:center; padding-top: 5rem; padding-bottom: 5rem;">
         <div class="k-badge k-badge-glass fade-up" style="margin-bottom:1.5rem;display:inline-flex">
             <i class="fa fa-graduation-cap"></i> Plataforma Educativa Kinal
@@ -50,11 +46,12 @@
             <a href="/login"    class="k-btn k-btn-primary k-btn-lg"><i class="fa fa-arrow-right-to-bracket"></i> Iniciar sesión</a>
             <a href="/registro" class="k-btn k-btn-amber k-btn-lg"><i class="fa fa-user-plus"></i> Crear cuenta</a>
         </div>
+        <!-- TARJETAS ESTÁTICAS (sin hover) -->
         <div class="k-grid-4 fade-up stagger-4" style="margin-top:4rem;text-align:center">
-            <div class="k-stat k-stat-glass"><div class="k-stat-value">+200</div><div class="k-stat-label">Lecturas Técnicas</div></div>
-            <div class="k-stat k-stat-glass"><div class="k-stat-value">100%</div><div class="k-stat-label">Interactividad</div></div>
-            <div class="k-stat k-stat-glass"><div class="k-stat-value">12</div><div class="k-stat-label">Carreras</div></div>
-            <div class="k-stat k-stat-glass"><div class="k-stat-value">Gratis</div><div class="k-stat-label">Estudiantes Kinal</div></div>
+            <div class="k-stat k-stat-glass-static"><div class="k-stat-value">+200</div><div class="k-stat-label">Lecturas Técnicas</div></div>
+            <div class="k-stat k-stat-glass-static"><div class="k-stat-value">100%</div><div class="k-stat-label">Interactividad</div></div>
+            <div class="k-stat k-stat-glass-static"><div class="k-stat-value">12</div><div class="k-stat-label">Carreras</div></div>
+            <div class="k-stat k-stat-glass-static"><div class="k-stat-value">Gratis</div><div class="k-stat-label">Estudiantes Kinal</div></div>
         </div>
     </div>
 </div>
@@ -64,7 +61,6 @@
         <h2 class="k-heading">Vida <span class="accent" style="color: var(--kinal-gold);">Estudiantil Kinal</span></h2>
         <p class="k-subtext">Preparando a los técnicos del mañana mediante la lectura y la práctica.</p>
     </div>
-
     <div class="k-marquee-container reveal">
         <div class="k-marquee-track">
             <img src="https://static.wixstatic.com/media/128120_1d93353278314df08258144884930293~mv2.jpg/v1/fill/w_640,h_446,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/128120_1d93353278314df08258144884930293~mv2.jpg" alt="Estudiante Kinal 1">
@@ -77,7 +73,6 @@
             <img src="https://www.corporacionbi.com/gt/bancoindustrial/wp-content/uploads/2024/02/PCP_Kinal_4-1.jpg" alt="Estudiante Kinal 8">
             <img src="https://www.corporacionbi.com/gt/bancoindustrial/wp-content/uploads/2024/02/PCP_Kinal_5-1.jpg" alt="Estudiante Kinal 9">
             <img src="https://www.galileo.edu/fisicc/wp-content/blogs.dir/2/files/smart-cars/07.jpg" alt="Estudiante Kinal 10">
-            <!-- Duplicadas para loop infinito -->
             <img src="https://static.wixstatic.com/media/128120_1d93353278314df08258144884930293~mv2.jpg/v1/fill/w_640,h_446,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/128120_1d93353278314df08258144884930293~mv2.jpg" alt="Estudiante Kinal 1">
             <img src="https://static.wixstatic.com/media/128120_65ca700cddfb4542a1615eccce9da67b~mv2.jpg/v1/fill/w_640,h_426,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/128120_65ca700cddfb4542a1615eccce9da67b~mv2.jpg" alt="Estudiante Kinal 2">
             <img src="https://static.wixstatic.com/media/128120_d85e94e94f1048659b09fa09c476764b~mv2.jpg/v1/fill/w_640,h_446,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/128120_d85e94e94f1048659b09fa09c476764b~mv2.jpg" alt="Estudiante Kinal 3">
@@ -92,7 +87,6 @@
         <h2 class="k-heading">¿Cómo funciona la <span style="color: var(--kinal-blue-mid);">Plataforma?</span></h2>
         <p class="k-subtext">Tres simples pasos para mejorar tu comprensión técnica.</p>
     </div>
-
     <div class="k-grid-3">
         <div class="k-card text-center">
             <div class="k-card-icon mx-auto"><i class="fa fa-book-open"></i></div>
