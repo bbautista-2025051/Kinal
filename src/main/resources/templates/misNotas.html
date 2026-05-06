@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
-
 </head>
 <body>
 
@@ -147,21 +146,9 @@
                         th:data-titulo="${r.lectura.titulo}"
                         class="mn-row reveal">
 
-                        <!-- # -->
                         <td><span class="mn-num" th:text="${stat.index + 1}">1</span></td>
-
-                        <!-- Lectura -->
-                        <td>
-                            <span class="mn-lectura-title" th:text="${r.lectura.titulo}">Título</span>
-                        </td>
-
-                        <!-- Carrera -->
-                        <td>
-                                <span class="k-badge k-badge-indigo" style="font-size:.68rem"
-                                      th:text="${r.lectura.carrera.nombre}">Carrera</span>
-                        </td>
-
-                        <!-- Nota con anillo SVG -->
+                        <td><span class="mn-lectura-title" th:text="${r.lectura.titulo}">Título</span></td>
+                        <td><span class="k-badge k-badge-indigo" style="font-size:.68rem" th:text="${r.lectura.carrera.nombre}">Carrera</span></td>
                         <td>
                             <div class="mn-score-wrap">
                                 <div class="mn-score-ring">
@@ -180,26 +167,20 @@
                                       th:text="${r.nota >= 90 ? '🏆 Excelente' : (r.nota >= 70 ? '✓ Muy bueno' : (r.nota >= 60 ? '~ Aprobado' : '✗ Reprobado'))}">—</span>
                             </div>
                         </td>
-
-                        <!-- Aciertos -->
                         <td>
                             <span style="font-weight:600; color:var(--k-text)" th:text="${r.aciertos}">0</span>
                             <span style="color:var(--k-caption)">/</span>
                             <span style="color:var(--k-muted)" th:text="${r.totalPreguntas}">5</span>
                         </td>
-
-                        <!-- Velocidad -->
                         <td>
-                                <span th:if="${r.velocidadLectoraPpm != null}"
-                                      class="mn-ppm"
-                                      th:classappend="${r.velocidadLectoraPpm >= 300 ? 'ppm-fast' : (r.velocidadLectoraPpm >= 200 ? 'ppm-mid' : 'ppm-slow')}">
-                                    <i class="fa fa-gauge-high" style="font-size:.65rem"></i>
-                                    <span th:text="${r.velocidadLectoraPpm}">0</span> ppm
-                                </span>
+                            <span th:if="${r.velocidadLectoraPpm != null}"
+                                  class="mn-ppm"
+                                  th:classappend="${r.velocidadLectoraPpm >= 300 ? 'ppm-fast' : (r.velocidadLectoraPpm >= 200 ? 'ppm-mid' : 'ppm-slow')}">
+                                <i class="fa fa-gauge-high" style="font-size:.65rem"></i>
+                                <span th:text="${r.velocidadLectoraPpm}">0</span> ppm
+                            </span>
                             <span th:unless="${r.velocidadLectoraPpm != null}" style="color:var(--k-caption);font-size:.85rem">—</span>
                         </td>
-
-                        <!-- Fecha -->
                         <td>
                             <div class="mn-fecha">
                                 <strong th:text="${#temporals.format(r.fecha, 'dd/MM/yyyy')}">—</strong>
@@ -211,7 +192,6 @@
                 </table>
             </div>
 
-            <!-- Footer de la tabla -->
             <div class="mn-footer-bar">
                 <span class="mn-count-label">
                     Mostrando <strong id="mnVisible" th:text="${resultados.size()}">0</strong>
@@ -249,7 +229,6 @@
 <script th:src="@{/js/kinal.js}" defer></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Scroll reveal
         const reveals = document.querySelectorAll(".reveal");
         const revealOnScroll = () => {
             const wh = window.innerHeight;
@@ -260,7 +239,6 @@
         window.addEventListener("scroll", revealOnScroll);
         revealOnScroll();
 
-        // Búsqueda en vivo
         const searchInput = document.getElementById("mnSearch");
         if (searchInput) {
             searchInput.addEventListener("input", applyFilters);
