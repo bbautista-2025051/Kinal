@@ -48,40 +48,44 @@
         <div class="carreras-stats fade-up stagger-3">
             <div class="c-stat"><span class="c-stat-num" th:text="${carreras != null ? carreras.size() : '12'}">12</span><span class="c-stat-lbl">Carreras</span></div>
             <div class="c-stat-divider"></div>
-            <div class="c-stat"><span class="c-stat-num" th:text="${totalLecturas != null ? totalLecturas : '+200'}">+200</span><span class="c-stat-lbl">Lecturas</span></div>
+            <div class="c-stat"><span class="c-stat-num">+200</span><span class="c-stat-lbl">Lecturas</span></div>
             <div class="c-stat-divider"></div>
             <div class="c-stat"><span class="c-stat-num">100%</span><span class="c-stat-lbl">Interactivo</span></div>
         </div>
     </div>
 </div>
 
-<!-- CUERPO: primero las tarjetas de carreras, después el buscador -->
+<!-- SECCIÓN PRINCIPAL: Grid arriba, buscador abajo -->
 <div class="carreras-section">
 
-    <!-- Grid de carreras (arriba) -->
     <div class="section-eyebrow fade-up" style="margin-bottom:1.5rem;">
         <i class="fa fa-list-check"></i> Todas las carreras
     </div>
 
+    <!-- Grid de carreras -->
     <div class="k-grid-2 fade-up stagger-2">
-        <!-- Ejemplo de tarjeta estática (Thymeleaf iteraría realmente) -->
-        <div class="k-carrera-card" th:each="c : ${carreras}">
+        <div th:each="c : ${carreras}" class="k-carrera-card">
             <div class="k-carrera-card-header"></div>
             <div class="k-carrera-card-body">
-                <div class="k-carrera-icon-wrap" th:classappend="${c.iconClass ? c.iconClass : 'icon-blue'}">
-                    <i th:class="${c.icono ? c.icono : 'fa fa-laptop-code'}"></i>
+                <!-- Siempre icono azul con ícono de laptop (cámbialo después si la entidad lo tiene) -->
+                <div class="k-carrera-icon-wrap icon-blue">
+                    <i class="fa fa-laptop-code"></i>
                 </div>
                 <h3 class="k-carrera-name" th:text="${c.nombre}">Informática</h3>
-                <p class="k-carrera-desc" th:text="${c.descripcion ? c.descripcion : 'Descripción breve de la carrera técnica.'}">Lecturas enfocadas en programación, redes y soporte técnico.</p>
+                <!-- Si tu entidad tiene descripcion, puedes usar th:text; si no, deja texto fijo -->
+                <p class="k-carrera-desc">Lecturas especializadas en esta área técnica.</p>
                 <div class="k-carrera-footer">
                     <div class="k-carrera-lecturas">
                         <span class="dot"></span>
-                        <span th:text="${c.cantidadLecturas ? c.cantidadLecturas + ' lecturas' : '5 lecturas'}">5 lecturas</span>
+                        <span>5 lecturas</span>
                     </div>
-                    <div class="k-carrera-arrow"><i class="fa fa-arrow-right"></i></div>
+                    <div class="k-carrera-arrow">
+                        <i class="fa fa-arrow-right"></i>
+                    </div>
                 </div>
             </div>
-            <a class="k-carrera-card-link" th:href="@{/lecturas/{id}(id=${c.id})}" style="position:absolute; inset:0; opacity:0;"></a>
+            <!-- Enlace que cubre toda la tarjeta -->
+            <a th:href="@{/lecturas/{id}(id=${c.id})}" class="k-carrera-card-link" style="position:absolute;inset:0;opacity:0;"></a>
         </div>
     </div>
 
@@ -93,6 +97,7 @@
                    oninput="filtrarCarreras()" />
         </div>
     </div>
+
 </div>
 
 <footer class="k-footer">
@@ -107,7 +112,8 @@
             card.style.display = nombre.includes(q) ? '' : 'none';
         });
     }
-    // Scroll reveal (usando las clases reveal del CSS)
+
+    // Scroll reveal
     document.addEventListener("DOMContentLoaded", function() {
         const reveals = document.querySelectorAll(".reveal");
         const revealOnScroll = () => {
