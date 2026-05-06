@@ -23,7 +23,7 @@ public class LecturaController {
     @Autowired private ResultadoRepository resultadoRepository;
     @Autowired private EstudianteService estudianteService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/lecturas/{carreraId}")
     public String verLectura(@PathVariable Long id,
                              Model model,
                              Authentication auth,
