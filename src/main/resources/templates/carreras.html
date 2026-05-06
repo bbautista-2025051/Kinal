@@ -53,30 +53,33 @@
             <div class="c-stat"><span class="c-stat-num">100%</span><span class="c-stat-lbl">Interactivo</span></div>
         </div>
     </div>
-    <div>
-        <input type="text" class="k-search-input" id="carreraSearch" placeholder="Buscar carrera por nombre…"
-               oninput="filtrarCarreras()" />
-    </div>
 </div>
 
-<!-- SECCIÓN PRINCIPAL: Grid arriba, buscador abajo -->
+<!-- SECCIÓN PRINCIPAL: buscador + grid -->
 <div class="carreras-section">
-
     <div class="section-eyebrow fade-up" style="margin-bottom:1.5rem;">
         <i class="fa fa-list-check"></i> Todas las carreras
     </div>
 
+    <!-- Buscador (mejorado) -->
+    <div class="fade-up stagger-1" style="margin-bottom: 2rem; text-align: center;">
+        <div class="k-search-wrap" style="max-width: 500px; margin: 0 auto;">
+            <i class="fa fa-search k-search-icon"></i>
+            <input type="text" class="k-search-input" id="carreraSearch"
+                   placeholder="Buscar carrera por nombre…"
+                   oninput="filtrarCarreras()" />
+        </div>
+    </div>
+
     <!-- Grid de carreras -->
-    <div class="k-grid-2 fade-up stagger-2">
+    <div class="k-grid-2 fade-up stagger-2" id="carrerasGrid">
         <div th:each="c : ${carreras}" class="k-carrera-card">
             <div class="k-carrera-card-header"></div>
             <div class="k-carrera-card-body">
-                <!-- Siempre icono azul con ícono de laptop (cámbialo después si la entidad lo tiene) -->
                 <div class="k-carrera-icon-wrap icon-blue">
                     <i class="fa fa-laptop-code"></i>
                 </div>
                 <h3 class="k-carrera-name" th:text="${c.nombre}">Informática</h3>
-                <!-- Si tu entidad tiene descripcion, puedes usar th:text; si no, deja texto fijo -->
                 <p class="k-carrera-desc">Lecturas especializadas en esta área técnica.</p>
                 <div class="k-carrera-footer">
                     <div class="k-carrera-lecturas">
@@ -88,18 +91,15 @@
                     </div>
                 </div>
             </div>
-            <!-- Enlace que cubre toda la tarjeta -->
             <a th:href="@{/lecturas/{id}(id=${c.id})}" class="k-carrera-card-link" style="position:absolute;inset:0;opacity:0;"></a>
         </div>
     </div>
 
-    <!-- Buscador (abajo) -->
-    <div class="fade-up stagger-4" style="margin-top:3rem; text-align:center;">
-        <div class="k-search-wrap mx-auto" style="max-width:500px;">
-            <i class="fa fa-search k-search-icon"></i>
-        </div>
+    <!-- Mensaje cuando no hay resultados -->
+    <div id="noResultsMsg" class="k-empty" style="display: none; text-align: center; padding: 3rem;">
+        <div class="k-empty-icon"><i class="fa fa-circle-exclamation"></i></div>
+        <p style="color: var(--k-muted);">No se encontraron carreras con ese nombre.</p>
     </div>
-
 </div>
 
 <footer class="k-footer">
@@ -109,13 +109,23 @@
 <script>
     function filtrarCarreras() {
         const q = document.getElementById('carreraSearch').value.toLowerCase().trim();
-        document.querySelectorAll('.k-carrera-card').forEach(card => {
+        const cards = document.querySelectorAll('.k-carrera-card');
+        let hasVisible = false;
+
+        cards.forEach(card => {
             const nombre = card.querySelector('.k-carrera-name')?.textContent.toLowerCase() || '';
-            card.style.display = nombre.includes(q) ? '' : 'none';
+            const matches = nombre.includes(q);
+            card.style.display = matches ? '' : 'none';
+            if (matches) hasVisible = true;
         });
+
+        const noResultsDiv = document.getElementById('noResultsMsg');
+        if (noResultsDiv) {
+            noResultsDiv.style.display = hasVisible ? 'none' : 'block';
+        }
     }
 
-    // Scroll reveal
+    // Scroll reveal (opcional)
     document.addEventListener("DOMContentLoaded", function() {
         const reveals = document.querySelectorAll(".reveal");
         const revealOnScroll = () => {
