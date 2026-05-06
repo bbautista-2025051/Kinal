@@ -30,7 +30,6 @@
     </ul>
 </nav>
 
-<!-- HERO (sin buscador) -->
 <div class="carreras-hero">
     <div class="carreras-hero-deco">C</div>
     <div class="k-container" style="position:relative;z-index:2">
@@ -55,13 +54,12 @@
     </div>
 </div>
 
-<!-- SECCIÓN PRINCIPAL: buscador + grid -->
 <div class="carreras-section">
     <div class="section-eyebrow fade-up" style="margin-bottom:1.5rem;">
         <i class="fa fa-list-check"></i> Todas las carreras
     </div>
 
-    <!-- Buscador (mejorado) -->
+    <!-- Buscador mejorado -->
     <div class="fade-up stagger-1" style="margin-bottom: 2rem; text-align: center;">
         <div class="k-search-wrap" style="max-width: 500px; margin: 0 auto;">
             <i class="fa fa-search k-search-icon"></i>
@@ -95,7 +93,7 @@
         </div>
     </div>
 
-    <!-- Mensaje cuando no hay resultados -->
+    <!-- Mensaje sin resultados -->
     <div id="noResultsMsg" class="k-empty" style="display: none; text-align: center; padding: 3rem;">
         <div class="k-empty-icon"><i class="fa fa-circle-exclamation"></i></div>
         <p style="color: var(--k-muted);">No se encontraron carreras con ese nombre.</p>
@@ -111,28 +109,20 @@
         const q = document.getElementById('carreraSearch').value.toLowerCase().trim();
         const cards = document.querySelectorAll('.k-carrera-card');
         let hasVisible = false;
-
         cards.forEach(card => {
             const nombre = card.querySelector('.k-carrera-name')?.textContent.toLowerCase() || '';
             const matches = nombre.includes(q);
             card.style.display = matches ? '' : 'none';
             if (matches) hasVisible = true;
         });
-
         const noResultsDiv = document.getElementById('noResultsMsg');
-        if (noResultsDiv) {
-            noResultsDiv.style.display = hasVisible ? 'none' : 'block';
-        }
+        if (noResultsDiv) noResultsDiv.style.display = hasVisible ? 'none' : 'block';
     }
-
-    // Scroll reveal (opcional)
     document.addEventListener("DOMContentLoaded", function() {
         const reveals = document.querySelectorAll(".reveal");
         const revealOnScroll = () => {
             const wh = window.innerHeight;
-            reveals.forEach(r => {
-                if (r.getBoundingClientRect().top < wh - 80) r.classList.add("visible");
-            });
+            reveals.forEach(r => { if (r.getBoundingClientRect().top < wh - 80) r.classList.add("visible"); });
         };
         window.addEventListener("scroll", revealOnScroll);
         revealOnScroll();
