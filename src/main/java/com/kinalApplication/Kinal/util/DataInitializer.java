@@ -34,6 +34,14 @@ public class DataInitializer implements CommandLineRunner {
                     "Fundamentos de electricidad, circuitos, ley de Ohm, corriente alterna y continua, seguridad eléctrica.");
             carreraRepository.save(electricidad);
 
+            Carrera culturaGeneral = new Carrera("Cultura General",
+                    "Historia universal y guatemalteca, eventos relevantes, geografía y comprensión del mundo contemporáneo.");
+            carreraRepository.save(culturaGeneral);
+
+            Carrera fantasia = new Carrera("Fantasía",
+                    "Cuentos, fábulas y leyendas de Guatemala: narrativa popular, tradición oral y literatura imaginativa del pueblo guatemalteco.");
+            carreraRepository.save(fantasia);
+
             // ==================== LECTURAS INFORMÁTICA ====================
             crearLecturaJava(informatica);
             crearLecturaHTML(informatica);
@@ -53,6 +61,22 @@ public class DataInitializer implements CommandLineRunner {
             crearLecturaElectricidad3(electricidad);
             crearLecturaElectricidad4(electricidad);
             crearLecturaElectricidad5(electricidad);
+
+            // ==================== LECTURAS CULTURA GENERAL ====================
+            crearLecturaRevolucionIndustrial(culturaGeneral);
+            crearLecturaSegundaGuerraMundial(culturaGeneral);
+            crearLecturaMuroBerlin(culturaGeneral);
+            crearLecturaRevolucion1944(culturaGeneral);
+            crearLecturaAcuerdosPaz(culturaGeneral);
+            crearLecturaTerremoto1976(culturaGeneral);
+
+            // ==================== LECTURAS FANTASÍA ====================
+            crearCuentoSombrerónGuatemala(fantasia);
+            crearCuentoXibalbaGuatemala(fantasia);
+            crearFabulaQuetzalGuatemala(fantasia);
+            crearFabulaConejo(fantasia);
+            crearLeyendaLlorona(fantasia);
+            crearLeyendaCadejo(fantasia);
 
             System.out.println("Datos iniciales cargados correctamente.");
         }
@@ -82,7 +106,6 @@ public class DataInitializer implements CommandLineRunner {
         Lectura l = new Lectura("Introducción a Java", texto, c);
         lecturaRepository.save(l);
 
-        // 10 preguntas
         agregarPregunta(l, "El lema \"Write Once, Run Anywhere\" sugiere principalmente que:",
                 new String[]{"El código de Java es imposible de hackear.",
                         "Java elimina la necesidad de adaptar el software a diferentes sistemas operativos.",
@@ -548,34 +571,32 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     // ==================== ELECTRICIDAD ====================
-    // Textos del 1 al 5 con sus preguntas (algunas V/F)
     private void crearLecturaElectricidad1(Carrera c) {
         String texto = "Fundamentos de la Corriente Eléctrica y el Circuito de Carga\n\n" +
                 "La electricidad no es una invención humana, sino una fuerza fundamental de la naturaleza que hemos aprendido a canalizar...";
         Lectura l = new Lectura("Fundamentos de la Corriente Eléctrica", texto, c);
         lecturaRepository.save(l);
 
-        // Preguntas (basadas en la tabla: 1C,2B,3V,4F,5B,6C,7F,8B,9V,10F)
         agregarPreguntaVF(l, "¿Cuál es la partícula subatómica cuyo flujo ordenado genera la corriente eléctrica?",
                 new String[]{"Protón", "Neutrón", "Electrón", "Átomo"}, 2);
         agregarPreguntaVF(l, "El componente encargado de gestionar el paso de la corriente (abrir o cerrar el circuito) es:",
                 new String[]{"El receptor", "El dispositivo de control", "La fuente de energía", "El fusible"}, 1);
         agregarPreguntaVF(l, "El aluminio es mencionado como un buen conductor debido a su baja resistencia.",
-                new String[]{"Verdadero", "Falso"}, 0); // V
+                new String[]{"Verdadero", "Falso"}, 0);
         agregarPreguntaVF(l, "La \"fuerza electromotriz\" es proporcionada por el receptor del circuito.",
-                new String[]{"Verdadero", "Falso"}, 1); // F
+                new String[]{"Verdadero", "Falso"}, 1);
         agregarPreguntaVF(l, "Si en la analogía hidráulica el voltaje es la presión, ¿qué representa un cable con mucha resistencia?",
                 new String[]{"Un motor potente", "Una tubería con el diámetro muy reducido", "Un tanque de agua lleno", "Una llave de paso abierta"}, 1);
         agregarPreguntaVF(l, "El \"Efecto Joule\" se menciona en relación con la protección. ¿Qué fenómeno físico genera este efecto en los cables?",
                 new String[]{"Enfriamiento por flujo", "Magnetismo", "Generación de calor", "Aumento de voltaje"}, 2);
         agregarPreguntaVF(l, "Según el texto, un circuito abierto permite el flujo de electrones libremente.",
-                new String[]{"Verdadero", "Falso"}, 1); // F
+                new String[]{"Verdadero", "Falso"}, 1);
         agregarPreguntaVF(l, "¿Por qué se considera que la protección es el elemento más crítico en una instalación profesional?",
                 new String[]{"Porque es el más caro de comprar", "Porque previene la destrucción de la infraestructura ante fallos", "Porque mejora el brillo de las bombillas", "Porque sustituye a la fuente de energía"}, 1);
         agregarPreguntaVF(l, "Un técnico que comprende la analogía hidráulica tiene mejores bases para predecir el comportamiento del circuito.",
-                new String[]{"Verdadero", "Falso"}, 0); // V
+                new String[]{"Verdadero", "Falso"}, 0);
         agregarPreguntaVF(l, "En un taller rural, ¿es válido sustituir un fusible quemado por un trozo de alambre de cobre?",
-                new String[]{"Verdadero", "Falso"}, 1); // F
+                new String[]{"Verdadero", "Falso"}, 1);
     }
 
     private void crearLecturaElectricidad2(Carrera c) {
@@ -584,7 +605,6 @@ public class DataInitializer implements CommandLineRunner {
         Lectura l = new Lectura("La Ley de Ohm y la Eficiencia en Instalaciones", texto, c);
         lecturaRepository.save(l);
 
-        // Tabla: 1B,2C,3V,4F,5B,6C,7V,8B,9V,10F
         agregarPreguntaVF(l, "En la fórmula V = I * R, ¿qué representa la letra I?",
                 new String[]{"Inductancia", "Intensidad de corriente", "Impedancia interna", "Interruptor"}, 1);
         agregarPreguntaVF(l, "La Ley de Ohm establece que la intensidad es proporcional al voltaje de forma:",
@@ -613,7 +633,6 @@ public class DataInitializer implements CommandLineRunner {
         Lectura l = new Lectura("Arquitectura de Circuitos: Serie y Paralelo", texto, c);
         lecturaRepository.save(l);
 
-        // Tabla: 1C,2B,3F,4V,5B,6B,7V,8B,9V,10V
         agregarPreguntaVF(l, "¿Qué sucede si se quema una bombilla en un circuito en serie?",
                 new String[]{"El resto brilla más", "Solo fallan las bombillas que están después", "Todo el circuito deja de funcionar", "La fuente de energía explota"}, 2);
         agregarPreguntaVF(l, "En un circuito en paralelo, el voltaje en cada receptor es:",
@@ -642,7 +661,6 @@ public class DataInitializer implements CommandLineRunner {
         Lectura l = new Lectura("La Guerra de las Corrientes: CA versus CC", texto, c);
         lecturaRepository.save(l);
 
-        // Tabla: 1B,2C,3F,4V,5B,6B,7V,8B,9V,10V
         agregarPreguntaVF(l, "¿Cuál es el tipo de corriente que generan las baterías y paneles solares?",
                 new String[]{"Alterna", "Continua", "Bifásica", "Inducida"}, 1);
         agregarPreguntaVF(l, "La principal ventaja de la CA para las ciudades es que puede usarse con:",
@@ -671,7 +689,6 @@ public class DataInitializer implements CommandLineRunner {
         Lectura l = new Lectura("Seguridad Eléctrica: La Prevención como Herramienta Técnica", texto, c);
         lecturaRepository.save(l);
 
-        // Tabla: 1B,2B,3F,4V,5D,6B,7F,8B,9V,10F
         agregarPreguntaVF(l, "¿Cuál es el objetivo principal de la \"puesta a tierra\"?",
                 new String[]{"Ahorrar energía eléctrica", "Desviar corrientes de falla hacia el suelo", "Hacer que los equipos pesen más", "Mejorar la señal de radio"}, 1);
         agregarPreguntaVF(l, "El calzado de seguridad para un electricista debe ser:",
@@ -681,7 +698,7 @@ public class DataInitializer implements CommandLineRunner {
         agregarPreguntaVF(l, "El cuerpo humano es un buen conductor de electricidad.",
                 new String[]{"Verdadero", "Falso"}, 0);
         agregarPreguntaVF(l, "¿Por qué es fundamental \"verificar la ausencia de tensión\" antes de tocar un cable, aunque ya hayamos bajado el interruptor?",
-                new String[]{"Porque el interruptor podría estar defectuoso", "Porque el cable podría tener carga estática o retorno", "Para cumplir con el protocolo legal", "Todas las anteriores son correctas"}, 3); // D
+                new String[]{"Porque el interruptor podría estar defectuoso", "Porque el cable podría tener carga estática o retorno", "Para cumplir con el protocolo legal", "Todas las anteriores son correctas"}, 3);
         agregarPreguntaVF(l, "Según el texto, ¿por qué la corriente \"prefiere\" ir por un cable de tierra que por una persona?",
                 new String[]{"Porque el cobre es de color rojo", "Porque la corriente siempre busca el camino de menor resistencia", "Porque la tierra atrae a los electrones como un imán", "Porque el cable de tierra es más corto"}, 1);
         agregarPreguntaVF(l, "Un arco eléctrico solo ocurre cuando hay contacto físico directo.",
@@ -692,6 +709,774 @@ public class DataInitializer implements CommandLineRunner {
                 new String[]{"Verdadero", "Falso"}, 0);
         agregarPreguntaVF(l, "El uso de agua es el método más seguro para apagar incendios eléctricos.",
                 new String[]{"Verdadero", "Falso"}, 1);
+    }
+
+    // ==================== CULTURA GENERAL ====================
+
+    private void crearLecturaRevolucionIndustrial(Carrera c) {
+        String texto = "La Revolución Industrial: El Cambio de Paradigma Global\n\n" +
+                "La Revolución Industrial es considerada por los historiadores como el cambio más radical en la vida cotidiana de la humanidad desde la invención de la agricultura en el Neolítico. " +
+                "Este proceso, que comenzó en Inglaterra aproximadamente en 1760 y se extendió hasta mediados del siglo XIX, no fue simplemente una acumulación de inventos, sino una reconfiguración total de la economía, la estructura social y la relación del ser humano con la naturaleza. " +
+                "Antes de este periodo, el mundo era fundamentalmente agrario y artesanal; las herramientas eran accionadas por la mano del hombre, por animales o por fuerzas naturales limitadas como el viento o el agua.\n\n" +
+                "El epicentro de esta transformación fue la sustitución de la energía orgánica por la energía inorgánica. El perfeccionamiento de la máquina de vapor por James Watt en 1769 permitió convertir la energía térmica del carbón en energía mecánica de movimiento. " +
+                "Esto eliminó la necesidad de ubicar las industrias cerca de corrientes de agua, permitiendo que las fábricas se establecieran en los centros urbanos. La industria textil fue la pionera, donde máquinas como la \"Spinning Jenny\" de James Hargreaves multiplicaron exponencialmente la capacidad de producción.\n\n" +
+                "A medida que la industrialización avanzaba, la demanda de hierro y carbón impulsó la minería y la metalurgia. Esto llevó al desarrollo del ferrocarril. La locomotora a vapor, ideada por George Stephenson, permitió que las materias primas y los productos terminados viajaran a velocidades antes inimaginables, unificando mercados nacionales.\n\n" +
+                "Socialmente, la Revolución Industrial provocó un éxodo rural masivo. Las ciudades no estaban preparadas, resultando en barrios obreros hacinados, condiciones de insalubridad y jornadas extenuantes de hasta 16 horas diarias. El trabajo infantil era común.\n\n" +
+                "Este contexto de explotación dio origen a la \"cuestión social\". Surgieron los primeros sindicatos (Trade Unions) y corrientes como el socialismo utópico y el marxismo. " +
+                "Hoy en día, la humanidad se encuentra en la transición hacia energías limpias, intentando corregir el impacto ambiental que inició precisamente con el humo de las chimeneas en la Inglaterra del siglo XVIII.";
+        Lectura l = new Lectura("La Revolución Industrial: El Cambio de Paradigma Global", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Cuál fue el invento que permitió a las fábricas establecerse en las ciudades, lejos de los ríos?",
+                new String[]{"La locomotora a vapor de Stephenson.",
+                        "La máquina de vapor de James Watt.",
+                        "El motor de combustión interna.",
+                        "La hiladora \"Spinning Jenny\"."}, 1);
+        agregarPregunta(l, "Según el texto, ¿en qué país y periodo inició este proceso de transformación?",
+                new String[]{"En Francia a finales del siglo XIX.",
+                        "En Alemania durante el año 1760.",
+                        "En Inglaterra a mediados del siglo XVIII.",
+                        "En Estados Unidos tras la Guerra Civil."}, 2);
+        agregarPregunta(l, "¿Qué industria fue la pionera en implementar procesos mecanizados durante este periodo?",
+                new String[]{"La siderurgia y el hierro.",
+                        "La minería de carbón mineral.",
+                        "La industria del transporte.",
+                        "La industria textil."}, 3);
+        agregarPregunta(l, "¿Cuál fue la consecuencia directa de la invención de la locomotora a vapor?",
+                new String[]{"La unificación de mercados nacionales.",
+                        "La reducción del trabajo en las minas.",
+                        "El fin del uso de combustibles fósiles.",
+                        "El aumento de la producción artesanal."}, 0);
+        agregarPregunta(l, "¿A qué se refiere el autor con el término \"energía inorgánica\"?",
+                new String[]{"Al uso de fertilizantes químicos.",
+                        "Al calor generado por el sol.",
+                        "Al uso del carbón y el vapor.",
+                        "A la fuerza de los animales."}, 2);
+        agregarPregunta(l, "¿Por qué el ferrocarril cambió la percepción humana del tiempo?",
+                new String[]{"Porque las personas podían dormir más.",
+                        "Por la necesidad de estandarizar horarios.",
+                        "Porque eliminó el uso de los calendarios.",
+                        "Por la gran cantidad de accidentes que había."}, 1);
+        agregarPregunta(l, "¿Qué factor facilitó que los niños fueran empleados en minas y telares?",
+                new String[]{"Su capacidad de liderazgo y disciplina.",
+                        "El hecho de poseer un tamaño pequeño.",
+                        "Su gran conocimiento sobre las máquinas.",
+                        "El deseo de aprender un oficio nuevo."}, 1);
+        agregarPregunta(l, "¿Cuál fue la relación entre el éxodo rural y las condiciones de salud en las ciudades?",
+                new String[]{"Las ciudades se volvieron más limpias.",
+                        "El hacinamiento provocó enfermedades.",
+                        "Los campesinos trajeron medicinas nuevas.",
+                        "El aire puro del campo llegó a las fábricas."}, 1);
+        agregarPregunta(l, "Basándote en el texto, ¿qué ideologías nacieron como respuesta a la \"cuestión social\"?",
+                new String[]{"El capitalismo y el liberalismo.",
+                        "El socialismo y el marxismo.",
+                        "El absolutismo y el feudalismo.",
+                        "El catolicismo y el protestantismo."}, 1);
+        agregarPregunta(l, "¿Cuál es el planteamiento final del autor respecto al impacto ambiental de la Revolución Industrial?",
+                new String[]{"Que las chimeneas no dañan el ambiente.",
+                        "Que el humo industrial era señal de éxito.",
+                        "Que hoy intentamos corregir ese daño.",
+                        "Que el carbón es la mejor energía hoy."}, 2);
+    }
+
+    private void crearLecturaSegundaGuerraMundial(Carrera c) {
+        String texto = "La Segunda Guerra Mundial: El Conflicto que Redibujó el Planeta\n\n" +
+                "La Segunda Guerra Mundial (1939-1945) no fue solo la mayor contienda bélica de la historia, sino el evento que definió la estructura geopolítica, tecnológica y ética del mundo contemporáneo. " +
+                "El conflicto se desencadenó formalmente el 1 de septiembre de 1939, cuando las tropas de la Alemania nazi, bajo el mando de Adolf Hitler, invadieron Polonia. " +
+                "Este acto obligó a las potencias democráticas, como Francia y el Reino Unido, a declarar la guerra al Tercer Reich.\n\n" +
+                "Se consolidaron dos bandos: las Potencias del Eje (Alemania, Italia y Japón) y los Aliados (Reino Unido, Unión Soviética y Estados Unidos). " +
+                "Fue una \"guerra total\", donde las naciones movilizaron todos sus recursos. La ciencia se puso al servicio de la destrucción, acelerando el desarrollo de motores a reacción, sistemas de radar y la energía nuclear.\n\n" +
+                "El Holocausto fue uno de los capítulos más atroces. El régimen nazi implementó la \"Solución Final\", un sistema industrializado de exterminio que resultó en el asesinato de seis millones de judíos. " +
+                "Este horror dio paso a la redacción de la Declaración Universal de los Derechos Humanos. La guerra en el Pacífico culminó en agosto de 1945 con el uso de bombas atómicas sobre Hiroshima y Nagasaki.\n\n" +
+                "El conflicto finalizó con la rendición incondicional de Alemania en mayo de 1945 y de Japón en septiembre. " +
+                "Europa perdió su papel como centro del poder mundial, dando paso a una bipolaridad entre Estados Unidos y la Unión Soviética, conocida como la Guerra Fría. " +
+                "Además, se fundó la Organización de las Naciones Unidas (ONU) con el objetivo de evitar que una tragedia de tal magnitud volviera a repetirse.";
+        Lectura l = new Lectura("La Segunda Guerra Mundial: El Conflicto que Redibujó el Planeta", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Qué evento marcó el inicio formal de la Segunda Guerra Mundial?",
+                new String[]{"El bombardeo a Pearl Harbor",
+                        "La invasión nazi a Polonia",
+                        "La creación de las Naciones Unidas",
+                        "El ascenso de los regímenes totalitarios"}, 1);
+        agregarPregunta(l, "¿Qué nombre recibió la alianza formada por Alemania, Italia y Japón?",
+                new String[]{"Los Aliados",
+                        "Las Potencias del Eje",
+                        "La Sociedad de Naciones",
+                        "El Bloque Soviético"}, 1);
+        agregarPregunta(l, "¿En qué año se dio por finalizado este conflicto global?",
+                new String[]{"1939", "1941", "1945", "1950"}, 2);
+        agregarPregunta(l, "¿Qué término describe el uso de todos los recursos de una nación para el esfuerzo bélico?",
+                new String[]{"Guerra Fría", "Guerra Relámpago", "Guerra Total", "Guerra Nuclear"}, 2);
+        agregarPregunta(l, "¿Cuál fue el principal objetivo de fundar la Organización de las Naciones Unidas (ONU)?",
+                new String[]{"Dividir el territorio alemán",
+                        "Fomentar la energía nuclear",
+                        "Evitar guerras mundiales",
+                        "Castigar a los países derrotados"}, 2);
+        agregarPregunta(l, "¿Qué consecuencia inmediata tuvo el uso de bombas atómicas en Hiroshima y Nagasaki?",
+                new String[]{"El inicio del Holocausto",
+                        "La rendición de Japón",
+                        "La invasión de Polonia",
+                        "El fin del Proyecto Manhattan"}, 1);
+        agregarPregunta(l, "¿Qué documento internacional surgió como respuesta ética a los horrores del Holocausto?",
+                new String[]{"El Tratado de Versalles",
+                        "El Código de Trabajo",
+                        "Los Derechos Humanos",
+                        "La Constitución de 1945"}, 2);
+        agregarPregunta(l, "Se puede inferir que la \"guerra total\" afectó principalmente a:",
+                new String[]{"Solo a los soldados",
+                        "Exclusivamente a Alemania",
+                        "A toda la población civil",
+                        "Únicamente a los científicos"}, 2);
+        agregarPregunta(l, "Según la lectura, ¿qué provocó el quiebre de la alianza entre los vencedores tras la guerra?",
+                new String[]{"Una crisis económica",
+                        "Rivalidad ideológica",
+                        "Falta de armamento",
+                        "La muerte de los líderes"}, 1);
+        agregarPregunta(l, "¿Cuál fue el nuevo orden geopolítico que dominó el mundo después de 1945?",
+                new String[]{"El Imperio Británico",
+                        "El Colonialismo Europeo",
+                        "La Guerra Fría",
+                        "La Revolución Industrial"}, 2);
+    }
+
+    private void crearLecturaMuroBerlin(Carrera c) {
+        String texto = "La Caída del Muro de Berlín: El Fin de la Cortina de Hierro\n\n" +
+                "Para comprender la trascendencia de la caída del Muro de Berlín, es imperativo retroceder al final de la Segunda Guerra Mundial. " +
+                "Tras la derrota de la Alemania nazi en 1945, el territorio alemán fue dividido en cuatro zonas de ocupación. " +
+                "En 1949, Alemania se dividió formalmente en dos Estados: la República Federal de Alemania (RFA) en el oeste y la República Democrática Alemana (RDA) en el este.\n\n" +
+                "Berlín, la capital, también fue dividida. Durante los años 50, miles de personas huían diariamente hacia el lado occidental. " +
+                "Para detener esta fuga, las autoridades de la RDA iniciaron la construcción del muro la madrugada del 13 de agosto de 1961. " +
+                "Lo que comenzó como una alambrada se convirtió en una barrera de hormigón de casi cuatro metros de altura, protegida por fosos, perros y la temida \"franja de la muerte\".\n\n" +
+                "Durante 28 años, el muro dividió familias. Se estima que al menos 140 personas murieron intentando atravesarlo. " +
+                "Hacia finales de la década de 1980, el bloque soviético comenzó a debilitarse. El líder soviético Mijaíl Gorbachov impulsó reformas conocidas como Glasnost y Perestroika.\n\n" +
+                "El colapso definitivo ocurrió el 9 de noviembre de 1989 debido a un error burocrático histórico. " +
+                "El portavoz Günter Schabowski anunció apresuradamente que las restricciones de viaje se levantarían \"de inmediato\". " +
+                "Aquella noche, ciudadanos de ambos lados se fundieron en abrazos sobre el muro, mientras comenzaban a derribarlo.\n\n" +
+                "La caída del muro fue el preámbulo de la reunificación de Alemania en 1990 y la posterior disolución de la Unión Soviética en 1991. " +
+                "Hoy, es el símbolo universal de la caída de los autoritarismos y el triunfo de la democracia moderna.";
+        Lectura l = new Lectura("La Caída del Muro de Berlín: El Fin de la Cortina de Hierro", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Qué evento histórico dio origen a la división de Alemania en dos Estados?",
+                new String[]{"La Revolución Industrial",
+                        "La Guerra Fría",
+                        "La caída del muro",
+                        "El Tratado de Versalles"}, 1);
+        agregarPregunta(l, "¿En qué fecha se inició la construcción del muro para detener la fuga de ciudadanos?",
+                new String[]{"9 de noviembre de 1989",
+                        "13 de agosto de 1961",
+                        "1 de septiembre de 1939",
+                        "20 de octubre de 1944"}, 1);
+        agregarPregunta(l, "¿Qué nombre recibía la zona de máxima vigilancia que rodeaba el muro?",
+                new String[]{"La Cortina de Hierro",
+                        "El Bloque del Este",
+                        "La franja de la muerte",
+                        "El puesto de control"}, 2);
+        agregarPregunta(l, "¿Quién fue el líder soviético que impulsó las reformas Glasnost y Perestroika?",
+                new String[]{"Adolf Hitler",
+                        "Günter Schabowski",
+                        "Mijaíl Gorbachov",
+                        "Jacobo Árbenz"}, 2);
+        agregarPregunta(l, "¿A qué se debió principalmente el colapso definitivo del muro el 9 de noviembre?",
+                new String[]{"Una invasión militar",
+                        "Un error burocrático",
+                        "Un desastre natural",
+                        "Una orden de la ONU"}, 1);
+        agregarPregunta(l, "¿Quién fue el portavoz que anunció erróneamente la apertura inmediata de las fronteras?",
+                new String[]{"James Watt",
+                        "Jorge Ubico",
+                        "Günter Schabowski",
+                        "George Stephenson"}, 2);
+        agregarPregunta(l, "Según el texto, ¿qué simbolizó a nivel mundial la caída de esta estructura?",
+                new String[]{"El inicio de la guerra",
+                        "El fin del capitalismo",
+                        "El triunfo democrático",
+                        "La creación de la URSS"}, 2);
+        agregarPregunta(l, "Se puede inferir que la principal motivación de la RDA para construir el muro fue:",
+                new String[]{"Fomentar el turismo",
+                        "Evitar el espionaje",
+                        "Controlar a su población",
+                        "Embellecer la ciudad"}, 2);
+        agregarPregunta(l, "¿Qué acontecimiento importante ocurrió un año después de la caída del muro, en 1990?",
+                new String[]{"La Revolución de Octubre",
+                        "La reunificación alemana",
+                        "El inicio de la Guerra Fría",
+                        "El terremoto de Berlín"}, 1);
+        agregarPregunta(l, "A partir de la lectura, ¿cuál es el significado simbólico actual del muro de Berlín?",
+                new String[]{"Un éxito de ingeniería",
+                        "Fracaso del autoritarismo",
+                        "Símbolo de la arquitectura",
+                        "Un monumento a la guerra"}, 1);
+    }
+
+    private void crearLecturaRevolucion1944(Carrera c) {
+        String texto = "La Revolución de octubre de 1944: La Primavera Democrática de Guatemala\n\n" +
+                "Para dimensionar la importancia de la Revolución de 1944, es fundamental analizar el contexto de opresión que la precedió. " +
+                "Durante 14 años, el general Jorge Ubico Castañeda gobernó Guatemala con mano de hierro. " +
+                "Su administración se caracterizó por la aplicación de la \"Ley de Vagancia\", que obligaba a los campesinos e indígenas a trabajar gratuitamente si no podían demostrar un número mínimo de días laborados al año. " +
+                "Además, Ubico otorgó concesiones extraordinarias a la United Fruit Company (UFCO).\n\n" +
+                "El descontento social comenzó en junio de 1944 con manifestaciones de maestros y estudiantes universitarios. " +
+                "La maestra María Chinchilla fue asesinada por las fuerzas del orden, convirtiéndose en un símbolo de la lucha civil. " +
+                "Ubico renunció el 1 de julio, pero dejó en su lugar al general Federico Ponce Vaides, quien intentó perpetuar la dictadura.\n\n" +
+                "La madrugada del 20 de octubre de 1944 cambió el rumbo del país. El capitán Jacobo Árbenz Guzmán y el mayor Francisco Javier Arana, junto con Jorge Toriello Garrido, lograron la rendición de Ponce Vaides. " +
+                "Se instauró la Junta Revolucionaria de Gobierno, que convocó las primeras elecciones libres, resultando electo el Dr. Juan José Arévalo Bermejo.\n\n" +
+                "El periodo de diez años que siguió se conoce como la \"Década de la Primavera\". Se redactó la Constitución de 1945, se fundó el IGSS, se creó el Comité Nacional de Alfabetización y se promulgó el Código de Trabajo en 1947, " +
+                "que estableció por primera vez el derecho al salario mínimo, las vacaciones pagadas, el descanso semanal y la protección para las mujeres trabajadoras.\n\n" +
+                "El proyecto revolucionario alcanzó su punto más ambicioso con el Decreto 900 o Ley de Reforma Agraria de Árbenz, que buscaba redistribuir las tierras ociosas. " +
+                "Esto provocó que en 1954 una intervención orquestada por la CIA derrocara el gobierno democrático. " +
+                "A pesar de su interrupción, la Revolución de 1944 dejó un legado de instituciones que hoy son pilares del Estado guatemalteco.";
+        Lectura l = new Lectura("La Revolución de octubre de 1944: La Primavera Democrática de Guatemala", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Cuántos años duró la dictadura del general Jorge Ubico antes de la Revolución?",
+                new String[]{"5 años", "10 años", "14 años", "20 años"}, 2);
+        agregarPregunta(l, "¿Qué ley obligaba a la población indígena al trabajo forzado durante la dictadura?",
+                new String[]{"Ley de Educación", "Ley contra la Vagancia", "Código de Trabajo", "Ley de Seguridad Social"}, 1);
+        agregarPregunta(l, "¿Qué figura histórica falleció durante las protestas de junio de 1944?",
+                new String[]{"María Chinchilla", "Jacobo Árbenz", "Jorge Ubico", "Ponce Vaides"}, 0);
+        agregarPregunta(l, "¿En qué fecha se consolidó el movimiento cívico-militar que derrocó al sucesor de Ubico?",
+                new String[]{"25 de junio", "1 de julio", "20 de octubre", "29 de diciembre"}, 2);
+        agregarPregunta(l, "¿Cuál fue uno de los logros sociales más importantes creados en este periodo?",
+                new String[]{"El Palacio Nacional", "El IGSS", "La UFCO", "El Ferrocarril"}, 1);
+        agregarPregunta(l, "¿Qué derecho civil fue otorgado por primera vez a mujeres y analfabetos en 1945?",
+                new String[]{"Derecho al trabajo", "Derecho al voto", "Derecho a la salud", "Derecho a viajar"}, 1);
+        agregarPregunta(l, "Según el texto, ¿qué institución educativa obtuvo su autonomía en esta época?",
+                new String[]{"Ministerio de Educación", "Universidad de San Carlos", "Comité de Alfabetización", "Escuela Normal Central"}, 1);
+        agregarPregunta(l, "Se puede inferir que Ponce Vaides no fue aceptado por la población porque:",
+                new String[]{"No era militar", "Era extranjero", "Seguía con la dictadura", "No hablaba español"}, 2);
+        agregarPregunta(l, "¿Cuál de estos beneficios laborales aparece por primera vez en el Código de Trabajo de 1947?",
+                new String[]{"Trabajo sin pago", "Jubilación privada", "El salario mínimo", "Seguro de accidentes"}, 2);
+        agregarPregunta(l, "¿Qué representa la Revolución de 1944 para la Guatemala actual?",
+                new String[]{"Un evento sin importancia", "La base de la ley social", "Un conflicto sin sentido", "Un simple cambio de líderes"}, 1);
+    }
+
+    private void crearLecturaAcuerdosPaz(Carrera c) {
+        String texto = "La Firma de los Acuerdos de Paz: El Camino hacia la Reconciliación\n\n" +
+                "Guatemala atravesó uno de los periodos más oscuros de su historia republicana entre 1960 y 1996: el Conflicto Armado Interno. " +
+                "Esta guerra civil, que duró 36 años, enfrentó al Estado guatemalteco contra grupos insurgentes aglutinados en la Unidad Revolucionaria Nacional Guatemalteca (URNG). " +
+                "La confrontación dejó un saldo devastador de más de 200,000 víctimas, entre muertos y desaparecidos, y fracturó el tejido social, especialmente entre las poblaciones indígenas, que sufrieron políticas de \"tierra arrasada\".\n\n" +
+                "El proceso para alcanzar la paz no fue sencillo. Las negociaciones formales comenzaron a finales de la década de 1980. " +
+                "Países como México, Noruega y España sirvieron como sedes y facilitadores del diálogo. " +
+                "Se firmaron acuerdos parciales que abordaban la democratización, los derechos humanos, el reasentamiento de las poblaciones desarraigadas y la identidad y derechos de los pueblos indígenas.\n\n" +
+                "El momento culminante ocurrió el 29 de diciembre de 1996, en el Patio de la Paz del Palacio Nacional de la Cultura. " +
+                "Se firmó el \"Acuerdo de Paz Firme y Duradera\", que puso fin oficial a las hostilidades. " +
+                "Este documento buscaba transformar las causas que originaron la guerra: la exclusión social, la falta de espacios políticos democráticos y la desigualdad económica.\n\n" +
+                "A tres décadas de aquel acontecimiento, los Acuerdos de Paz siguen siendo el norte jurídico y moral de Guatemala, aunque su cumplimiento pleno sigue siendo un reto pendiente. " +
+                "Para un ciudadano, conocer este proceso es fundamental para valorar la democracia y entender que la paz no es simplemente la ausencia de conflicto, sino la presencia de justicia y oportunidades para todos.";
+        Lectura l = new Lectura("La Firma de los Acuerdos de Paz: El Camino hacia la Reconciliación", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿En qué fecha se firmó el Acuerdo de Paz Firme y Duradera en Guatemala?",
+                new String[]{"20 de octubre de 1944",
+                        "29 de diciembre de 1996",
+                        "4 de febrero de 1976",
+                        "10 de mayo de 1985"}, 1);
+        agregarPregunta(l, "¿Cuántos años duró el Conflicto Armado Interno en el país?",
+                new String[]{"10 años", "20 años", "36 años", "50 años"}, 2);
+        agregarPregunta(l, "¿Qué instituciones o grupos se enfrentaron durante la guerra civil?",
+                new String[]{"La USAC y el Gobierno",
+                        "El Ejército y la URNG",
+                        "La ONU y los civiles",
+                        "México y Guatemala"}, 1);
+        agregarPregunta(l, "¿Cuál de estos países fue sede de las negociaciones de paz?",
+                new String[]{"Estados Unidos", "México", "Brasil", "Alemania"}, 1);
+        agregarPregunta(l, "¿Cómo define el texto la paz en su sentido más profundo?",
+                new String[]{"La firma de documentos",
+                        "El perdón total",
+                        "El cese al fuego",
+                        "La presencia de justicia y oportunidades"}, 3);
+        agregarPregunta(l, "¿Qué acuerdo reconoció a Guatemala como una nación multiétnica y pluricultural?",
+                new String[]{"Acuerdo de Reasentamiento",
+                        "Acuerdo de Poder Civil",
+                        "Acuerdo sobre Pueblos Indígenas",
+                        "Acuerdo de Reformas Agrarias"}, 2);
+        agregarPregunta(l, "Según la lectura, ¿qué organización actuó como moderadora en el proceso de paz?",
+                new String[]{"El Grupo de Contadora",
+                        "La Cruz Roja",
+                        "Las Naciones Unidas",
+                        "El Gobierno de España"}, 2);
+        agregarPregunta(l, "Se puede inferir que los acuerdos no solo buscaban detener las balas, sino también:",
+                new String[]{"Cambiar el nombre del país",
+                        "Resolver causas sociales",
+                        "Castigar a los estudiantes",
+                        "Aumentar los impuestos"}, 1);
+        agregarPregunta(l, "¿Cuál es uno de los mayores desafíos actuales respecto a los acuerdos?",
+                new String[]{"El olvido de las fechas",
+                        "Su cumplimiento lento",
+                        "La falta de copias físicas",
+                        "El cambio de moneda"}, 1);
+        agregarPregunta(l, "¿Cuál es la función principal de los Acuerdos de Paz en la actualidad?",
+                new String[]{"Servir como hoja de ruta",
+                        "Organizar las elecciones",
+                        "Controlar al ejército",
+                        "Promover el turismo"}, 0);
+    }
+
+    private void crearLecturaTerremoto1976(Carrera c) {
+        String texto = "El Terremoto de 1976: La Sacudida que Transformó a Guatemala\n\n" +
+                "La madrugada del 4 de febrero de 1976 quedó grabada en la memoria colectiva de Guatemala. " +
+                "A las 3:01 a.m., se produjo una ruptura en la falla del Motagua, el límite tectónico que separa las placas de Norteamérica y del Caribe. " +
+                "El sismo tuvo una magnitud de 7.5 grados en la escala de Richter y una duración aproximada de 39 segundos.\n\n" +
+                "El epicentro se localizó cerca de Los Amates, en el departamento de Izabal, pero el impacto más severo se sintió en el altiplano central y la Ciudad de Guatemala. " +
+                "Las cifras oficiales reflejaron la magnitud del desastre: aproximadamente 23,000 personas fallecidas, 77,000 heridos y más de un millón de personas que perdieron sus hogares.\n\n" +
+                "Uno de los aspectos más reveladores fue su carácter social, lo que llevó a muchos analistas a llamarlo \"el terremoto de los pobres\". " +
+                "La gran mayoría de las muertes ocurrieron en los barrios marginales y en los pueblos del área rural, donde las viviendas estaban construidas de adobe y techos de teja pesada.\n\n" +
+                "La respuesta ante la emergencia fue un hito de solidaridad. Bajo el lema del presidente Kjell Eugenio Laugerud García: \"Guatemala está herida, pero no de muerte\", se inició un proceso de reconstrucción sin precedentes. " +
+                "La sociedad civil se organizó en comités locales, fortaleciendo el movimiento cooperativista. " +
+                "La ayuda internacional introdujo en el país el uso de materiales más ligeros y sismorresistentes.\n\n" +
+                "A largo plazo, el terremoto cambió la fisonomía de la capital y se crearon instituciones de prevención como el CONE (antecesor de la actual CONRED). " +
+                "Hoy, el estudio de este evento es fundamental para la gestión de riesgos, recordándonos que la prevención y la planificación urbana son las únicas herramientas reales para enfrentar la fuerza de la naturaleza.";
+        Lectura l = new Lectura("El Terremoto de 1976: La Sacudida que Transformó a Guatemala", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿A qué hora exacta ocurrió el terremoto del 4 de febrero de 1976?",
+                new String[]{"A las 12:00 mediodía",
+                        "A las 3:01 de la madrugada",
+                        "A las 6:15 de la tarde",
+                        "A las 11:45 de la noche"}, 1);
+        agregarPregunta(l, "¿Cuál fue la falla geológica responsable de activar el sismo?",
+                new String[]{"Falla de San Andrés",
+                        "Falla del Motagua",
+                        "Falla de Jalpatagua",
+                        "Falla de Mixco"}, 1);
+        agregarPregunta(l, "¿Cuál fue la magnitud del terremoto en la escala de Richter?",
+                new String[]{"6.5 grados", "7.0 grados", "7.5 grados", "8.2 grados"}, 2);
+        agregarPregunta(l, "¿Cuál fue el saldo aproximado de personas fallecidas según el texto?",
+                new String[]{"5,000 personas", "15,000 personas", "23,000 personas", "50,000 personas"}, 2);
+        agregarPregunta(l, "¿Qué material de construcción predominante en la época fue responsable de muchos daños?",
+                new String[]{"El acero", "El ladrillo", "El adobe", "El block"}, 2);
+        agregarPregunta(l, "¿A qué se refiere el texto con la expresión \"el terremoto de los pobres\"?",
+                new String[]{"A que nadie tenía dinero",
+                        "Al daño desproporcionado en áreas vulnerables",
+                        "A que no afectó a los ricos",
+                        "Al bajo costo de reconstrucción"}, 1);
+        agregarPregunta(l, "¿Qué cambio importante se dio en la construcción tras este desastre?",
+                new String[]{"Se dejó de construir casas",
+                        "Se usó solo madera",
+                        "Se adoptaron sistemas sismorresistentes",
+                        "Se prohibieron los edificios"}, 2);
+        agregarPregunta(l, "Se puede inferir que el terremoto no solo fue una crisis natural, sino también:",
+                new String[]{"Una crisis política",
+                        "Una fiesta nacional",
+                        "Un evento sin importancia",
+                        "Una crisis social"}, 3);
+        agregarPregunta(l, "Según la lectura, ¿cuál fue la reacción de la sociedad ante la limitada capacidad del Estado?",
+                new String[]{"Abandonar el país",
+                        "Organización autónoma en comités",
+                        "Esperar la ayuda sentados",
+                        "Dejar de trabajar"}, 1);
+        agregarPregunta(l, "¿Qué valor humano destaca el texto como resultado de la tragedia?",
+                new String[]{"La avaricia", "El egoísmo", "La resiliencia", "La indiferencia"}, 2);
+    }
+
+    // ==================== FANTASÍA (CUENTOS, FÁBULAS Y LEYENDAS DE GUATEMALA) ====================
+
+    private void crearCuentoSombrerónGuatemala(Carrera c) {
+        String texto = "CUENTO: EL SOMBRERÓM Y LA NIÑA DE LAS TRENZAS\n\n" +
+                "En un pequeño pueblo del altiplano guatemalteco, rodeado de pinos y montañas que parecían rozar el cielo, vivía una joven llamada Ixchel. " +
+                "Era conocida en toda la aldea por su hermosa cabellera negra y brillante, que trenzaba cada mañana con listones de colores vivos. " +
+                "Su abuela siempre le advertía: \"Niña, no salgas a la calle con el cabello suelto cuando cae la tarde, porque el Sombrerón podría fijarse en ti.\" " +
+                "Pero Ixchel, curiosa y valiente, no prestaba mucha atención a esas palabras.\n\n" +
+                "Una tarde de noviembre, mientras Ixchel volvía del mercado con una canasta de elotes y güisquiles, escuchó el tintineo de campanillas y el galope suave de un caballo. " +
+                "Al voltear, vio a un hombre diminuto montado sobre un corcel negro, con un sombrero enorme que casi le tapaba la cara y una guitarra colgada al hombro. " +
+                "El hombrecito la miró y sonrió, y Ixchel sintió que sus pies se volvían de piedra.\n\n" +
+                "Aquella noche, el Sombrerón comenzó a rondar la casa de Ixchel. Cantaba canciones dulces y melancólicas bajo la ventana, y los caballos del vecino relinchaban inquietos. " +
+                "Ixchel no podía dormir; la música la llenaba de una tristeza extraña que no podía explicar. " +
+                "Su abuela, al darse cuenta de lo que pasaba, actuó de inmediato. Tomó sal gruesa y la esparció en el umbral de la puerta, colocó ramos de ruda en las ventanas y encendió una vela bendita. " +
+                "Luego llamó al sacerdote del pueblo para que rezara en la casa.\n\n" +
+                "Por tres noches consecutivas, el Sombrerón insistió, pero al ver que las protecciones eran fuertes y que Ixchel permanecía en casa rezando, finalmente se alejó hacia las montañas en busca de otro lugar. " +
+                "Ixchel nunca volvió a salir con el cabello suelto al atardecer. Y cada vez que escuchaba a lo lejos el tintineo de campanillas, daba gracias a su abuela por haberla enseñado a respetar las tradiciones de su pueblo.\n\n" +
+                "MORALEJA: Las tradiciones de nuestros ancestros no son solo supersticiones; muchas veces encierran la sabiduría de generaciones que aprendieron a vivir en armonía con el mundo que las rodea.";
+        Lectura l = new Lectura("El Sombrerón y la Niña de las Trenzas", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Por qué la abuela le advertía a Ixchel que no saliera con el cabello suelto al atardecer?",
+                new String[]{"Porque hacía mucho frío en las tardes.",
+                        "Porque el Sombrerón podría fijarse en ella.",
+                        "Porque los perros del pueblo se volvían peligrosos.",
+                        "Porque era costumbre del pueblo quedarse en casa."}, 1);
+        agregarPregunta(l, "¿Qué característica física era más notable en el personaje del Sombrerón?",
+                new String[]{"Sus ojos de color rojo y su capa larga.",
+                        "Su estatura enorme y su voz grave.",
+                        "Su sombrero enorme y su pequeña estatura.",
+                        "Su cabello blanco y sus botas de cuero."}, 2);
+        agregarPregunta(l, "¿Cómo reaccionó Ixchel al ver al Sombrerón por primera vez?",
+                new String[]{"Corrió muy rápido hacia su casa.",
+                        "Sintió que sus pies se volvían de piedra.",
+                        "Gritó pidiendo auxilio a los vecinos.",
+                        "Le lanzó la canasta de verduras."}, 1);
+        agregarPregunta(l, "¿Cuál fue el efecto que la música del Sombrerón tenía sobre Ixchel?",
+                new String[]{"Le daban ganas de bailar y reír.",
+                        "La llenaba de una tristeza extraña que no podía explicar.",
+                        "La hacía sentir muy hambrienta.",
+                        "Le provocaba un sueño profundo e inmediato."}, 1);
+        agregarPregunta(l, "¿Qué elementos utilizó la abuela para proteger la casa del Sombrerón?",
+                new String[]{"Agua bendita, flores y música de marimba.",
+                        "Sal gruesa, ruda y una vela bendita.",
+                        "Copal, barro y plantas medicinales.",
+                        "Candados, cadenas y oraciones en voz alta."}, 1);
+        agregarPregunta(l, "¿Por qué el Sombrerón finalmente se alejó de la casa de Ixchel?",
+                new String[]{"Porque encontró a otra joven más hermosa en el pueblo.",
+                        "Porque las protecciones eran fuertes y Ixchel rezaba.",
+                        "Porque el sacerdote lo maldijo y lo convirtió en piedra.",
+                        "Porque llegó el amanecer y él debía esconderse del sol."}, 1);
+        agregarPregunta(l, "¿En qué región de Guatemala se ambienta este cuento?",
+                new String[]{"En la costa del Pacífico, entre palmas y arena.",
+                        "En las llanuras del Petén, junto a la selva.",
+                        "En el altiplano guatemalteco, rodeado de pinos y montañas.",
+                        "En la ciudad capital, en un barrio antiguo."}, 2);
+        agregarPregunta(l, "¿Qué cambio de comportamiento tuvo Ixchel al final del cuento?",
+                new String[]{"Decidió mudarse a vivir con su abuela en otro pueblo.",
+                        "Nunca volvió a salir con el cabello suelto al atardecer.",
+                        "Dejó de ir al mercado para no encontrarse con el Sombrerón.",
+                        "Comenzó a usar sombrero grande para que no la reconocieran."}, 1);
+        agregarPregunta(l, "¿Qué instrumento musical llevaba el Sombrerón consigo?",
+                new String[]{"Una flauta de caña.", "Un tambor de cuero.", "Una guitarra.", "Una marimba pequeña."}, 2);
+        agregarPregunta(l, "¿Cuál es la enseñanza principal de este cuento guatemalteco?",
+                new String[]{"Que los jóvenes no deben salir solos de noche en ningún lugar.",
+                        "Que las tradiciones de los ancestros encierran sabiduría.",
+                        "Que los sombrereros son personas peligrosas en el altiplano.",
+                        "Que la música puede controlar la mente de las personas."}, 1);
+    }
+
+    private void crearCuentoXibalbaGuatemala(Carrera c) {
+        String texto = "CUENTO: EL NIÑO QUE DESAFIÓ A XIBALBÁ\n\n" +
+                "Hace muchos siglos, en las tierras del Petén guatemalteco, vivía un joven llamado Ajmaq, cuyo nombre en maya significaba \"el perdonador\". " +
+                "Ajmaq era hijo de un curandero y desde pequeño aprendió que el mundo tenía dos caras: la de la luz, donde vivían los hombres, y la del inframundo, conocido como Xibalbá, donde moraban los señores de la oscuridad.\n\n" +
+                "Un día, la hermana menor de Ajmaq enfermó gravemente. Los curanderos de la aldea intentaron todo, pero el mal que tenía la niña parecía venir de más allá de este mundo. " +
+                "Su padre, ya muy anciano, le dijo a Ajmaq: \"Solo hay un lugar donde encontrarás la medicina que tu hermana necesita: en el jardín de Xibalbá. " +
+                "Pero debes saber que los señores del inframundo solo respetan a quien entra sin miedo y actúa con inteligencia, no con fuerza.\"\n\n" +
+                "Ajmaq emprendió el viaje siguiendo el camino de una ceiba sagrada que crecía al borde del río Usumacinta. " +
+                "Al llegar a la entrada del inframundo, los señores de Xibalbá lo pusieron a prueba: primero en la Casa Oscura, donde debía mantener encendida una antorcha sin que se consumiera; " +
+                "luego en la Casa Fría, donde el viento helado intentaba apagar su voluntad; y finalmente en la Casa del Fuego, donde debía encontrar la flor de vida entre las llamas.\n\n" +
+                "Ajmaq recordó los consejos de su padre: usó su inteligencia. En la Casa Oscura colocó una luciérnaga en la punta de la antorcha para que simulara la llama. " +
+                "En la Casa Fría, cantó las canciones de su madre que calentaban el alma. En la Casa del Fuego, observó que la flor de vida crecía justo donde el fuego no llegaba, en la sombra que generaba la llama más grande.\n\n" +
+                "Los señores de Xibalbá, impresionados por su astucia y valentía, le entregaron la flor de vida y le permitieron regresar. " +
+                "Ajmaq volvió a su aldea, preparó la medicina con la flor sagrada y su hermana se curó. " +
+                "Desde entonces, se dice que en el Petén, cuando florece la ceiba al amanecer, es porque algún alma valiente ha vencido a los señores de Xibalbá con la fuerza más poderosa que existe: el amor a su familia.\n\n" +
+                "MORALEJA: La inteligencia y el amor son las armas más poderosas frente a cualquier adversidad. La fuerza bruta nunca vence donde la astucia del corazón puede triunfar.";
+        Lectura l = new Lectura("El Niño que Desafió a Xibalbá", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Qué significado tiene el nombre \"Ajmaq\" en el idioma maya?",
+                new String[]{"El guerrero invencible.", "El perdonador.", "El hijo del sol.", "El guardián del bosque."}, 1);
+        agregarPregunta(l, "¿Por qué Ajmaq decidió bajar a Xibalbá?",
+                new String[]{"Porque quería demostrar que era el más valiente del pueblo.",
+                        "Para buscar la medicina que curaría a su hermana enferma.",
+                        "Porque los señores de Xibalbá lo llamaron en sueños.",
+                        "Para recuperar las herramientas de su padre perdidas."}, 1);
+        agregarPregunta(l, "¿Qué consejo le dio su padre antes de emprender el viaje?",
+                new String[]{"Que llevara una espada de jade para defenderse.",
+                        "Que los señores del inframundo solo respetan inteligencia, no fuerza.",
+                        "Que corriera todo el tiempo para que no lo atraparan.",
+                        "Que no comiera ni bebiera nada dentro de Xibalbá."}, 1);
+        agregarPregunta(l, "¿Cómo resolvió Ajmaq el desafío de la Casa Oscura?",
+                new String[]{"Encendiendo una gran fogata con ramas de ceiba.",
+                        "Colocando una luciérnaga en la punta de la antorcha.",
+                        "Gritando en voz alta para ahuyentar a la oscuridad.",
+                        "Usando un espejo para reflejar la luz de la luna."}, 1);
+        agregarPregunta(l, "¿Qué hizo Ajmaq para sobrevivir en la Casa Fría?",
+                new String[]{"Se cubrió con hojas de maíz y barro del río.",
+                        "Cantó las canciones de su madre que calentaban el alma.",
+                        "Construyó una hoguera con pedazos de piedra volcánica.",
+                        "Corrió sin parar para generar calor en su cuerpo."}, 1);
+        agregarPregunta(l, "¿Dónde creció la flor de vida dentro de la Casa del Fuego?",
+                new String[]{"En el centro de la llama más alta.",
+                        "En el techo de la casa donde no llegaba el calor.",
+                        "En la sombra que generaba la llama más grande.",
+                        "Debajo de las brasas apagadas del piso."}, 2);
+        agregarPregunta(l, "¿Qué árbol sagrado sirvió de guía para encontrar la entrada a Xibalbá?",
+                new String[]{"Una palma real del Petén.", "Un aguacate milenario.", "Una ceiba sagrada.", "Un árbol de chicozapote."}, 2);
+        agregarPregunta(l, "¿Cuál fue la reacción de los señores de Xibalbá ante las acciones de Ajmaq?",
+                new String[]{"Se enojaron mucho y lo encerraron para siempre.",
+                        "Quedaron impresionados y le entregaron la flor de vida.",
+                        "Le pusieron más pruebas imposibles de superar.",
+                        "Lo convirtieron en un murciélago como castigo."}, 1);
+        agregarPregunta(l, "¿Qué fenómeno natural se relaciona con la victoria de Ajmaq al final del cuento?",
+                new String[]{"La lluvia que cae sobre el Petén en invierno.",
+                        "La floración de la ceiba al amanecer.",
+                        "El arco iris que aparece sobre el río Usumacinta.",
+                        "El rugido del jaguar en las noches de luna llena."}, 1);
+        agregarPregunta(l, "¿Cuál es la moraleja principal de este cuento guatemalteco?",
+                new String[]{"Que es mejor no meterse en asuntos del inframundo.",
+                        "La inteligencia y el amor son las armas más poderosas ante cualquier adversidad.",
+                        "Que los jóvenes deben obedecer siempre a los señores mayores.",
+                        "Que la fuerza física es el único camino para superar los obstáculos."}, 1);
+    }
+
+    private void crearFabulaQuetzalGuatemala(Carrera c) {
+        String texto = "FÁBULA: EL QUETZAL Y EL CUERVO ENVIDIOSO\n\n" +
+                "En los bosques nubosos de las Verapaces guatemaltecas, donde la neblina abraza los árboles de pino y liquidámbar, vivía el Quetzal, el ave más bella de todas las tierras. " +
+                "Sus plumas verdes resplandecían como esmeraldas mojadas y su pecho de un rojo encendido parecía llevar el color del sol del atardecer. " +
+                "El Quetzal era admirado por todos los animales del bosque, pero él nunca presumía de su belleza; vivía tranquilo, alimentándose de frutas silvestres y cantando para el viento.\n\n" +
+                "En ese mismo bosque habitaba un Cuervo de plumas negras como la noche. El Cuervo era inteligente, hábil para encontrar alimento y excelente constructor de nidos, " +
+                "pero vivía atormentado por la envidia que sentía hacia el Quetzal. Un día, el Cuervo tuvo una idea: iría a donde el Quetzal y le robaría algunas de sus plumas para pegárselas y así ser él también admirado.\n\n" +
+                "El Cuervo se acercó al Quetzal con engaños. Le dijo que el gran Dios de la montaña lo había llamado para darle un mensaje urgente. " +
+                "Mientras el Quetzal lo escuchaba con atención, el Cuervo le arrancó tres plumas largas de la cola. El Quetzal sintió el dolor, pero en lugar de enojarse, miró al Cuervo con serenidad y le dijo:\n\n" +
+                "\"Hermano Cuervo, si hubieras pedido mis plumas con honestidad, te las habría dado con gusto. Pero las plumas que robaste no te darán lo que buscas, porque la verdadera belleza no está en el plumaje, sino en el carácter del que lo lleva.\"\n\n" +
+                "El Cuervo, avergonzado, se pegó las plumas verdes en las alas y voló ante los otros animales esperando admiración. Pero en lugar de eso, los animales se rieron, porque las plumas pegadas se veían falsas y ridículas sobre el negro del cuervo. " +
+                "Humillado, el Cuervo volvió donde el Quetzal a pedir perdón.\n\n" +
+                "El Quetzal lo perdonó y le dijo: \"Tu don, Cuervo, es tu inteligencia. Nunca la cambies por la apariencia. Cada ser tiene un regalo único, y solo quien lo cultiva con honradez encontrará el respeto que busca.\"\n\n" +
+                "MORALEJA: La envidia y el engaño nunca producen los frutos que prometen. Cada quien debe valorar y desarrollar sus propios dones en lugar de desear los ajenos.";
+        Lectura l = new Lectura("El Quetzal y el Cuervo Envidioso", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿En qué región de Guatemala se ambienta esta fábula?",
+                new String[]{"En las playas del Pacífico, junto al mar.",
+                        "En los bosques nubosos de las Verapaces.",
+                        "En las llanuras del oriente guatemalteco.",
+                        "En el centro histórico de la ciudad capital."}, 1);
+        agregarPregunta(l, "¿Qué cualidad principal tenía el Cuervo que no le era reconocida?",
+                new String[]{"Su hermoso plumaje de colores brillantes.",
+                        "Su voz melodiosa y su canto hermoso.",
+                        "Su inteligencia y habilidad para construir nidos.",
+                        "Su generosidad con los otros animales del bosque."}, 2);
+        agregarPregunta(l, "¿Cuál era el sentimiento que atormentaba al Cuervo?",
+                new String[]{"La soledad por no tener amigos.", "La envidia hacia el Quetzal.", "El miedo a la oscuridad del bosque.", "La tristeza por no saber cantar."}, 1);
+        agregarPregunta(l, "¿Cómo engañó el Cuervo al Quetzal para robarle las plumas?",
+                new String[]{"Le dijo que había un incendio en el bosque.",
+                        "Le inventó que el Dios de la montaña lo llamaba.",
+                        "Le ofreció compartir su nido a cambio de plumas.",
+                        "Le pidió que cerrara los ojos para escuchar música."}, 1);
+        agregarPregunta(l, "¿Cómo reaccionó el Quetzal cuando el Cuervo le arrancó las plumas?",
+                new String[]{"Se enojó mucho y llamó a todos los animales para castigarlo.",
+                        "Lo persiguió por todo el bosque para recuperarlas.",
+                        "Le respondió con serenidad y una enseñanza sabia.",
+                        "Lloró tristemente y se escondió en su árbol."}, 2);
+        agregarPregunta(l, "¿Qué pasó cuando el Cuervo se pegó las plumas verdes y se mostró ante los demás animales?",
+                new String[]{"Todos lo admiraron y lo nombraron rey del bosque.",
+                        "Los animales se rieron porque las plumas se veían falsas.",
+                        "El Quetzal lo aplaudió por su ingenioso disfraz.",
+                        "El Cuervo se sintió tan feliz que olvidó su tristeza."}, 1);
+        agregarPregunta(l, "¿Qué le dijo el Quetzal al Cuervo cuando regresó a pedir perdón?",
+                new String[]{"Que nunca más serían amigos por su traición.",
+                        "Que debía devolver las plumas y abandonar el bosque.",
+                        "Que su don era la inteligencia y debía valorarla con honradez.",
+                        "Que tendría que pintarse de verde para compensar el daño."}, 2);
+        agregarPregunta(l, "¿Qué hace el Quetzal en esta fábula antes de que el Cuervo lo engañe?",
+                new String[]{"Presume su belleza ante todos los animales del bosque.",
+                        "Vive tranquilo comiendo frutas y cantando para el viento.",
+                        "Compite con otros pájaros para demostrar quién es el más bello.",
+                        "Construye el nido más grande del bosque nuboso."}, 1);
+        agregarPregunta(l, "¿Cuál es el don que el Quetzal le reconoce al Cuervo al final de la fábula?",
+                new String[]{"Su valentía para enfrentar peligros.", "Su inteligencia.", "Su nobleza y generosidad.", "Su fuerza para volar lejos."}, 1);
+        agregarPregunta(l, "¿Cuál es la moraleja de esta fábula guatemalteca?",
+                new String[]{"Que el más bello siempre gana en la vida.",
+                        "La envidia y el engaño no dan los frutos prometidos; hay que valorar los dones propios.",
+                        "Que está bien copiar a los demás si uno lo hace con esfuerzo.",
+                        "Que el Quetzal es superior a todos los animales del bosque."}, 1);
+    }
+
+    private void crearFabulaConejo(Carrera c) {
+        String texto = "FÁBULA: EL CONEJO Y EL COYOTE DEL LAGO ATITLÁN\n\n" +
+                "A orillas del lago Atitlán, donde los volcanes San Pedro, Tolimán y Atitlán se reflejan en las aguas azules como tres guardianes silenciosos, vivía un Conejo de orejas largas y patas veloces. " +
+                "El Conejo era pequeño pero muy ingenioso, y siempre encontraba la manera de conseguir lo que necesitaba. " +
+                "Cerca del lago también vivía un Coyote hambriento y arrogante que se creía el más listo de todos los animales.\n\n" +
+                "Un día de sequía, las plantas que servían de alimento al Conejo se habían secado y el hambre apretaba. " +
+                "El Conejo vio que en una pequeña isla en medio del lago crecían unos hermosos chiles y tomates silvestres. " +
+                "Para llegar, necesitaba cruzar el lago, pero el Conejo no sabía nadar.\n\n" +
+                "El Coyote, que lo observaba desde la orilla, se acercó con una sonrisa burlona: \"Conejo, ¿sabes cuántos de tus parientes viven en esta región del lago? " +
+                "Yo los conté todos el año pasado. Si me dices cuántos crees que son, te llevaré en mi lomo hasta la isla.\" " +
+                "El Conejo entendió que era una trampa; el Coyote quería distraerlo para atraparlo mientras cruzaban.\n\n" +
+                "Pero el Conejo sonrió y respondió: \"Con mucho gusto, Coyote. Pero primero cuéntame tú cuántas escamas tiene el pez más grande del lago Atitlán, y yo te contaré mis parientes.\" " +
+                "El Coyote se rascó la cabeza, incapaz de responder. \"¿Ves?\", dijo el Conejo, \"algunas cosas no se pueden contar. " +
+                "Pero sí puedo decirte otra cosa: si nadas hasta la isla y me traes diez chiles, te daré a cambio la dirección del nido de codornices más grande de la ribera, que tiene más huevos de los que jamás has visto.\"\n\n" +
+                "El Coyote, codiciando los huevos, aceptó. Nadó hasta la isla, recogió los chiles y los trajo de vuelta. " +
+                "El Conejo le dio la dirección, pero cuando el Coyote llegó, encontró solo un viejo nido vacío que ya nadie ocupaba. " +
+                "Furioso, regresó al lago, pero el Conejo ya había desaparecido entre los maizales, con el vientre lleno de chiles y tomates.\n\n" +
+                "MORALEJA: El arrogante que subestima a los demás por su tamaño o apariencia es el primero en caer en su propia trampa. El ingenio vence a la soberbia.";
+        Lectura l = new Lectura("El Conejo y el Coyote del Lago Atitlán", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿En qué lugar de Guatemala se ambienta esta fábula?",
+                new String[]{"En las playas de Livingston, junto al Caribe.",
+                        "A orillas del lago Atitlán.",
+                        "En los mercados de Chichicastenango.",
+                        "En los bosques del Parque Nacional Tikal."}, 1);
+        agregarPregunta(l, "¿Cuál era el problema principal que enfrentaba el Conejo al inicio de la historia?",
+                new String[]{"Que el Coyote le había robado su madriguera.",
+                        "Que no podía nadar para llegar a la isla con alimento.",
+                        "Que los volcanes habían espantado a todos los animales.",
+                        "Que no encontraba agua limpia para beber en la sequía."}, 1);
+        agregarPregunta(l, "¿Cuál era la trampa que el Coyote intentó tender al Conejo?",
+                new String[]{"Convencerlo de nadar en el lago para ahogarlo.",
+                        "Distraerlo con una pregunta mientras cruzaban para atraparlo.",
+                        "Hacerlo pelear con otro animal más grande.",
+                        "Robarle el alimento que ya había conseguido."}, 1);
+        agregarPregunta(l, "¿Cómo respondió el Conejo a la trampa del Coyote?",
+                new String[]{"Huyó corriendo hacia el bosque de inmediato.",
+                        "Pidió ayuda a los otros animales de la orilla.",
+                        "Respondió con otra pregunta imposible de contestar.",
+                        "Le mintió diciendo que sí sabía la respuesta exacta."}, 2);
+        agregarPregunta(l, "¿Qué prometió el Conejo al Coyote a cambio de traer los chiles de la isla?",
+                new String[]{"La ubicación del nido de codornices más grande de la ribera.",
+                        "La receta del mejor caldo de frijoles del lago.",
+                        "Un mapa de todas las madrigueras del bosque.",
+                        "La promesa de no molestarlo nunca más en el lago."}, 0);
+        agregarPregunta(l, "¿Qué encontró el Coyote cuando llegó al lugar que el Conejo le indicó?",
+                new String[]{"Un nido lleno de huevos frescos de codorniz.",
+                        "Un grupo de conejos que lo esperaban para atacarlo.",
+                        "Un viejo nido vacío que nadie ocupaba.",
+                        "Una trampa de cazadores que lo capturó."}, 2);
+        agregarPregunta(l, "¿Qué defecto principal tiene el Coyote en esta fábula?",
+                new String[]{"La pereza y el miedo al agua del lago.", "La arrogancia y la codicia.", "La tristeza y la nostalgia.", "La ingenuidad y la timidez."}, 1);
+        agregarPregunta(l, "¿Qué virtud principal demuestra el Conejo a lo largo de la historia?",
+                new String[]{"Su velocidad para correr por la orilla del lago.", "Su valentía para enfrentarse al Coyote.", "Su ingenio para resolver su problema sin violencia.", "Su fuerza para cargar mucho alimento."}, 2);
+        agregarPregunta(l, "¿Cuáles son los tres volcanes mencionados al inicio de la fábula?",
+                new String[]{"Santiaguito, Pacaya y Santa María.",
+                        "San Pedro, Tolimán y Atitlán.",
+                        "Tajumulco, Tacaná y el Agua.",
+                        "Fuego, Acatenango y Santa María."}, 1);
+        agregarPregunta(l, "¿Cuál es la moraleja de esta fábula del lago Atitlán?",
+                new String[]{"Que el más grande siempre derrota al más pequeño.",
+                        "El arrogante que subestima a otros por su tamaño es el primero en caer. El ingenio vence a la soberbia.",
+                        "Que los animales pequeños deben evitar a los grandes siempre.",
+                        "Que la honestidad es más importante que la inteligencia."}, 1);
+    }
+
+    private void crearLeyendaLlorona(Carrera c) {
+        String texto = "LEYENDA: LA LLORONA DE LOS RÍOS GUATEMALTECOS\n\n" +
+                "De todas las leyendas que han poblado la imaginación del pueblo guatemalteco a lo largo de los siglos, pocas son tan arraigadas y extendidas como la de La Llorona. " +
+                "Se dice que en tiempos de la Colonia, en los alrededores de la ciudad de Santiago de los Caballeros, hoy conocida como La Antigua Guatemala, " +
+                "vivía una joven indígena de nombre Xochilt, de rara belleza y corazón noble. Xochilt se enamoró perdidamente de un conquistador español llamado Don Rodrigo, quien la prometió matrimonio y amor eterno.\n\n" +
+                "Sin embargo, Don Rodrigo abandonó a Xochilt para casarse con una mujer española de noble linaje, como dictaban las costumbres y conveniencias de la época. " +
+                "Xochilt, rota de dolor y deshonra, perdió la razón. Cuentan los viejos del lugar que en un momento de locura, tomó a sus dos hijos pequeños al borde del río Pensativo y los dejó ir entre las aguas, convencida de que así estarían libres del sufrimiento del mundo.\n\n" +
+                "Cuando recuperó la conciencia y comprendió lo que había hecho, Xochilt cayó de rodillas lanzando un grito desgarrador que heló la sangre de todos los que lo escucharon. " +
+                "Desde esa noche, su alma no pudo descansar. Se convirtió en un espíritu que vaga eternamente por las orillas de los ríos y barrancos de Guatemala, " +
+                "vestida de blanco, con el cabello negro suelto, llorando sin consuelo y gritando: \"¡Aayyy, mis hijos!\"\n\n" +
+                "Los ancianos de los pueblos del altiplano y del oriente guatemalteco advierten que La Llorona aparece especialmente en las noches de luna llena y cerca de ríos, " +
+                "barrancos y quebradas. Se dice que quien la escucha llorar cerca de su casa debe rezar y no salir, pues el espíritu puede llevar consigo a los niños desobedientes que andan solos de noche. " +
+                "También se cuenta que algunos hombres que la han seguido atraídos por su llanto han amanecido perdidos en los barrancos, sin recordar cómo llegaron.\n\n" +
+                "Esta leyenda, transmitida de generación en generación alrededor de los fogones de las casas, cumple una función social profunda: " +
+                "refuerza los valores del cuidado de los hijos, advierte sobre los peligros de la noche para los niños y narra, desde la óptica popular, el sufrimiento histórico de las mujeres indígenas frente a la injusticia colonial.\n\n" +
+                "Versiones de La Llorona se escuchan desde la costa Sur hasta el Petén, adaptándose a los ríos y quebradas de cada región, pero siempre conservando su esencia: un alma en pena que llora eternamente por sus hijos perdidos.";
+        Lectura l = new Lectura("La Llorona de los Ríos Guatemaltecos", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿En qué ciudad colonial de Guatemala se origina esta leyenda según el texto?",
+                new String[]{"En la ciudad de Guatemala, capital actual del país.",
+                        "En Santiago de los Caballeros, hoy La Antigua Guatemala.",
+                        "En Quetzaltenango, la ciudad de los Altos.",
+                        "En Puerto Barrios, a orillas del Caribe."}, 1);
+        agregarPregunta(l, "¿Cuál fue la razón por la que Don Rodrigo abandonó a Xochilt?",
+                new String[]{"Porque Xochilt lo traicionó con otro hombre.",
+                        "Porque fue enviado de regreso a España por el rey.",
+                        "Para casarse con una mujer española de noble linaje.",
+                        "Porque Xochilt le confesó que no lo amaba."}, 2);
+        agregarPregunta(l, "¿Qué hizo Xochilt con sus hijos en el momento de mayor locura y desesperación?",
+                new String[]{"Los dejó al cuidado de una familia de la aldea.",
+                        "Los llevó consigo al buscar refugio en el bosque.",
+                        "Los dejó ir entre las aguas del río Pensativo.",
+                        "Los entregó a un convento para que los cuidaran."}, 2);
+        agregarPregunta(l, "¿Cómo se describe físicamente a La Llorona en la leyenda guatemalteca?",
+                new String[]{"Vestida de negro, con el cabello cubierto y los pies descalzos.",
+                        "Vestida de blanco, con el cabello negro suelto.",
+                        "Cubierta de barro del río y con ojos brillantes.",
+                        "Con un rebozo rojo y una antorcha en la mano."}, 1);
+        agregarPregunta(l, "¿En qué momento y lugar aparece La Llorona con mayor frecuencia según los ancianos?",
+                new String[]{"En las mañanas de lluvia, cerca de los cementerios.",
+                        "En las noches de luna llena, cerca de ríos y barrancos.",
+                        "Al amanecer, en las plazas principales de los pueblos.",
+                        "Durante los días festivos, en las iglesias antiguas."}, 1);
+        agregarPregunta(l, "¿Qué se dice que le ocurre a los hombres que siguen el llanto de La Llorona?",
+                new String[]{"Quedan encantados y se convierten en árboles.",
+                        "Encuentran riquezas escondidas bajo el río.",
+                        "Amanecen perdidos en los barrancos sin recordar cómo llegaron.",
+                        "Son llevados directamente a Xibalbá sin remedio."}, 2);
+        agregarPregunta(l, "¿Cuál es una de las funciones sociales que cumple esta leyenda según el texto?",
+                new String[]{"Promover el turismo hacia los ríos de Guatemala.",
+                        "Explicar el origen de los ríos del altiplano central.",
+                        "Advertir sobre los peligros de la noche para los niños.",
+                        "Celebrar el mestizaje entre españoles e indígenas."}, 2);
+        agregarPregunta(l, "¿Qué río se menciona en el texto como escenario de la tragedia de Xochilt?",
+                new String[]{"El río Motagua.", "El río Usumacinta.", "El río Pensativo.", "El río Samalá."}, 2);
+        agregarPregunta(l, "¿Por qué el alma de Xochilt no puede descansar según la leyenda?",
+                new String[]{"Porque fue maldecida por los señores de Xibalbá.",
+                        "Por el remordimiento eterno de haber perdido a sus hijos.",
+                        "Porque Don Rodrigo no quiso perdonarla antes de morir.",
+                        "Porque la Iglesia colonial le negó el derecho al entierro."}, 1);
+        agregarPregunta(l, "¿Qué perspectiva histórica adicional ofrece el texto sobre el significado de esta leyenda?",
+                new String[]{"Que fue inventada por los españoles para controlar a los indígenas.",
+                        "Que narra el sufrimiento histórico de las mujeres indígenas frente a la injusticia colonial.",
+                        "Que es una copia de una leyenda europea traída por los conquistadores.",
+                        "Que fue creada por los sacerdotes mayas para proteger los ríos sagrados."}, 1);
+    }
+
+    private void crearLeyendaCadejo(Carrera c) {
+        String texto = "LEYENDA: EL CADEJO: EL GUARDIÁN DE LAS NOCHES GUATEMALTECAS\n\n" +
+                "Entre todas las criaturas que pueblan el imaginario nocturno de Guatemala, ninguna es tan dual y fascinante como el Cadejo. " +
+                "A diferencia de muchas leyendas que presentan un solo ser, la tradición popular guatemalteca reconoce la existencia de dos Cadejos: el blanco y el negro, " +
+                "dos fuerzas opuestas que en la oscuridad de la noche libran una batalla eterna por el alma de los caminantes.\n\n" +
+                "El Cadejo Blanco es descrito como un perro grande de pelaje brillante como la luna, con ojos que brillan con una luz azulada y pezuñas que no hacen ruido al pisar el suelo. " +
+                "Aparece junto a aquellas personas que caminan de noche por caminos solitarios, velando por su seguridad y acompañándolas en silencio hasta que llegan a su destino. " +
+                "Muchos ancianos del oriente guatemalteco y del altiplano cuentan que en sus años de juventud, cuando debían caminar de noche entre aldeas, sentían la presencia del Cadejo Blanco a su lado, " +
+                "y esa presencia los llenaba de calma y les indicaba que iban por el buen camino.\n\n" +
+                "El Cadejo Negro, en cambio, es la contraparte oscura. Es un perro de pelaje negro azabache con ojos encendidos como brasas y un olor a azufre que lo delata antes de que se le vea. " +
+                "Su misión es perseguir, desorientar y asustar a los borrachos, a los que andan en malos pasos y a los que han tomado decisiones que dañan a su familia o comunidad. " +
+                "Se dice que quien es perseguido por el Cadejo Negro en un sueño recurrente debe reflexionar sobre sus acciones, pues la criatura actúa como un espejo del alma.\n\n" +
+                "Cuentan en los pueblos de Huehuetenango y de los Cuchumatanes que un hombre que regresaba de noche a su aldea, después de haber bebido en demasía, vio frente a él un perro enorme y negro que bloqueaba el camino. " +
+                "Por más que intentaba rodearlo, el animal aparecía siempre frente a él, hasta que el hombre, agotado, se sentó en una piedra a llorar. " +
+                "En ese momento, el Cadejo Negro desapareció y fue reemplazado por el Cadejo Blanco, que lo guió con suavidad por el camino hasta la puerta de su casa.\n\n" +
+                "Los estudiosos del folklore guatemalteco señalan que la leyenda del Cadejo es una expresión profunda de la cosmovisión indígena: " +
+                "la idea de que todo en la naturaleza tiene una dualidad, una fuerza de luz y una fuerza de oscuridad que se equilibran mutuamente. " +
+                "Además, la leyenda cumple una función práctica y moral: advierte sobre los peligros de andar de noche solo, especialmente bajo los efectos del alcohol, " +
+                "y al mismo tiempo ofrece consuelo al creyente, recordándole que las fuerzas protectoras del universo velan por quien camina con honestidad y bien en el corazón.\n\n" +
+                "Hoy en día, la leyenda del Cadejo sigue viva en las tertulias familiares, en los mercados y en las radios comunitarias de los municipios del interior de Guatemala, " +
+                "donde la tradición oral sigue siendo el vehículo principal de transmisión de la sabiduría popular.";
+        Lectura l = new Lectura("El Cadejo: El Guardián de las Noches Guatemaltecas", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Qué hace única a la leyenda del Cadejo en comparación con otras leyendas guatemaltecas?",
+                new String[]{"Que el Cadejo puede transformarse en cualquier animal del bosque.",
+                        "Que presenta dos seres opuestos: el Cadejo blanco y el negro.",
+                        "Que solo aparece en los departamentos del norte del país.",
+                        "Que fue inventada por los mayas para proteger a los sacerdotes."}, 1);
+        agregarPregunta(l, "¿Cuál es la función del Cadejo Blanco según la leyenda guatemalteca?",
+                new String[]{"Asustar y castigar a quienes hacen el mal en su comunidad.",
+                        "Guiar y proteger a las personas que caminan de noche por caminos solitarios.",
+                        "Anunciar la llegada de lluvias y tormentas en el altiplano.",
+                        "Cuidar los campos de maíz durante las noches de cosecha."}, 1);
+        agregarPregunta(l, "¿Qué característica física distingue al Cadejo Negro del Cadejo Blanco?",
+                new String[]{"El Cadejo Negro es más pequeño y tiene pelo corto.",
+                        "El Cadejo Negro tiene pelaje negro con ojos como brasas y olor a azufre.",
+                        "El Cadejo Negro aparece solo durante las lluvias del invierno.",
+                        "El Cadejo Negro tiene cuernos y camina en dos patas."}, 1);
+        agregarPregunta(l, "¿A quiénes persigue especialmente el Cadejo Negro según la tradición popular?",
+                new String[]{"A los niños que no obedecen a sus padres durante el día.",
+                        "A los viajeros extranjeros que no conocen los caminos.",
+                        "A los borrachos y a quienes andan en malos pasos.",
+                        "A los cazadores que entran al bosque sin permiso."}, 2);
+        agregarPregunta(l, "¿En qué región de Guatemala se ambienta la historia del hombre que se encontró con el Cadejo Negro?",
+                new String[]{"En las playas de Champerico, en la costa del Pacífico.",
+                        "En los pueblos de Huehuetenango y los Cuchumatanes.",
+                        "En las riveras del lago de Izabal, en el norte.",
+                        "En los mercados de Chichicastenango, en el Quiché."}, 1);
+        agregarPregunta(l, "¿Qué hizo el hombre cuando el Cadejo Negro bloqueaba constantemente su camino?",
+                new String[]{"Arrojó piedras al animal para espantarlo.",
+                        "Llamó en voz alta al Cadejo Blanco para que lo rescatara.",
+                        "Se sentó agotado en una piedra y comenzó a llorar.",
+                        "Corrió hacia el río más cercano para escapar."}, 2);
+        agregarPregunta(l, "¿Qué ocurrió después de que el hombre se sentó en la piedra a llorar?",
+                new String[]{"El Cadejo Negro lo ató al árbol más cercano hasta el amanecer.",
+                        "El Cadejo Negro desapareció y el Cadejo Blanco lo guió a casa.",
+                        "Ambos cadejos lucharon y el hombre pudo escapar por el camino.",
+                        "El hombre se quedó dormido y amaneció en la orilla del río."}, 1);
+        agregarPregunta(l, "¿Qué concepto de la cosmovisión indígena guatemalteca expresa la leyenda del Cadejo según el texto?",
+                new String[]{"Que los animales son más importantes que los seres humanos en la naturaleza.",
+                        "Que la oscuridad siempre vence a la luz en las noches del altiplano.",
+                        "Que todo en la naturaleza tiene una dualidad de luz y oscuridad que se equilibra.",
+                        "Que los perros son los únicos animales guardianes del ser humano."}, 2);
+        agregarPregunta(l, "¿Cómo se transmite actualmente la leyenda del Cadejo en Guatemala?",
+                new String[]{"A través de libros universitarios y museos nacionales.",
+                        "En tertulias familiares, mercados y radios comunitarias.",
+                        "Exclusivamente en los colegios privados de la capital.",
+                        "Por medio de películas y series producidas en Hollywood."}, 1);
+        agregarPregunta(l, "¿Qué mensaje práctico y moral refuerza la leyenda del Cadejo en las comunidades guatemaltecas?",
+                new String[]{"Que los perros callejeros son peligrosos y deben evitarse en la noche.",
+                        "Que es mejor viajar de día y evitar caminar de noche solo, especialmente bajo efectos del alcohol.",
+                        "Que quienes no creen en las leyendas serán castigados por los espíritus.",
+                        "Que el Cadejo Blanco solo aparece en los pueblos del altiplano, no en la costa."}, 1);
     }
 
     private void agregarPregunta(Lectura lectura, String enunciado, String[] textosOpciones, int indiceCorrecta) {
@@ -706,9 +1491,7 @@ public class DataInitializer implements CommandLineRunner {
         preguntaRepository.save(p);
     }
 
-    // Versión para preguntas de Verdadero/Falso (dos opciones)
     private void agregarPreguntaVF(Lectura lectura, String enunciado, String[] textosOpciones, int indiceCorrecta) {
-        // Si solo hay 2 opciones usamos el mismo método, funciona igual
         agregarPregunta(lectura, enunciado, textosOpciones, indiceCorrecta);
     }
 }
