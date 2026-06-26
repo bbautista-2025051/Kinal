@@ -22,13 +22,13 @@
     if (!SR) {
         btnMic.disabled = true;
         btnMic.style.opacity = '0.4';
-        if (voiceMsg) voiceMsg.textContent = 'Tu navegador no soporta reconocimiento de voz. Usa Google Chrome.';
+        if (voiceMsg) voiceMsg.textContent = 'Usa Google Chrome para esta función.';
         return;
     }
 
-    /* ── Preparar spans de palabras ── */
-    var raw   = contentEl.textContent;
-    var wi    = 0;
+    /* ── Preparar spans ── */
+    var raw = contentEl.textContent;
+    var wi  = 0;
     contentEl.innerHTML = raw.split(/(\s+)/).map(function (p) {
         if (/^\s*$/.test(p)) return p.replace(/\n/g, '<br>');
         return '<span class="rw" data-i="' + (wi++) + '">' +
@@ -56,36 +56,41 @@
     });
 
     /* ── Estado ── */
-    var rec         = null;
-    var active      = false;
-    var permGranted = false;   // true después de getUserMedia exitoso
+    var active  = false;
+    var rec     = null;
+    var started = false;  // onstart se disparó al menos una vez
 
     function setMsg(txt) { if (voiceMsg) voiceMsg.textContent = txt; }
 
     function resetBtn() {
         btnMic.classList.remove('active');
-        if (micIco) micIco.className = 'fa fa-microphone';
+        if (micIco) micIco.className  = 'fa fa-microphone';
         if (micTxt) micTxt.textContent = 'Iniciar';
+        btnMic.disabled = false;
     }
 
-    function setActiveBtn() {
+    function setListeningBtn() {
         btnMic.classList.add('active');
-        if (micIco) micIco.className = 'fa fa-stop';
+        if (micIco) micIco.className  = 'fa fa-stop';
         if (micTxt) micTxt.textContent = 'Detener';
+        btnMic.disabled = false;
     }
 
-    /* ── Iniciar reconocimiento (solo después de tener permiso) ── */
+    /* ── Crear y arrancar reconocimiento ── */
     function startRec() {
         if (!active) return;
 
-        rec = new SR();
+        rec     = new SR();
+        started = false;
+
         rec.lang            = 'es-ES';
         rec.continuous      = true;
         rec.interimResults  = true;
         rec.maxAlternatives = 1;
 
         rec.onstart = function () {
-            setActiveBtn();
+            started = true;
+            setListeningBtn();
             setMsg('🎤 Escuchando… lee el texto en voz alta');
         };
 
@@ -103,76 +108,40 @@
         };
 
         rec.onerror = function (e) {
-            /* no-speech y aborted son normales con continuous=true, ignorar */
             if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
                 active = false;
                 resetBtn();
-                setMsg('⛔ Permiso denegado. Haz clic en el candado 🔒 de la barra de Chrome → Micrófono → Permitir → recarga.');
+                setMsg('⛔ Micrófono bloqueado. Recarga la página — Chrome pedirá permiso al presionar Iniciar.');
             }
+            /* no-speech / aborted / network: onend reinicia */
         };
 
         rec.onend = function () {
-            /* Si el usuario NO detuvo, reiniciar inmediatamente */
-            if (active) {
-                setTimeout(startRec, 100);
-            } else {
+            if (!active) {
                 resetBtn();
                 setMsg('Detenido. Las palabras verdes quedan guardadas.');
+                return;
             }
+            /* Reiniciar — sin delay: Chrome con continuous=true termina a veces
+               por silencio aunque esté configurado para no hacerlo */
+            setTimeout(startRec, 50);
         };
 
-        try {
-            rec.start();
-        } catch (e) {
-            /* InvalidStateError: ya hay una sesión activa — esperar y reintentar */
-            setTimeout(startRec, 300);
-        }
+        rec.start();
     }
 
-    /* ── Pedir permiso explícito con getUserMedia primero ── */
-    function requestPermissionAndStart() {
-        if (permGranted) {
-            /* Ya tenemos permiso, iniciar directo */
-            active = true;
-            setMsg('⏳ Iniciando micrófono…');
-            startRec();
-            return;
-        }
-
-        setMsg('⏳ Solicitando permiso de micrófono…');
-        btnMic.disabled = true;
-
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(function (stream) {
-                /* Detener el stream inmediatamente — solo lo necesitábamos para el permiso */
-                stream.getTracks().forEach(function (t) { t.stop(); });
-                permGranted = true;
-                btnMic.disabled = false;
-                active = true;
-                setMsg('🎤 Escuchando… lee el texto en voz alta');
-                startRec();
-            })
-            .catch(function (err) {
-                btnMic.disabled = false;
-                resetBtn();
-                active = false;
-                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                    setMsg('⛔ Permiso denegado. Haz clic en el candado 🔒 de la barra de Chrome → Micrófono → Permitir → recarga la página.');
-                } else if (err.name === 'NotFoundError') {
-                    setMsg('⛔ No se encontró micrófono. Conecta uno e intenta de nuevo.');
-                } else {
-                    setMsg('⛔ Error: ' + err.name + '. Recarga la página e intenta de nuevo.');
-                }
-            });
-    }
-
-    /* ── Clic del botón ── */
+    /* ── Clic ── */
     btnMic.addEventListener('click', function () {
         if (!active) {
-            requestPermissionAndStart();
+            active = true;
+            btnMic.disabled = true;
+            setMsg('⏳ Iniciando micrófono…');
+            startRec();
         } else {
             active = false;
             try { if (rec) rec.stop(); } catch (ex) {}
+            resetBtn();
+            setMsg('Detenido. Las palabras verdes quedan guardadas.');
         }
     });
 
@@ -208,10 +177,10 @@
     function refreshCoverage() {
         var count = okBits.filter(Boolean).length;
         coverage  = Math.round((count / total) * 100);
-        if (covFill) covFill.style.width  = coverage + '%';
-        if (covPct)  covPct.textContent   = coverage + '%';
-        if (svFill)  svFill.style.width   = coverage + '%';
-        if (svPct)   svPct.textContent    = coverage + '%';
+        if (covFill) covFill.style.width = coverage + '%';
+        if (covPct)  covPct.textContent  = coverage + '%';
+        if (svFill)  svFill.style.width  = coverage + '%';
+        if (svPct)   svPct.textContent   = coverage + '%';
         if (lockMsg && coverage < 60)
             lockMsg.textContent = 'Lee en voz alta el 60% del texto (' + coverage + '% reconocido)';
         checkUnlock();
@@ -232,7 +201,7 @@
         setMsg('✅ ¡60% alcanzado! El test está desbloqueado.');
     }
 
-    /* ── Navegar al test ── */
+    /* ── Ir al test ── */
     if (testBtn) {
         testBtn.addEventListener('click', function (e) {
             e.preventDefault();
