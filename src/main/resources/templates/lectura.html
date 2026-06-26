@@ -11,7 +11,102 @@
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
     <style>
-        /* ── Controles de audio ── */
+        /* ══ Barra de escucha de voz ══ */
+        #voiceBar {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            padding: .9rem 1.25rem;
+            background: #f0f4ff;
+            border: 1.5px solid rgba(27,58,107,.18);
+            border-radius: var(--k-radius);
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+        #voiceBar .v-lbl {
+            font-size: .75rem;
+            font-weight: 700;
+            color: var(--kinal-blue-dark);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            white-space: nowrap;
+        }
+        #btnMic {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            padding: .45rem 1.1rem;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-size: .85rem;
+            font-weight: 600;
+            background: var(--kinal-blue);
+            color: #fff;
+            transition: background .18s;
+            white-space: nowrap;
+        }
+        #btnMic:hover { background: var(--kinal-blue-mid); }
+        #btnMic.listening {
+            background: var(--k-red, #C0392B);
+            animation: micPulse 1.2s ease-in-out infinite;
+        }
+        @keyframes micPulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(192,57,43,.4); }
+            50%      { box-shadow: 0 0 0 8px rgba(192,57,43,0); }
+        }
+        #voiceStatus {
+            font-size: .78rem;
+            color: var(--k-muted);
+            flex: 1;
+            min-width: 120px;
+        }
+        /* Barra de progreso de cobertura de voz */
+        #voiceCoverageWrap {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            min-width: 160px;
+        }
+        #voiceCoverageBar {
+            flex: 1;
+            height: 6px;
+            background: #dde1ea;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        #voiceCoverageFill {
+            height: 100%;
+            width: 0%;
+            background: var(--k-green);
+            border-radius: 999px;
+            transition: width .5s ease;
+        }
+        #voiceCoveragePct {
+            font-size: .78rem;
+            font-weight: 700;
+            color: var(--k-green);
+            min-width: 2.8rem;
+            text-align: right;
+        }
+
+        /* ══ Resaltado de palabras ══ */
+        .rd-word {
+            border-radius: 3px;
+            transition: background .3s;
+        }
+        /* Palabra actualmente reconocida (interim) */
+        .rd-word.interim { background: rgba(245,166,35,.35); }
+        /* Palabra confirmada leída correctamente */
+        .rd-word.read-ok {
+            background: rgba(39,174,96,.18);
+            color: var(--k-green);
+            font-weight: 500;
+        }
+        /* Palabra que no coincidió */
+        .rd-word.read-miss { background: rgba(192,57,43,.10); }
+
+        /* ══ Barra TTS (escuchar audio) ══ */
         #audioBar {
             display: flex;
             align-items: center;
@@ -58,11 +153,7 @@
         }
         #audioStatus { font-size: .75rem; color: var(--k-muted); margin-left: auto; }
 
-        /* ── Resaltado TTS ── */
-        .tts-word { cursor: default; border-radius: 3px; }
-        .tts-word.hl { background: rgba(245,166,35,.38); padding: 0 2px; }
-
-        /* ── Bloqueo del test ── */
+        /* ══ Bloqueo del test ══ */
         #lockBox {
             display: flex;
             align-items: center;
@@ -94,8 +185,6 @@
             pointer-events: none;
             filter: grayscale(.5);
         }
-
-        /* Barra de progreso lateral */
         .side-prog-wrap {
             height: 8px;
             background: #e5e8ed;
@@ -134,8 +223,9 @@
 
 <div class="k-page">
     <div class="k-glow k-glow-indigo" style="width:300px;height:300px;top:-30px;right:-50px;"></div>
-
     <div class="k-container" style="position:relative;z-index:1">
+
+        <!-- Breadcrumb -->
         <div class="fade-up" style="display:flex;align-items:center;gap:.5rem;margin-bottom:2rem;font-size:.875rem;color:var(--k-muted)">
             <a href="/carreras" style="color:var(--kinal-blue)"><i class="fa fa-house"></i> Carreras</a>
             <i class="fa fa-chevron-right" style="font-size:.65rem;opacity:.5"></i>
@@ -146,6 +236,7 @@
 
         <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start" id="mainGrid">
             <div>
+                <!-- Cabecera lectura -->
                 <div class="k-card fade-up" style="margin-bottom:1.5rem;padding:2rem">
                     <h1 class="k-heading" style="margin-bottom:1rem;line-height:1.25" th:text="${lectura.titulo}">Título</h1>
                     <div style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:center">
@@ -155,19 +246,17 @@
                     </div>
                 </div>
 
-                <!-- BARRA DE AUDIO -->
+                <!-- ══ BARRA TTS (escuchar) ══ -->
                 <div id="audioBar" class="fade-up stagger-1">
-                    <span class="audio-lbl"><i class="fa fa-volume-high"></i> Audio</span>
+                    <span class="audio-lbl"><i class="fa fa-volume-high"></i> Escuchar</span>
                     <button id="btnPlay" class="audio-btn">
                         <i class="fa fa-play" id="playIco"></i>
-                        <span id="playTxt">Escuchar</span>
+                        <span id="playTxt">Reproducir</span>
                     </button>
                     <button id="btnStop" class="audio-btn">
                         <i class="fa fa-stop"></i> Detener
                     </button>
-                    <label for="speedSel" style="font-size:.75rem;color:var(--k-muted)">
-                        <i class="fa fa-gauge-high"></i>
-                    </label>
+                    <label for="speedSel" style="font-size:.75rem;color:var(--k-muted)"><i class="fa fa-gauge-high"></i></label>
                     <select id="speedSel">
                         <option value="0.75">0.75×</option>
                         <option value="1" selected>1×</option>
@@ -178,7 +267,21 @@
                     <span id="audioStatus"></span>
                 </div>
 
-                <!-- TARJETA DE LECTURA -->
+                <!-- ══ BARRA DE RECONOCIMIENTO DE VOZ ══ -->
+                <div id="voiceBar" class="fade-up stagger-1">
+                    <span class="v-lbl"><i class="fa fa-microphone"></i> Leer en voz alta</span>
+                    <button id="btnMic">
+                        <i class="fa fa-microphone" id="micIco"></i>
+                        <span id="micTxt">Iniciar reconocimiento</span>
+                    </button>
+                    <span id="voiceStatus">Presiona el micrófono y lee el texto en voz alta</span>
+                    <div id="voiceCoverageWrap" title="Porcentaje de la lectura reconocida correctamente">
+                        <div id="voiceCoverageBar"><div id="voiceCoverageFill"></div></div>
+                        <span id="voiceCoveragePct">0%</span>
+                    </div>
+                </div>
+
+                <!-- ══ TARJETA DE CONTENIDO ══ -->
                 <div class="k-card fade-up stagger-2" id="readingCard">
                     <div style="position:sticky;top:65px;margin:-1.75rem -1.75rem 1.75rem;z-index:10">
                         <div class="k-progress" style="border-radius:0;height:3px">
@@ -190,11 +293,11 @@
                     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
                         <div>
                             <p style="font-size:.875rem;font-weight:600;color:var(--k-text)">¿Terminaste de leer?</p>
-                            <p style="font-size:.8125rem;color:var(--k-muted)" id="scrollHint">Desplázate hasta el final para habilitar el test</p>
+                            <p style="font-size:.8125rem;color:var(--k-muted)" id="scrollHint">Lee en voz alta y desplázate hasta el final</p>
                         </div>
                         <div th:if="${!yaRealizado}" style="display:flex;flex-direction:column;align-items:flex-end;gap:.5rem">
-                            <div id="lockBox"><i class="fa fa-lock"></i> Lee todo el contenido para desbloquear</div>
-                            <div id="readyBox"><i class="fa fa-circle-check"></i> ¡Lectura completada! Puedes iniciar el test.</div>
+                            <div id="lockBox"><i class="fa fa-lock"></i> <span id="lockMsg">Lee en voz alta al menos el 60% del texto</span></div>
+                            <div id="readyBox"><i class="fa fa-circle-check"></i> ¡Lectura verificada! Puedes iniciar el test.</div>
                             <a th:href="${testUrl}" class="k-btn k-btn-amber k-btn-lg locked" id="startTestBtn">
                                 <i class="fa fa-pen-to-square"></i> Iniciar test
                             </a>
@@ -208,7 +311,7 @@
                 </div>
             </div>
 
-            <!-- SIDEBAR -->
+            <!-- ══ SIDEBAR ══ -->
             <div style="position:sticky;top:80px" class="fade-up stagger-1" id="sidebar">
                 <div class="k-card" style="margin-bottom:1.25rem;text-align:center">
                     <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-muted);margin-bottom:.75rem;font-weight:600">
@@ -218,9 +321,21 @@
                     <p style="font-size:.75rem;color:var(--k-caption);margin-top:.6rem">Un buen lector: ~200 ppm</p>
                 </div>
 
+                <!-- Cobertura de voz en sidebar -->
                 <div class="k-card" style="margin-bottom:1.25rem">
                     <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-muted);margin-bottom:.75rem;font-weight:600">
-                        <i class="fa fa-eye"></i> Progreso de lectura
+                        <i class="fa fa-microphone"></i> Lectura reconocida
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.65rem;margin-bottom:.5rem">
+                        <div class="side-prog-wrap"><div id="sideVoiceFill" style="height:100%;width:0%;background:var(--k-green);border-radius:999px;transition:width .5s"></div></div>
+                        <span id="sideVoicePct" style="font-size:.8rem;font-weight:700;color:var(--k-green);min-width:2.5rem;text-align:right">0%</span>
+                    </div>
+                    <p style="font-size:.72rem;color:var(--k-caption)">Necesitas <strong>60%</strong> para desbloquear el test</p>
+                </div>
+
+                <div class="k-card" style="margin-bottom:1.25rem">
+                    <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-muted);margin-bottom:.75rem;font-weight:600">
+                        <i class="fa fa-eye"></i> Progreso de scroll
                     </p>
                     <div style="display:flex;align-items:center;gap:.65rem">
                         <div class="side-prog-wrap"><div id="sideProgFill"></div></div>
@@ -248,13 +363,13 @@
                     </p>
                     <ul style="list-style:none;display:flex;flex-direction:column;gap:.65rem">
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
-                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> Lee en un lugar tranquilo
+                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> Activa el micrófono y lee en voz alta
                         </li>
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
-                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> No te saltes párrafos
+                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> Las palabras verdes ya fueron reconocidas
                         </li>
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
-                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> Responder rápido da bonus de puntos
+                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> Necesitas leer el 60% para continuar
                         </li>
                     </ul>
                 </div>
@@ -272,201 +387,340 @@
 /*<![CDATA[*/
 const totalPalabras = [[${palabrasLectura}]];
 
-// ── Temporizador de lectura ─────────────────────────────────────────────────
-let startTime = Date.now();
-let elapsedMs = 0;
-const timerEl = document.getElementById('readingTimer');
-const ppmEl   = document.getElementById('ppmDisplay');
+// ══ 1. TEMPORIZADOR ══════════════════════════════════════════════════════════
+var startTime = Date.now();
+var elapsedMs = 0;
+var timerEl   = document.getElementById('readingTimer');
+var ppmEl     = document.getElementById('ppmDisplay');
 
 setInterval(function() {
     elapsedMs = Date.now() - startTime;
-    const secs = Math.floor(elapsedMs / 1000);
-    timerEl.textContent = String(Math.floor(secs / 60)).padStart(2,'0') + ':' + String(secs % 60).padStart(2,'0');
-    const mins = elapsedMs / 60000;
+    var secs = Math.floor(elapsedMs / 1000);
+    timerEl.textContent = pad(Math.floor(secs / 60)) + ':' + pad(secs % 60);
+    var mins = elapsedMs / 60000;
     if (mins > 0.1) {
-        const ppm = Math.round(totalPalabras / mins);
+        var ppm = Math.round(totalPalabras / mins);
         ppmEl.textContent = ppm;
         ppmEl.style.color = ppm >= 300 ? 'var(--k-green)' : ppm >= 200 ? 'var(--k-amber)' : 'var(--k-red)';
     }
-    sessionStorage.setItem('lecturaTime', elapsedMs);
-    // re-chequear desbloqueo periódicamente (en caso de que ya bajó pero no pasó el tiempo)
-    checkUnlock(lastPct);
+    checkUnlock();
 }, 1000);
 
-// ── TTS (Text-to-Speech) ────────────────────────────────────────────────────
-const contentEl = document.getElementById('readingContent');
+function pad(n) { return String(n).padStart(2,'0'); }
 
-// Envolver cada palabra en <span class="tts-word">
-(function wrapWords() {
-    const text  = contentEl.textContent;
-    const parts = text.split(/(\s+)/);
+// ══ 2. PREPARAR PALABRAS DEL TEXTO ══════════════════════════════════════════
+var contentEl = document.getElementById('readingContent');
+
+// Envolver cada palabra en span con índice
+(function() {
+    var raw   = contentEl.textContent;
+    var parts = raw.split(/(\s+)/);
+    var wi    = 0;
     contentEl.innerHTML = parts.map(function(p) {
-        return /\s+/.test(p) ? p : '<span class="tts-word">' + p.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>';
+        if (/^\s+$/.test(p) || p === '') return p;
+        var span = '<span class="rd-word" data-wi="' + wi + '">' +
+                   p.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>';
+        wi++;
+        return span;
     }).join('');
 })();
 
-const plainText  = contentEl.textContent; // texto plano reconstruido
-const wordSpans  = contentEl.querySelectorAll('.tts-word');
+// Array de palabras normalizadas (sin tildes, minúsculas, sin puntuación)
+var allWordSpans = Array.from(contentEl.querySelectorAll('.rd-word'));
+var allWordsNorm = allWordSpans.map(function(s) { return normalize(s.textContent); });
+var readBitmap   = new Array(allWordSpans.length).fill(false); // true = reconocida
+var totalWords   = allWordSpans.length;
 
-let utterance   = null;
-let ttsPlaying  = false;
-let ttsPaused   = false;
-
-const btnPlay    = document.getElementById('btnPlay');
-const playIco    = document.getElementById('playIco');
-const playTxt    = document.getElementById('playTxt');
-const btnStop    = document.getElementById('btnStop');
-const speedSel   = document.getElementById('speedSel');
-const audioStat  = document.getElementById('audioStatus');
-
-function clearHL() { wordSpans.forEach(function(s){ s.classList.remove('hl'); }); }
-
-function highlightByChar(charIndex) {
-    clearHL();
-    // Reconstruir offsets de palabras
-    var offset = 0;
-    var si = 0;
-    var text = plainText;
-    for (var i = 0; i < text.length; ) {
-        if (/\s/.test(text[i])) { i++; continue; }
-        var end = i;
-        while (end < text.length && !/\s/.test(text[end])) end++;
-        if (i <= charIndex && charIndex < end) {
-            if (wordSpans[si]) wordSpans[si].classList.add('hl');
-            return;
-        }
-        si++;
-        i = end;
-    }
+function normalize(str) {
+    return str.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // quitar tildes
+        .replace(/[^a-z0-9]/g,'');                       // quitar puntuación
 }
 
-function setPlayUI(playing) {
-    if (playing) {
-        playIco.className = 'fa fa-pause';
-        playTxt.textContent = 'Pausar';
+// Índice de búsqueda: palabra → lista de posiciones en el texto
+var wordIndex = {};
+allWordsNorm.forEach(function(w, i) {
+    if (!w) return;
+    if (!wordIndex[w]) wordIndex[w] = [];
+    wordIndex[w].push(i);
+});
+
+// ══ 3. TTS (escuchar el texto) ═══════════════════════════════════════════════
+var plainText = allWordSpans.map(function(s){ return s.textContent; }).join(' ');
+var utterance = null, ttsPlaying = false, ttsPaused = false;
+var btnPlay   = document.getElementById('btnPlay');
+var playIco   = document.getElementById('playIco');
+var playTxt   = document.getElementById('playTxt');
+var btnStop   = document.getElementById('btnStop');
+var speedSel  = document.getElementById('speedSel');
+var audioStat = document.getElementById('audioStatus');
+
+function setPlayUI(on) {
+    if (on) {
+        playIco.className = 'fa fa-pause'; playTxt.textContent = 'Pausar';
         audioStat.textContent = '🔊 Reproduciendo…';
     } else {
         playIco.className = 'fa fa-play';
-        playTxt.textContent = ttsPaused ? 'Continuar' : 'Escuchar';
+        playTxt.textContent = ttsPaused ? 'Continuar' : 'Reproducir';
         audioStat.textContent = ttsPaused ? '⏸ Pausado' : '';
     }
 }
 
 function startTTS() {
-    if (!window.speechSynthesis) {
-        audioStat.textContent = '❌ Navegador sin soporte TTS';
-        return;
-    }
+    if (!window.speechSynthesis) { audioStat.textContent = '❌ Sin soporte TTS'; return; }
     window.speechSynthesis.cancel();
     utterance = new SpeechSynthesisUtterance(plainText);
     utterance.lang = 'es-GT';
     utterance.rate = parseFloat(speedSel.value);
     utterance.onboundary = function(e) {
-        if (e.name === 'word') highlightByChar(e.charIndex);
+        if (e.name !== 'word') return;
+        // resaltar palabra TTS con interim class
+        allWordSpans.forEach(function(s){ s.classList.remove('interim'); });
+        var si = charToWordIdx(e.charIndex);
+        if (si >= 0) allWordSpans[si].classList.add('interim');
     };
     utterance.onend = function() {
         ttsPlaying = false; ttsPaused = false;
-        clearHL();
-        setPlayUI(false);
-        audioStat.textContent = '✅ Lectura terminada';
+        allWordSpans.forEach(function(s){ s.classList.remove('interim'); });
+        setPlayUI(false); audioStat.textContent = '✅ Terminado';
     };
     utterance.onerror = function() {
-        ttsPlaying = false; ttsPaused = false;
-        setPlayUI(false);
-        audioStat.textContent = '';
+        ttsPlaying = false; ttsPaused = false; setPlayUI(false); audioStat.textContent = '';
     };
     window.speechSynthesis.speak(utterance);
-    ttsPlaying = true; ttsPaused = false;
-    setPlayUI(true);
+    ttsPlaying = true; ttsPaused = false; setPlayUI(true);
+}
+
+function charToWordIdx(charIdx) {
+    // reconstruct character offsets on the fly
+    var offset = 0, si = 0;
+    for (var i = 0; i < allWordSpans.length; i++) {
+        var w = allWordSpans[i].textContent;
+        if (charIdx >= offset && charIdx < offset + w.length) return i;
+        offset += w.length + 1; // +1 for space
+    }
+    return -1;
 }
 
 btnPlay.addEventListener('click', function() {
     if (!window.speechSynthesis) return;
-    if (!ttsPlaying && !ttsPaused) {
-        startTTS();
-    } else if (ttsPlaying && !ttsPaused) {
-        window.speechSynthesis.pause();
-        ttsPlaying = false; ttsPaused = true;
-        setPlayUI(false);
-    } else {
-        window.speechSynthesis.resume();
-        ttsPlaying = true; ttsPaused = false;
-        setPlayUI(true);
-    }
+    if (!ttsPlaying && !ttsPaused) { startTTS(); }
+    else if (ttsPlaying)           { window.speechSynthesis.pause(); ttsPlaying=false; ttsPaused=true; setPlayUI(false); }
+    else                           { window.speechSynthesis.resume(); ttsPlaying=true; ttsPaused=false; setPlayUI(true); }
 });
-
 btnStop.addEventListener('click', function() {
     if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    ttsPlaying = false; ttsPaused = false;
-    clearHL();
-    setPlayUI(false);
-    audioStat.textContent = '';
+    window.speechSynthesis.cancel(); ttsPlaying=false; ttsPaused=false;
+    allWordSpans.forEach(function(s){ s.classList.remove('interim'); });
+    setPlayUI(false); audioStat.textContent = '';
 });
-
 speedSel.addEventListener('change', function() {
-    if (ttsPlaying || ttsPaused) {
-        window.speechSynthesis.cancel();
-        ttsPlaying = false; ttsPaused = false;
-        startTTS();
-    }
+    if (ttsPlaying || ttsPaused) { window.speechSynthesis.cancel(); ttsPlaying=false; ttsPaused=false; startTTS(); }
 });
-
 window.addEventListener('beforeunload', function() {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
 });
 
-// ── Bloqueo del test: scroll + tiempo mínimo ────────────────────────────────
-const content    = contentEl;
-const progBar    = document.getElementById('readingProgress');
-const sideBar    = document.getElementById('sideProgFill');
-const sidePct    = document.getElementById('sidePct');
-const testBtn    = document.getElementById('startTestBtn');
-const lockBox    = document.getElementById('lockBox');
-const readyBox   = document.getElementById('readyBox');
-const scrollHint = document.getElementById('scrollHint');
+// ══ 4. RECONOCIMIENTO DE VOZ (STT) ══════════════════════════════════════════
+var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+var btnMic    = document.getElementById('btnMic');
+var micIco    = document.getElementById('micIco');
+var micTxt    = document.getElementById('micTxt');
+var voiceStat = document.getElementById('voiceStatus');
+var coverFill = document.getElementById('voiceCoverageFill');
+var coverPct  = document.getElementById('voiceCoveragePct');
+var sideVoice = document.getElementById('sideVoiceFill');
+var sideVPct  = document.getElementById('sideVoicePct');
 
-// Tiempo mínimo: palabras / 350 ppm → segundos  (lector rápido)
-const MIN_SECS = Math.max(8, Math.round((totalPalabras / 350) * 60));
-let unlocked = false;
-var lastPct  = 0;
+var recognition   = null;
+var isListening   = false;
+// ventana deslizante: empezamos a buscar desde la última palabra reconocida
+var searchCursor  = 0;
+var voiceCoverage = 0; // 0-100
 
-function checkUnlock(pct) {
+if (!SpeechRec) {
+    btnMic.disabled = true;
+    btnMic.style.opacity = '.4';
+    voiceStat.textContent = '❌ Tu navegador no soporta reconocimiento de voz (usa Chrome)';
+} else {
+    recognition = new SpeechRec();
+    recognition.lang = 'es-GT';
+    recognition.continuous    = true;  // no para después de una pausa
+    recognition.interimResults= true;  // resultados parciales en tiempo real
+    recognition.maxAlternatives = 3;
+
+    recognition.onstart = function() {
+        isListening = true;
+        btnMic.classList.add('listening');
+        micIco.className = 'fa fa-stop';
+        micTxt.textContent = 'Detener escucha';
+        voiceStat.textContent = '🎤 Escuchando… lee el texto en voz alta';
+    };
+
+    recognition.onend = function() {
+        // Si no lo detuvo el usuario, reiniciar automáticamente
+        if (isListening) {
+            try { recognition.start(); } catch(e) {}
+        } else {
+            btnMic.classList.remove('listening');
+            micIco.className = 'fa fa-microphone';
+            micTxt.textContent = 'Iniciar reconocimiento';
+            voiceStat.textContent = 'Reconocimiento detenido. Palabras verdes = leídas correctamente.';
+        }
+    };
+
+    recognition.onerror = function(e) {
+        if (e.error === 'not-allowed') {
+            isListening = false;
+            voiceStat.textContent = '⛔ Permiso de micrófono denegado. Actívalo en tu navegador.';
+            btnMic.classList.remove('listening');
+            micIco.className = 'fa fa-microphone';
+            micTxt.textContent = 'Iniciar reconocimiento';
+        }
+        // Para otros errores (no-speech, aborted) simplemente ignorar
+    };
+
+    recognition.onresult = function(event) {
+        for (var ri = event.resultIndex; ri < event.results.length; ri++) {
+            var result   = event.results[ri];
+            var isFinal  = result.isFinal;
+            // Recopilar todas las alternativas
+            var texts = [];
+            for (var ai = 0; ai < result.length; ai++) {
+                texts.push(result[ai].transcript);
+            }
+            processTranscript(texts, isFinal);
+        }
+    };
+
+    btnMic.addEventListener('click', function() {
+        if (!isListening) {
+            isListening = true;
+            try { recognition.start(); } catch(e) { isListening=false; }
+        } else {
+            isListening = false;
+            recognition.stop();
+        }
+    });
+}
+
+/**
+ * Procesa un transcript (array de alternativas) y marca las palabras leídas.
+ * Usa una ventana deslizante ±30 palabras desde el cursor para evitar
+ * marcar palabras fuera de orden.
+ */
+function processTranscript(alternatives, isFinal) {
+    // Unir todas las alternativas y extraer palabras normalizadas
+    var spokenWords = [];
+    alternatives.forEach(function(alt) {
+        alt.split(/\s+/).forEach(function(w) {
+            var n = normalize(w);
+            if (n) spokenWords.push(n);
+        });
+    });
+
+    if (!spokenWords.length) return;
+
+    var WINDOW = 50; // buscar dentro de ±50 palabras del cursor
+    var matched = false;
+
+    spokenWords.forEach(function(spoken) {
+        var positions = wordIndex[spoken];
+        if (!positions) return;
+
+        // Buscar la posición más cercana al cursor dentro de la ventana
+        var best = -1, bestDist = Infinity;
+        positions.forEach(function(pos) {
+            if (pos < searchCursor) return;                    // ya pasó
+            if (pos > searchCursor + WINDOW) return;          // demasiado lejos
+            var dist = pos - searchCursor;
+            if (dist < bestDist) { bestDist = dist; best = pos; }
+        });
+
+        if (best >= 0 && !readBitmap[best]) {
+            readBitmap[best] = true;
+            allWordSpans[best].classList.add('read-ok');
+            allWordSpans[best].classList.remove('rd-word');
+            // Avanzar cursor al siguiente no leído
+            if (best >= searchCursor) searchCursor = best + 1;
+            matched = true;
+        }
+    });
+
+    if (matched || isFinal) updateCoverage();
+}
+
+function updateCoverage() {
+    var count = readBitmap.filter(Boolean).length;
+    voiceCoverage = Math.round((count / totalWords) * 100);
+    coverFill.style.width  = voiceCoverage + '%';
+    coverPct.textContent   = voiceCoverage + '%';
+    if (sideVoice) sideVoice.style.width = voiceCoverage + '%';
+    if (sideVPct)  sideVPct.textContent  = voiceCoverage + '%';
+
+    // Actualizar mensaje de bloqueo
+    var lockMsg = document.getElementById('lockMsg');
+    if (lockMsg && voiceCoverage < 60) {
+        lockMsg.textContent = 'Lee en voz alta al menos el 60% del texto (' + voiceCoverage + '% actual)';
+    }
+    checkUnlock();
+}
+
+// ══ 5. PROGRESO DE SCROLL ════════════════════════════════════════════════════
+var progBar    = document.getElementById('readingProgress');
+var sideBar    = document.getElementById('sideProgFill');
+var sidePct    = document.getElementById('sidePct');
+var scrollHint = document.getElementById('scrollHint');
+var lastPct    = 0;
+
+window.addEventListener('scroll', function() {
+    var rect    = contentEl.getBoundingClientRect();
+    var total   = contentEl.offsetHeight - window.innerHeight;
+    var scrolled = Math.max(0, -rect.top);
+    var pct = Math.min(100, total > 0 ? (scrolled / (total + 150)) * 100 : 100);
+    lastPct = pct;
+    progBar.style.width = pct + '%';
+    if (sideBar) sideBar.style.width = pct + '%';
+    if (sidePct) sidePct.textContent = Math.round(pct) + '%';
+    checkUnlock();
+});
+
+// ══ 6. DESBLOQUEO DEL TEST ═══════════════════════════════════════════════════
+var testBtn  = document.getElementById('startTestBtn');
+var lockBox  = document.getElementById('lockBox');
+var readyBox = document.getElementById('readyBox');
+var unlocked = false;
+
+// Umbral: 60% de palabras reconocidas por voz
+var VOICE_THRESHOLD = 60;
+
+function checkUnlock() {
     if (unlocked) return;
-    const secsElapsed = Math.floor((Date.now() - startTime) / 1000);
-    if (pct >= 95 && secsElapsed >= MIN_SECS) {
+    // Condición: cobertura de voz >= 60%
+    if (voiceCoverage >= VOICE_THRESHOLD) {
         unlocked = true;
-        if (testBtn)    testBtn.classList.remove('locked');
-        if (lockBox)    lockBox.style.display   = 'none';
-        if (readyBox)   readyBox.style.display  = 'flex';
-        if (scrollHint) { scrollHint.textContent = 'Lectura completada ✓'; scrollHint.style.color = 'var(--k-green)'; }
+        if (testBtn)  testBtn.classList.remove('locked');
+        if (lockBox)  lockBox.style.display  = 'none';
+        if (readyBox) readyBox.style.display = 'flex';
+        if (scrollHint) { scrollHint.textContent = '¡Lectura verificada por voz ✓'; scrollHint.style.color = 'var(--k-green)'; }
+        // Parar el reconocimiento automáticamente
+        if (isListening) { isListening = false; if (recognition) recognition.stop(); }
     }
 }
 
-window.addEventListener('scroll', function() {
-    const rect    = content.getBoundingClientRect();
-    const total   = content.offsetHeight - window.innerHeight;
-    const scrolled = Math.max(0, -rect.top);
-    var pct = Math.min(100, total > 0 ? (scrolled / (total + 150)) * 100 : 100);
-    lastPct = pct;
-    progBar.style.width  = pct + '%';
-    if (sideBar) sideBar.style.width = pct + '%';
-    if (sidePct) sidePct.textContent = Math.round(pct) + '%';
-    checkUnlock(pct);
-});
-
-// Navegar al test
+// ══ 7. IR AL TEST ════════════════════════════════════════════════════════════
 if (testBtn) {
     testBtn.addEventListener('click', function(e) {
         e.preventDefault();
         if (this.classList.contains('locked')) return;
         if (window.speechSynthesis) window.speechSynthesis.cancel();
+        if (isListening && recognition) recognition.stop();
         document.cookie = 'lecturaMs=' + elapsedMs + ';path=/;SameSite=Strict';
         window.location.href = this.href;
     });
 }
 
-// Responsive
+// ══ 8. RESPONSIVE ════════════════════════════════════════════════════════════
 if (window.innerWidth < 900) {
     document.getElementById('mainGrid').style.gridTemplateColumns = '1fr';
     var sb = document.getElementById('sidebar');
