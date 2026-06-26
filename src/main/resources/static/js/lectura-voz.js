@@ -18,33 +18,8 @@
 
     if (!btnMic || !contentEl) return;
 
-    /* ── Caja de diagnóstico (se elimina al funcionar) ── */
-    var diagBox = document.createElement('div');
-    diagBox.id  = 'voiceDiag';
-    diagBox.style.cssText = [
-        'font-size:11px','font-family:monospace','background:#1e1e1e','color:#d4d4d4',
-        'padding:8px 12px','border-radius:6px','margin-bottom:8px',
-        'max-height:120px','overflow-y:auto','display:none'
-    ].join(';');
-    var voiceBar = document.getElementById('voiceBar');
-    if (voiceBar) voiceBar.insertAdjacentElement('afterend', diagBox);
-
-    var logLines = [];
-    function log(msg) {
-        var ts = new Date().toLocaleTimeString();
-        logLines.push('[' + ts + '] ' + msg);
-        if (logLines.length > 30) logLines.shift();
-        diagBox.innerHTML = logLines.join('<br>');
-        diagBox.style.display = 'block';
-        diagBox.scrollTop = diagBox.scrollHeight;
-    }
-
     /* ── Verificar API ── */
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    log('SpeechRecognition: ' + (SR ? 'disponible ✓' : 'NO DISPONIBLE ✗'));
-    log('navigator.mediaDevices: ' + (navigator.mediaDevices ? 'OK' : 'NO'));
-    log('Protocolo: ' + location.protocol);
-    log('Host: ' + location.host);
 
     if (!SR) {
         btnMic.disabled = true;
@@ -60,18 +35,16 @@
                 btnMic.style.opacity = '0.6';
                 setMsg('⚠️ Micrófono bloqueado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga la página.');
             }
-            /* Escuchar cambios de permiso en tiempo real */
             result.onchange = function() {
-                log('Permiso de micrófono cambió a: ' + result.state);
                 if (result.state === 'granted') {
                     btnMic.style.opacity = '1';
                     setMsg('Presiona Iniciar y lee el texto en voz alta');
                 }
             };
-        }).catch(function() { /* Permissions API no disponible, continuar normal */ });
+        }).catch(function() {});
     }
 
-    /* ── Preparar spans ── */
+    /* ── Preparar spans: una palabra por span ── */
     var raw = contentEl.textContent;
     var wi  = 0;
     contentEl.innerHTML = raw.split(/(\s+)/).map(function (p) {
@@ -83,20 +56,26 @@
     var spans  = Array.from(contentEl.querySelectorAll('.rw'));
     var total  = spans.length;
     var okBits = new Array(total).fill(false);
-    var coverage = 0, cursor = 0;
+    var coverage = 0;
 
+    /*
+     * ── CURSOR SECUENCIAL ──
+     * El cursor apunta a la siguiente palabra esperada en el texto.
+     * Solo avanzamos hacia adelante, nunca hacia atrás.
+     * Esto obliga al usuario a leer en orden y hace la detección mucho
+     * más precisa porque eliminamos ambigüedad en palabras repetidas.
+     */
+    var cursor = 0;
+
+    /* Normalizar: minúsculas, sin tildes, solo alfanumérico */
     function norm(s) {
         return s.toLowerCase()
-            .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-            .replace(/[^a-z0-9]/g,'');
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]/g, '');
     }
-    var idx = {};
-    spans.forEach(function(sp, i) {
-        var w = norm(sp.textContent);
-        if (!w) return;
-        if (!idx[w]) idx[w] = [];
-        idx[w].push(i);
-    });
+
+    /* Texto normalizado de cada span, precalculado */
+    var spanNorms = spans.map(function(sp) { return norm(sp.textContent); });
 
     /* ── Estado ── */
     var active = false, rec = null;
@@ -115,27 +94,19 @@
         btnMic.disabled = false;
     }
 
-    /* ── Solicitar permiso de micrófono explícitamente ── */
+    /* ── Solicitar permiso ── */
     function pedirPermisoYArrancar() {
-        log('Solicitando permiso con getUserMedia...');
         setMsg('⏳ Solicitando permiso de micrófono… Acepta el diálogo del navegador.');
-
-        /* Verificar si ya existe el permiso antes de pedirlo */
         if (navigator.permissions) {
             navigator.permissions.query({ name: 'microphone' }).then(function(result) {
-                log('Estado actual del permiso: ' + result.state);
                 if (result.state === 'denied') {
                     active = false;
                     resetBtn();
-                    setMsg('⛔ Micrófono bloqueado. Haz clic en el ícono 🔒 junto a la URL → Micrófono → Permitir → recarga la página.');
+                    setMsg('⛔ Micrófono bloqueado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga.');
                     return;
                 }
-                /* Si es 'granted' o 'prompt', proceder con getUserMedia */
                 solicitarMicrofono();
-            }).catch(function() {
-                /* Permissions API no soportada, intentar directamente */
-                solicitarMicrofono();
-            });
+            }).catch(solicitarMicrofono);
         } else {
             solicitarMicrofono();
         }
@@ -144,119 +115,148 @@
     function solicitarMicrofono() {
         navigator.mediaDevices.getUserMedia({ audio: true, video: false })
             .then(function (stream) {
-                log('getUserMedia OK — permiso concedido');
-                /* Detener el stream de inmediato, solo necesitábamos el permiso */
                 stream.getTracks().forEach(function(t) { t.stop(); });
                 setMsg('✅ Permiso concedido. Iniciando reconocimiento…');
                 startRec();
             })
             .catch(function (err) {
-                log('getUserMedia ERROR: ' + err.name + ' — ' + err.message);
                 active = false;
                 resetBtn();
                 if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                    setMsg('⛔ Permiso denegado. Haz clic en el ícono 🎙 o 🔒 junto a la URL → Micrófono → Permitir → recarga la página.');
+                    setMsg('⛔ Permiso denegado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga.');
                 } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
                     setMsg('⛔ No se detectó micrófono. Conecta uno e intenta de nuevo.');
-                } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-                    setMsg('⛔ El micrófono está en uso por otra aplicación. Ciérrala e intenta de nuevo.');
+                } else if (err.name === 'NotReadableError') {
+                    setMsg('⛔ El micrófono está en uso por otra aplicación. Ciérrala e intenta.');
                 } else {
-                    setMsg('⛔ Error al acceder al micrófono: ' + err.name + '. Intenta recargar la página.');
+                    setMsg('⛔ Error al acceder al micrófono: ' + err.name + '. Recarga la página.');
                 }
             });
     }
 
     function startRec() {
         if (!active) return;
-        log('Creando SpeechRecognition...');
 
         rec = new SR();
-        rec.lang           = 'es-ES';
-        rec.continuous     = true;
-        rec.interimResults = true;
-        rec.maxAlternatives = 1;
+        rec.lang            = 'es-GT';   // español guatemalteco para mejor precisión local
+        rec.continuous      = true;
+        rec.interimResults  = true;
+        rec.maxAlternatives = 3;         // pedir 3 alternativas mejora la cobertura
 
         rec.onstart = function() {
-            log('onstart ✓ — escuchando activamente');
             setActiveBtn();
             setMsg('🎤 Escuchando… lee el texto en voz alta');
         };
 
-        rec.onsoundstart  = function() { log('onsoundstart — detectó sonido'); };
-        rec.onspeechstart = function() { log('onspeechstart — detectó habla'); };
-        rec.onspeechend   = function() { log('onspeechend'); };
-
         rec.onresult = function(e) {
             var interim = '';
             for (var i = e.resultIndex; i < e.results.length; i++) {
-                var t = e.results[i][0].transcript;
-                if (e.results[i].isFinal) { log('FINAL: "' + t.trim() + '"'); markWords(t); }
-                else interim = t;
+                if (e.results[i].isFinal) {
+                    /* Procesar todas las alternativas disponibles */
+                    for (var a = 0; a < e.results[i].length; a++) {
+                        markWords(e.results[i][a].transcript);
+                    }
+                } else {
+                    interim = e.results[i][0].transcript;
+                }
             }
             if (interim) setMsg('🎤 "' + interim.trim() + '"');
         };
 
         rec.onerror = function(e) {
-            log('onerror: ' + e.error + (e.message ? ' / ' + e.message : ''));
             if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
                 active = false;
                 resetBtn();
                 setMsg('⛔ Permiso denegado. Recarga y permite el micrófono cuando Chrome lo solicite.');
             }
+            /* 'no-speech' y 'aborted' son normales, simplemente reiniciar */
         };
 
         rec.onend = function() {
-            log('onend (active=' + active + ')');
             if (!active) { resetBtn(); setMsg('Detenido.'); return; }
             setTimeout(startRec, 80);
         };
 
         try {
             rec.start();
-            log('rec.start() llamado');
         } catch(ex) {
-            log('ERROR en rec.start(): ' + ex.name + ' — ' + ex.message);
             setTimeout(startRec, 300);
         }
     }
 
     /* ── Clic del botón ── */
     btnMic.addEventListener('click', function() {
-        log('--- Botón presionado (active=' + active + ') ---');
         if (!active) {
             active = true;
             btnMic.disabled = true;
             pedirPermisoYArrancar();
         } else {
             active = false;
-            try { if (rec) rec.stop(); } catch(ex) { log('stop error: ' + ex.message); }
+            try { if (rec) rec.stop(); } catch(ex) {}
             resetBtn();
             setMsg('Detenido.');
         }
     });
 
-    /* ── Marcar palabras ── */
+    /*
+     * ── ALGORITMO DE MARCADO MEJORADO ──
+     *
+     * Estrategia: coincidencia secuencial estricta.
+     *
+     * En lugar de buscar la palabra en un índice de posiciones (que falla
+     * con palabras repetidas), recorremos las palabras del transcript en
+     * orden y las buscamos en el texto a partir del cursor actual con una
+     * ventana hacia adelante. Esto garantiza que:
+     *   1. Las palabras se marcan en el orden en que aparecen en el texto.
+     *   2. Una palabra repetida solo se marca si está en el lugar correcto.
+     *   3. El cursor nunca retrocede, así que palabras anteriores no se
+     *      cuentan dos veces.
+     *
+     * VENTANA_ADELANTE: cuántas palabras hacia adelante buscamos desde el
+     * cursor. Un valor pequeño (15-20) fuerza precisión pero puede perder
+     * palabras si el reconocedor omite alguna. Un valor mayor (40-60) es
+     * más tolerante con errores de reconocimiento.
+     */
+    var VENTANA_ADELANTE = 40;
+
     function markWords(transcript) {
         var spoken  = transcript.trim().split(/\s+/).map(norm).filter(Boolean);
-        var WINDOW  = 80, changed = false;
-        spoken.forEach(function(word) {
-            var positions = idx[word];
-            if (!positions) return;
-            var best = -1, bestD = Infinity;
-            positions.forEach(function(p) {
-                if (p < cursor || p > cursor + WINDOW) return;
-                var d = p - cursor;
-                if (d < bestD) { bestD = d; best = p; }
-            });
-            if (best !== -1 && !okBits[best]) {
-                okBits[best] = true;
-                spans[best].classList.add('ok');
-                spans.forEach(function(s){ s.classList.remove('now'); });
-                if (spans[best+1]) spans[best+1].classList.add('now');
-                if (best >= cursor) cursor = best + 1;
+        var changed = false;
+
+        /* Recorrer cada palabra dicha en el orden en que fue dicha */
+        for (var si = 0; si < spoken.length; si++) {
+            var word = spoken[si];
+            if (!word) continue;
+
+            /* Buscar la palabra desde el cursor hasta cursor+VENTANA */
+            var limite = Math.min(cursor + VENTANA_ADELANTE, total);
+            var encontrado = -1;
+
+            for (var ti = cursor; ti < limite; ti++) {
+                if (okBits[ti]) continue;          /* ya marcada, saltar */
+                if (spanNorms[ti] === word) {
+                    encontrado = ti;
+                    break;
+                }
+            }
+
+            if (encontrado !== -1) {
+                okBits[encontrado] = true;
+                spans[encontrado].classList.add('ok');
+
+                /* Resaltar la siguiente palabra esperada */
+                spans.forEach(function(s) { s.classList.remove('now'); });
+                var siguiente = encontrado + 1;
+                /* Saltar palabras ya marcadas para señalar la próxima pendiente */
+                while (siguiente < total && okBits[siguiente]) siguiente++;
+                if (siguiente < total) spans[siguiente].classList.add('now');
+
+                /* Avanzar el cursor a justo después de la palabra marcada */
+                cursor = encontrado + 1;
                 changed = true;
             }
-        });
+        }
+
         if (changed) refreshCoverage();
     }
 
@@ -282,9 +282,8 @@
         if (lockBox)    lockBox.style.display  = 'none';
         if (readyBox)   readyBox.style.display = 'flex';
         if (testBtn)    testBtn.classList.remove('locked');
-        if (scrollHint) { scrollHint.textContent = '✓ Lectura verificada'; scrollHint.style.color='#198754'; }
+        if (scrollHint) { scrollHint.textContent = '✓ Lectura verificada'; scrollHint.style.color = '#198754'; }
         setMsg('✅ ¡60% alcanzado! El test está desbloqueado.');
-        diagBox.style.display = 'none'; /* ocultar logs al terminar */
     }
 
     if (testBtn) {
@@ -293,7 +292,7 @@
             if (this.classList.contains('locked')) return;
             active = false;
             try { if (rec) rec.stop(); } catch(ex) {}
-            document.cookie = 'lecturaMs=' + (window._lecturaElapsed||0) + ';path=/;SameSite=Strict';
+            document.cookie = 'lecturaMs=' + (window._lecturaElapsed || 0) + ';path=/;SameSite=Strict';
             window.location.href = this.href;
         });
     }
