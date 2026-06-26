@@ -11,7 +11,6 @@
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
     <style>
-        /* ── Barra de voz ── */
         #voiceBar {
             display: flex;
             align-items: center;
@@ -47,7 +46,7 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
-        #btnMic:hover  { background: var(--kinal-blue-mid); }
+        #btnMic:hover { background: var(--kinal-blue-mid); }
         #btnMic.active {
             background: #c0392b;
             animation: micPulse 1.2s ease-in-out infinite;
@@ -62,84 +61,29 @@
             flex: 1;
             min-width: 0;
         }
-        /* mini barra de cobertura en la fila */
-        #covWrap {
-            display: flex;
-            align-items: center;
-            gap: .45rem;
-            flex-shrink: 0;
-        }
-        #covTrack {
-            width: 100px;
-            height: 6px;
-            background: #dde1ea;
-            border-radius: 999px;
-            overflow: hidden;
-        }
-        #covFill {
-            height: 100%;
-            width: 0%;
-            background: #27ae60;
-            border-radius: 999px;
-            transition: width .4s ease;
-        }
-        #covPct {
-            font-size: .78rem;
-            font-weight: 700;
-            color: #27ae60;
-            min-width: 2.5rem;
-            text-align: right;
-        }
+        #covWrap { display:flex; align-items:center; gap:.45rem; flex-shrink:0; }
+        #covTrack { width:100px; height:6px; background:#dde1ea; border-radius:999px; overflow:hidden; }
+        #covFill  { height:100%; width:0%; background:#27ae60; border-radius:999px; transition:width .4s ease; }
+        #covPct   { font-size:.78rem; font-weight:700; color:#27ae60; min-width:2.5rem; text-align:right; }
 
-        /* ── Resaltado de palabras ── */
-        .rw {
-            border-radius: 3px;
-            transition: background .25s;
-        }
-        /* verde = ya reconocida */
-        .rw.ok {
-            background: rgba(39,174,96,.18);
-            color: #1a7a42;
-            font-weight: 500;
-        }
-        /* amarillo = la que está leyendo ahora */
-        .rw.now {
-            background: rgba(245,166,35,.4);
-        }
+        .rw  { border-radius: 3px; transition: background .25s; }
+        .rw.ok  { background: rgba(39,174,96,.18); color: #1a7a42; font-weight: 500; }
+        .rw.now { background: rgba(245,166,35,.4); }
 
-        /* ── Bloqueo del test ── */
         #lockBox {
-            display: flex;
-            align-items: center;
-            gap: .55rem;
-            padding: .6rem 1rem;
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            border-radius: var(--k-radius-sm);
-            font-size: .82rem;
-            color: #856404;
-            font-weight: 500;
-            margin-bottom: .65rem;
+            display: flex; align-items: center; gap: .55rem;
+            padding: .6rem 1rem; background: #fff3cd;
+            border: 1px solid #ffc107; border-radius: var(--k-radius-sm);
+            font-size: .82rem; color: #856404; font-weight: 500; margin-bottom: .65rem;
         }
         #readyBox {
-            display: none;
-            align-items: center;
-            gap: .55rem;
-            padding: .6rem 1rem;
-            background: #d1e7dd;
-            border: 1px solid #198754;
-            border-radius: var(--k-radius-sm);
-            font-size: .82rem;
-            color: #0f5132;
-            font-weight: 500;
-            margin-bottom: .65rem;
+            display: none; align-items: center; gap: .55rem;
+            padding: .6rem 1rem; background: #d1e7dd;
+            border: 1px solid #198754; border-radius: var(--k-radius-sm);
+            font-size: .82rem; color: #0f5132; font-weight: 500; margin-bottom: .65rem;
         }
-        #startTestBtn.locked {
-            opacity: .4;
-            pointer-events: none;
-            filter: grayscale(.5);
-        }
-        .spw { height: 8px; background: #e5e8ed; border-radius: 999px; overflow: hidden; flex: 1; }
+        #startTestBtn.locked { opacity:.4; pointer-events:none; filter:grayscale(.5); }
+        .spw { height:8px; background:#e5e8ed; border-radius:999px; overflow:hidden; flex:1; }
         #sideProgFill { height:100%; width:0%; background:var(--kinal-blue); border-radius:999px; transition:width .3s; }
     </style>
 </head>
@@ -186,7 +130,7 @@
                     </div>
                 </div>
 
-                <!-- ── BARRA DE VOZ ── -->
+                <!-- BARRA DE VOZ -->
                 <div id="voiceBar" class="fade-up stagger-1">
                     <span class="v-lbl"><i class="fa fa-microphone"></i> Leer en voz alta</span>
                     <button id="btnMic" type="button">
@@ -200,7 +144,7 @@
                     </div>
                 </div>
 
-                <!-- ── CONTENIDO ── -->
+                <!-- CONTENIDO -->
                 <div class="k-card fade-up stagger-2">
                     <div style="position:sticky;top:65px;margin:-1.75rem -1.75rem 1.75rem;z-index:10">
                         <div class="k-progress" style="border-radius:0;height:3px">
@@ -230,7 +174,7 @@
                 </div>
             </div>
 
-            <!-- ── SIDEBAR ── -->
+            <!-- SIDEBAR -->
             <div style="position:sticky;top:80px" class="fade-up stagger-1" id="sidebar">
                 <div class="k-card" style="margin-bottom:1.25rem;text-align:center">
                     <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-muted);margin-bottom:.75rem;font-weight:600">
@@ -294,7 +238,7 @@
                         </li>
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
                             <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.25rem;flex-shrink:0"></i>
-                            Usa Chrome para mejor soporte
+                            Usa Chrome en <strong>localhost</strong> o HTTPS
                         </li>
                     </ul>
                 </div>
@@ -307,291 +251,65 @@
     <p>© 2025 Fundación Kinal · Centro Educativo Técnico · Guatemala</p>
 </footer>
 
+<!-- JS: primero kinal.js, luego temporizador inline, luego voz con defer -->
 <script th:src="@{/js/kinal.js}" defer></script>
-<script th:inline="javascript">
+
+<script th:inline="javascript" defer>
 /*<![CDATA[*/
-var totalPalabras = [[${palabrasLectura}]];
-
-/* ════════════════════════════════════════════════
-   1. TEMPORIZADOR
-════════════════════════════════════════════════ */
-var startTime = Date.now();
-var elapsedMs = 0;
-
-setInterval(function () {
-    elapsedMs = Date.now() - startTime;
-    var s = Math.floor(elapsedMs / 1000);
-    document.getElementById('readingTimer').textContent =
-        pad(Math.floor(s / 60)) + ':' + pad(s % 60);
-    var mins = elapsedMs / 60000;
-    if (mins > 0.08) {
-        var ppm = Math.round(totalPalabras / mins);
-        var el  = document.getElementById('ppmDisplay');
-        el.textContent = ppm;
-        el.style.color = ppm >= 300 ? 'var(--k-green)' : ppm >= 200 ? 'var(--k-amber)' : 'var(--k-red)';
-    }
-}, 1000);
-
-function pad(n) { return String(n).padStart(2, '0'); }
-
-/* ════════════════════════════════════════════════
-   2. DIVIDIR TEXTO EN SPANS
-════════════════════════════════════════════════ */
-var contentEl = document.getElementById('readingContent');
-var rawText   = contentEl.textContent;
-
-// Dividir conservando espacios y saltos de línea
-var parts = rawText.split(/(\s+)/);
-var wi = 0;
-contentEl.innerHTML = parts.map(function (p) {
-    if (/^\s*$/.test(p)) return p.replace(/\n/g, '<br>');
-    var safe = p.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return '<span class="rw" data-i="' + (wi++) + '">' + safe + '</span>';
-}).join('');
-
-var spans    = Array.from(contentEl.querySelectorAll('.rw'));
-var total    = spans.length;
-var okBits   = new Array(total).fill(false);
-var coverage = 0; // 0-100
-
-// Normalizar: minúsculas, sin tildes, sin puntuación
-function norm(s) {
-    return s.toLowerCase()
-            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-            .replace(/[^a-z0-9]/g, '');
-}
-
-// Índice invertido: palabra → [índices en spans]
-var idx = {};
-spans.forEach(function (sp, i) {
-    var w = norm(sp.textContent);
-    if (!w) return;
-    if (!idx[w]) idx[w] = [];
-    idx[w].push(i);
-});
-
-/* ════════════════════════════════════════════════
-   3. RECONOCIMIENTO DE VOZ
-════════════════════════════════════════════════ */
-var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-var btnMic   = document.getElementById('btnMic');
-var micIco   = document.getElementById('micIco');
-var micTxt   = document.getElementById('micTxt');
-var voiceMsg = document.getElementById('voiceMsg');
-
-var rec          = null;
-var active       = false;   // true = el usuario quiere que esté escuchando
-var cursor       = 0;
-var noSpeechCnt  = 0;       // contador de silencios seguidos
-
-if (!SR) {
-    btnMic.disabled = true;
-    btnMic.style.opacity = '.45';
-    voiceMsg.textContent = '⚠ Tu navegador no soporta reconocimiento de voz. Usa Google Chrome.';
-} else {
-
-    function startRec() {
-        rec = new SR();
-        rec.lang            = 'es-ES';
-        rec.continuous      = true;   // no termina por silencio
-        rec.interimResults  = true;
-        rec.maxAlternatives = 1;
-
-        rec.onstart = function () {
-            noSpeechCnt = 0;
-            btnMic.classList.add('active');
-            micIco.className   = 'fa fa-stop';
-            micTxt.textContent = 'Detener';
-            voiceMsg.textContent = '🎤 Escuchando… lee el texto en voz alta';
-        };
-
-        rec.onresult = function (e) {
-            noSpeechCnt = 0;
-            for (var i = e.resultIndex; i < e.results.length; i++) {
-                var t = e.results[i][0].transcript;
-                var f = e.results[i].isFinal;
-                markWords(t, f);
-            }
-        };
-
-        rec.onerror = function (e) {
-            if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-                active = false;
-                resetBtn();
-                voiceMsg.textContent = '⛔ Permiso de micrófono denegado. Habilítalo en la barra del navegador.';
-                return;
-            }
-            if (e.error === 'no-speech') {
-                noSpeechCnt++;
-                // Simplemente dejamos que onend reinicie; no cambiar UI
-            }
-            // aborted, network, etc: onend se encargará
-        };
-
-        rec.onend = function () {
-            if (!active) {
-                // el usuario lo detuvo a propósito
-                resetBtn();
-                voiceMsg.textContent = '⏹ Detenido. Las palabras verdes quedan guardadas.';
-                return;
-            }
-            // Si sigue activo, reiniciar inmediatamente
-            // (usar setTimeout 0 evita AbortError en Chrome)
-            setTimeout(function () {
-                if (active) {
-                    try { startRec(); }
-                    catch (ex) { /* ignorar */ }
-                }
-            }, 0);
-        };
-
-        rec.start();
-    }
-
-    function resetBtn() {
-        btnMic.classList.remove('active');
-        micIco.className   = 'fa fa-microphone';
-        micTxt.textContent = 'Iniciar';
-    }
-
-    btnMic.addEventListener('click', function () {
-        if (!active) {
-            active = true;
-            startRec();
-        } else {
-            active = false;
-            try { rec.stop(); } catch (ex) { resetBtn(); }
-        }
-    });
-}
-
-/* ════════════════════════════════════════════════
-   4. MARCAR PALABRAS RECONOCIDAS
-════════════════════════════════════════════════ */
-function markWords(transcript, isFinal) {
-    // Mostrar en vivo lo que escucha
-    if (!isFinal) {
-        voiceMsg.textContent = '🎤 "' + transcript.trim() + '"';
-    }
-
-    var spoken = transcript.trim().split(/\s+/).map(norm).filter(Boolean);
-    var WINDOW = 80; // cuántas posiciones hacia adelante buscar
-    var changed = false;
-
-    spoken.forEach(function (word) {
-        var positions = idx[word];
-        if (!positions) return;
-
-        // Encontrar la posición más cercana al cursor dentro de la ventana
-        var best = -1, bestD = Infinity;
-        for (var j = 0; j < positions.length; j++) {
-            var p = positions[j];
-            if (p < cursor) continue;
-            if (p > cursor + WINDOW) continue;
-            var d = p - cursor;
-            if (d < bestD) { bestD = d; best = p; }
-        }
-
-        if (best !== -1 && !okBits[best]) {
-            okBits[best] = true;
-            spans[best].classList.add('ok');
-            spans[best].classList.remove('now');
-            // resaltar siguiente como "ahora"
-            if (spans[best + 1]) {
-                spans.forEach(function(s){ s.classList.remove('now'); });
-                spans[best + 1].classList.add('now');
-            }
-            if (best >= cursor) cursor = best + 1;
-            changed = true;
-        }
-    });
-
-    if (changed || isFinal) refreshCoverage();
-}
-
-function refreshCoverage() {
-    var count = okBits.filter(Boolean).length;
-    coverage  = Math.round((count / total) * 100);
-
-    document.getElementById('covFill').style.width  = coverage + '%';
-    document.getElementById('covPct').textContent   = coverage + '%';
-    document.getElementById('sideVoiceFill').style.width = coverage + '%';
-    document.getElementById('sideVoicePct').textContent  = coverage + '%';
-
-    var lockMsg = document.getElementById('lockMsg');
-    if (lockMsg && coverage < 60)
-        lockMsg.textContent = 'Lee en voz alta el 60% del texto (' + coverage + '% reconocido)';
-
-    checkUnlock();
-}
-
-/* ════════════════════════════════════════════════
-   5. PROGRESO DE SCROLL
-════════════════════════════════════════════════ */
-var progBar  = document.getElementById('readingProgress');
-var sideBar  = document.getElementById('sideProgFill');
-var sidePct  = document.getElementById('sidePct');
-
-window.addEventListener('scroll', function () {
-    var rect    = contentEl.getBoundingClientRect();
-    var total_h = contentEl.offsetHeight - window.innerHeight;
-    var scrolled = Math.max(0, -rect.top);
-    var pct = Math.min(100, total_h > 0 ? (scrolled / (total_h + 150)) * 100 : 100);
-    progBar.style.width = pct + '%';
-    sideBar.style.width = pct + '%';
-    sidePct.textContent = Math.round(pct) + '%';
-});
-
-/* ════════════════════════════════════════════════
-   6. DESBLOQUEO DEL TEST
-════════════════════════════════════════════════ */
-var testBtn  = document.getElementById('startTestBtn');
-var lockBox  = document.getElementById('lockBox');
-var readyBox = document.getElementById('readyBox');
-var unlocked = false;
-
-function checkUnlock() {
-    if (unlocked || coverage < 60) return;
-    unlocked = true;
-
-    // Detener reconocimiento automáticamente
-    active = false;
-    try { if (rec) rec.stop(); } catch(e) {}
-    resetBtn();
-
-    if (testBtn)  testBtn.classList.remove('locked');
-    if (lockBox)  lockBox.style.display = 'none';
-    if (readyBox) readyBox.style.display = 'flex';
-
-    var hint = document.getElementById('scrollHint');
-    if (hint) { hint.textContent = '✓ Lectura verificada por voz'; hint.style.color = '#198754'; }
-
-    voiceMsg.textContent = '✅ ¡60% alcanzado! El test está desbloqueado.';
-}
-
-/* ════════════════════════════════════════════════
-   7. NAVEGAR AL TEST
-════════════════════════════════════════════════ */
-if (testBtn) {
-    testBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        if (this.classList.contains('locked')) return;
-        active = false;
-        try { if (rec) rec.stop(); } catch(e) {}
-        document.cookie = 'lecturaMs=' + elapsedMs + ';path=/;SameSite=Strict';
-        window.location.href = this.href;
-    });
-}
-
-/* ════════════════════════════════════════════════
-   8. RESPONSIVE
-════════════════════════════════════════════════ */
-if (window.innerWidth < 900) {
-    document.getElementById('mainGrid').style.gridTemplateColumns = '1fr';
-    var sb = document.getElementById('sidebar');
-    if (sb) sb.style.position = 'relative';
-}
+/* Temporizador y PPM — datos del servidor */
+window._totalPalabras = [[${palabrasLectura}]];
 /*]]>*/
 </script>
+
+<script th:src="@{/js/lectura-voz.js}" defer></script>
+
+<script defer>
+document.addEventListener('DOMContentLoaded', function () {
+    var totalP   = window._totalPalabras || 0;
+    var startT   = Date.now();
+    var timerEl  = document.getElementById('readingTimer');
+    var ppmEl    = document.getElementById('ppmDisplay');
+    var progBar  = document.getElementById('readingProgress');
+    var sideBar  = document.getElementById('sideProgFill');
+    var sidePct  = document.getElementById('sidePct');
+    var content  = document.getElementById('readingContent');
+
+    /* temporizador */
+    setInterval(function () {
+        window._lecturaElapsed = Date.now() - startT;
+        var s = Math.floor(window._lecturaElapsed / 1000);
+        if (timerEl) timerEl.textContent = pad(Math.floor(s/60)) + ':' + pad(s%60);
+        var mins = window._lecturaElapsed / 60000;
+        if (ppmEl && mins > 0.08) {
+            var ppm = Math.round(totalP / mins);
+            ppmEl.textContent = ppm;
+            ppmEl.style.color = ppm >= 300 ? 'var(--k-green)' : ppm >= 200 ? 'var(--k-amber)' : 'var(--k-red)';
+        }
+    }, 1000);
+
+    /* progreso de scroll */
+    window.addEventListener('scroll', function () {
+        if (!content) return;
+        var rect    = content.getBoundingClientRect();
+        var total_h = content.offsetHeight - window.innerHeight;
+        var scrolled = Math.max(0, -rect.top);
+        var pct = Math.min(100, total_h > 0 ? (scrolled / (total_h + 150)) * 100 : 100);
+        if (progBar) progBar.style.width = pct + '%';
+        if (sideBar) sideBar.style.width = pct + '%';
+        if (sidePct) sidePct.textContent = Math.round(pct) + '%';
+    });
+
+    /* responsive */
+    if (window.innerWidth < 900) {
+        var grid = document.getElementById('mainGrid');
+        var sb   = document.getElementById('sidebar');
+        if (grid) grid.style.gridTemplateColumns = '1fr';
+        if (sb)   sb.style.position = 'relative';
+    }
+
+    function pad(n) { return String(n).padStart(2,'0'); }
+});
+</script>
+
 </body>
 </html>
