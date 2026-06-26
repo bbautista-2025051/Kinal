@@ -379,92 +379,88 @@ var micIco   = document.getElementById('micIco');
 var micTxt   = document.getElementById('micTxt');
 var voiceMsg = document.getElementById('voiceMsg');
 
-var rec         = null;
-var listening   = false;
-var shouldRun   = false;   // intención del usuario
-var cursor      = 0;       // ventana: buscamos desde aquí
-var restartTimer = null;
+var rec          = null;
+var active       = false;   // true = el usuario quiere que esté escuchando
+var cursor       = 0;
+var noSpeechCnt  = 0;       // contador de silencios seguidos
 
 if (!SR) {
     btnMic.disabled = true;
     btnMic.style.opacity = '.45';
     voiceMsg.textContent = '⚠ Tu navegador no soporta reconocimiento de voz. Usa Google Chrome.';
 } else {
-    function buildRec() {
+
+    function startRec() {
         rec = new SR();
-        rec.lang             = 'es-ES';   // español neutro, mejor soporte cross-browser
-        rec.continuous       = false;      // false = más estable; reiniciamos manualmente
-        rec.interimResults   = true;
-        rec.maxAlternatives  = 1;
+        rec.lang            = 'es-ES';
+        rec.continuous      = true;   // no termina por silencio
+        rec.interimResults  = true;
+        rec.maxAlternatives = 1;
 
         rec.onstart = function () {
-            listening = true;
+            noSpeechCnt = 0;
             btnMic.classList.add('active');
-            micIco.className  = 'fa fa-stop';
+            micIco.className   = 'fa fa-stop';
             micTxt.textContent = 'Detener';
             voiceMsg.textContent = '🎤 Escuchando… lee el texto en voz alta';
         };
 
         rec.onresult = function (e) {
+            noSpeechCnt = 0;
             for (var i = e.resultIndex; i < e.results.length; i++) {
-                var transcript = e.results[i][0].transcript;
-                var isFinal    = e.results[i].isFinal;
-                markWords(transcript, isFinal);
+                var t = e.results[i][0].transcript;
+                var f = e.results[i].isFinal;
+                markWords(t, f);
             }
         };
 
         rec.onerror = function (e) {
-            // 'no-speech' y 'aborted' son normales, ignorar
             if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-                shouldRun = false;
-                listening = false;
+                active = false;
                 resetBtn();
-                voiceMsg.textContent = '⛔ Permiso de micrófono denegado. Habilítalo en el navegador.';
+                voiceMsg.textContent = '⛔ Permiso de micrófono denegado. Habilítalo en la barra del navegador.';
+                return;
             }
-            // para otros errores dejamos que onend reinicie
+            if (e.error === 'no-speech') {
+                noSpeechCnt++;
+                // Simplemente dejamos que onend reinicie; no cambiar UI
+            }
+            // aborted, network, etc: onend se encargará
         };
 
         rec.onend = function () {
-            listening = false;
-            if (shouldRun) {
-                // Reiniciar con pequeño delay para evitar el error AbortError
-                clearTimeout(restartTimer);
-                restartTimer = setTimeout(function () {
-                    if (shouldRun) {
-                        try { buildRec(); rec.start(); }
-                        catch(ex) { /* silenciar */ }
-                    }
-                }, 300);
-            } else {
+            if (!active) {
+                // el usuario lo detuvo a propósito
                 resetBtn();
-                voiceMsg.textContent = 'Reconocimiento pausado. Las palabras verdes quedan guardadas.';
+                voiceMsg.textContent = '⏹ Detenido. Las palabras verdes quedan guardadas.';
+                return;
             }
+            // Si sigue activo, reiniciar inmediatamente
+            // (usar setTimeout 0 evita AbortError en Chrome)
+            setTimeout(function () {
+                if (active) {
+                    try { startRec(); }
+                    catch (ex) { /* ignorar */ }
+                }
+            }, 0);
         };
+
+        rec.start();
     }
 
     function resetBtn() {
         btnMic.classList.remove('active');
-        micIco.className  = 'fa fa-microphone';
+        micIco.className   = 'fa fa-microphone';
         micTxt.textContent = 'Iniciar';
     }
 
-    buildRec();
-
     btnMic.addEventListener('click', function () {
-        if (!shouldRun) {
-            // INICIAR
-            shouldRun = true;
-            try { rec.start(); }
-            catch(ex) {
-                // si ya hay una instancia activa, reconstruir
-                buildRec();
-                setTimeout(function(){ rec.start(); }, 100);
-            }
+        if (!active) {
+            active = true;
+            startRec();
         } else {
-            // DETENER
-            shouldRun = false;
-            clearTimeout(restartTimer);
-            try { rec.stop(); } catch(ex) {}
+            active = false;
+            try { rec.stop(); } catch (ex) { resetBtn(); }
         }
     });
 }
@@ -559,8 +555,7 @@ function checkUnlock() {
     unlocked = true;
 
     // Detener reconocimiento automáticamente
-    shouldRun = false;
-    clearTimeout(restartTimer);
+    active = false;
     try { if (rec) rec.stop(); } catch(e) {}
     resetBtn();
 
@@ -581,7 +576,7 @@ if (testBtn) {
     testBtn.addEventListener('click', function (e) {
         e.preventDefault();
         if (this.classList.contains('locked')) return;
-        shouldRun = false;
+        active = false;
         try { if (rec) rec.stop(); } catch(e) {}
         document.cookie = 'lecturaMs=' + elapsedMs + ';path=/;SameSite=Strict';
         window.location.href = this.href;
