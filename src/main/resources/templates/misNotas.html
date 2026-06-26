@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Mis Notas · Fundación Kinal</title>
+    <meta name="theme-color" content="#1B3A6B"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
+</head>
+<body>
+
+<nav class="k-nav">
+    <a href="/carreras" class="k-nav-brand">
+        <img src="https://static.wixstatic.com/media/128120_32e25aed1e3b488f9f2e834a59aef168~mv2.png/v1/fill/w_313,h_114,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Recurso%208_3x-8%20(3).png" alt="Fundación Kinal">
+    </a>
+    <ul class="k-nav-links">
+        <li><a href="/carreras"><i class="fa fa-book-open" style="font-size:.8rem"></i> Carreras</a></li>
+        <li><a href="/mis-notas" class="active"><i class="fa fa-chart-line" style="font-size:.8rem"></i> Mis Notas</a></li>
+        <li>
+            <form th:action="@{/logout}" method="post" style="margin:0">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="k-btn k-btn-ghost k-btn-sm">
+                    <i class="fa fa-right-from-bracket" style="font-size:.8rem"></i> Salir
+                </button>
+            </form>
+        </li>
+    </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="mn-hero">
+    <div class="mn-hero-pattern"></div>
+    <div class="mn-hero-deco">N</div>
+
+    <div class="k-container" style="position:relative;z-index:2">
+        <div class="fade-up" style="margin-bottom:.5rem">
+            <div class="k-badge k-badge-glass" style="display:inline-flex">
+                <i class="fa fa-chart-line"></i>&nbsp; Mi historial académico
+            </div>
+        </div>
+        <h1 class="k-display fade-up stagger-1" style="color:#fff; margin-bottom:.5rem">
+            Mis <span style="color:var(--kinal-gold)">Notas</span>
+        </h1>
+        <p style="color:rgba(255,255,255,.65); font-size:.95rem;" class="fade-up stagger-2">
+            Tu progreso en comprensión lectora · Fundación Kinal
+        </p>
+
+        <!-- Stats grid -->
+        <div th:if="${!#lists.isEmpty(resultados)}" class="mn-stats-row fade-up stagger-3">
+            <div class="mn-stat-card">
+                <div class="mn-stat-icon"><i class="fa fa-clipboard-check"></i> Tests</div>
+                <span class="mn-stat-num" th:text="${resultados.size()}">0</span>
+                <span class="mn-stat-lbl">Completados</span>
+                <div class="mn-mini-progress">
+                    <div class="mn-mini-progress-bar" style="width:100%"></div>
+                </div>
+            </div>
+            <div class="mn-stat-card accent-gold">
+                <div class="mn-stat-icon"><i class="fa fa-trophy"></i> Mejor</div>
+                <span class="mn-stat-num" th:text="${mejorNota}">0</span>
+                <span class="mn-stat-lbl">Nota más alta</span>
+                <div class="mn-mini-progress">
+                    <div class="mn-mini-progress-bar" th:style="'width:' + ${mejorNota} + '%'"></div>
+                </div>
+            </div>
+            <div class="mn-stat-card accent-blue">
+                <div class="mn-stat-icon"><i class="fa fa-chart-bar"></i> Promedio</div>
+                <span class="mn-stat-num" th:text="${promedio}">0</span>
+                <span class="mn-stat-lbl">Nota promedio</span>
+                <div class="mn-mini-progress">
+                    <div class="mn-mini-progress-bar" th:style="'width:' + ${promedio} + '%'"></div>
+                </div>
+            </div>
+            <div class="mn-stat-card accent-green">
+                <div class="mn-stat-icon"><i class="fa fa-circle-check"></i> Aprobados</div>
+                <span class="mn-stat-num" th:text="${aprobados}">0</span>
+                <span class="mn-stat-lbl">Tests aprobados</span>
+                <div class="mn-mini-progress">
+                    <div class="mn-mini-progress-bar"
+                         th:style="'width:' + (${resultados.size()} > 0 ? (${aprobados} * 100 / ${resultados.size()}) : 0) + '%'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── BODY ── -->
+<div class="mn-body">
+
+    <!-- CON RESULTADOS -->
+    <div th:if="${!#lists.isEmpty(resultados)}">
+        <!-- Toolbar -->
+        <div class="mn-toolbar fade-up">
+            <div class="mn-toolbar-left">
+                <button class="mn-filter-btn active" onclick="filtrar(this,'todos')">
+                    <i class="fa fa-list" style="font-size:.75rem"></i> Todos
+                </button>
+                <button class="mn-filter-btn" onclick="filtrar(this,'excelente')">
+                    <i class="fa fa-star" style="font-size:.75rem"></i> Excelente
+                </button>
+                <button class="mn-filter-btn" onclick="filtrar(this,'aprobado')">
+                    <i class="fa fa-check" style="font-size:.75rem"></i> Aprobados
+                </button>
+                <button class="mn-filter-btn" onclick="filtrar(this,'reprobado')">
+                    <i class="fa fa-xmark" style="font-size:.75rem"></i> Reprobados
+                </button>
+            </div>
+            <div class="mn-search-wrap">
+                <i class="fa fa-search"></i>
+                <input type="text" class="mn-search" id="mnSearch" placeholder="Buscar lectura…"/>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="mn-table-card fade-up stagger-1">
+            <div class="mn-table-header">
+                <div class="mn-table-title">
+                    <div class="mn-table-icon"><i class="fa fa-table-list"></i></div>
+                    <h3>Historial de evaluaciones</h3>
+                </div>
+                <span class="k-badge k-badge-indigo" style="font-size:.7rem">
+                    <span th:text="${resultados.size()}">0</span> registros
+                </span>
+            </div>
+
+            <div class="mn-table-wrap">
+                <table class="mn-table" id="mnTable">
+                    <thead>
+                    <tr>
+                        <th style="width:36px">#</th>
+                        <th>Lectura</th>
+                        <th>Carrera</th>
+                        <th>Nota</th>
+                        <th>Aciertos</th>
+                        <th>Velocidad</th>
+                        <th>Fecha</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="r, stat : ${resultados}"
+                        th:data-nota="${r.nota}"
+                        th:data-titulo="${r.lectura.titulo}"
+                        class="mn-row reveal">
+
+                        <td><span class="mn-num" th:text="${stat.index + 1}">1</span></td>
+                        <td><span class="mn-lectura-title" th:text="${r.lectura.titulo}">Título</span></td>
+                        <td><span class="k-badge k-badge-indigo" style="font-size:.68rem" th:text="${r.lectura.carrera.nombre}">Carrera</span></td>
+                        <td>
+                            <div class="mn-score-wrap">
+                                <div class="mn-score-ring">
+                                    <svg width="44" height="44" viewBox="0 0 44 44" th:with="offset=${106.8 - (r.nota / 100.0 * 106.8)}">
+                                        <circle cx="22" cy="22" r="17" fill="none" stroke="#e5e8ed" stroke-width="3.5"/>
+                                        <circle cx="22" cy="22" r="17" fill="none"
+                                                th:attr="stroke=${r.nota >= 90 ? '#22c55e' : (r.nota >= 70 ? '#2255A4' : (r.nota >= 60 ? '#F5A623' : '#C0392B'))},stroke-dashoffset=${offset}"
+                                                stroke-width="3.5" stroke-linecap="round"
+                                                stroke-dasharray="106.8"
+                                                transform="rotate(-90 22 22)"/>
+                                    </svg>
+                                    <div class="mn-score-ring-num" th:text="${#numbers.formatDecimal(r.nota,1,0)}">0</div>
+                                </div>
+                                <span class="mn-score-pill"
+                                      th:classappend="${r.nota >= 90 ? 'pill-excelente' : (r.nota >= 70 ? 'pill-muybueno' : (r.nota >= 60 ? 'pill-aprobado' : 'pill-reprobado'))}"
+                                      th:text="${r.nota >= 90 ? '🏆 Excelente' : (r.nota >= 70 ? '✓ Muy bueno' : (r.nota >= 60 ? '~ Aprobado' : '✗ Reprobado'))}">—</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span style="font-weight:600; color:var(--k-text)" th:text="${r.aciertos}">0</span>
+                            <span style="color:var(--k-caption)">/</span>
+                            <span style="color:var(--k-muted)" th:text="${r.totalPreguntas}">5</span>
+                        </td>
+                        <td>
+                            <span th:if="${r.velocidadLectoraPpm != null}"
+                                  class="mn-ppm"
+                                  th:classappend="${r.velocidadLectoraPpm >= 300 ? 'ppm-fast' : (r.velocidadLectoraPpm >= 200 ? 'ppm-mid' : 'ppm-slow')}">
+                                <i class="fa fa-gauge-high" style="font-size:.65rem"></i>
+                                <span th:text="${r.velocidadLectoraPpm}">0</span> ppm
+                            </span>
+                            <span th:unless="${r.velocidadLectoraPpm != null}" style="color:var(--k-caption);font-size:.85rem">—</span>
+                        </td>
+                        <td>
+                            <div class="mn-fecha">
+                                <strong th:text="${#temporals.format(r.fecha, 'dd/MM/yyyy')}">—</strong>
+                                <span th:text="${#temporals.format(r.fecha, 'HH:mm')}">—</span>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mn-footer-bar">
+                <span class="mn-count-label">
+                    Mostrando <strong id="mnVisible" th:text="${resultados.size()}">0</strong>
+                    de <strong th:text="${resultados.size()}">0</strong> evaluaciones
+                </span>
+                <div style="display:flex;align-items:center;gap:.5rem">
+                    <div style="width:8px;height:8px;border-radius:50%;background:var(--k-green)"></div>
+                    <span style="font-size:.78rem;color:var(--k-muted)">Datos actualizados</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIN RESULTADOS -->
+    <div th:if="${#lists.isEmpty(resultados)}" class="mn-empty fade-up">
+        <div class="mn-empty-icon">
+            <i class="fa fa-chart-line"></i>
+        </div>
+        <h3 style="font-family:var(--k-font-display);font-size:1.3rem;margin-bottom:.6rem;color:var(--k-text)">
+            Aún no tienes evaluaciones completadas
+        </h3>
+        <p class="k-subtext" style="margin-bottom:1.75rem;max-width:380px;margin-left:auto;margin-right:auto">
+            Lee una lectura, completa el test y vuelve aquí para ver tus notas y progreso.
+        </p>
+        <a href="/carreras" class="k-btn k-btn-primary k-btn-lg">
+            <i class="fa fa-book-open"></i> Explorar lecturas
+        </a>
+    </div>
+</div>
+
+<footer class="k-footer">
+    <p>© 2026 Fundación Kinal · Centro Educativo Técnico · Guatemala</p>
+</footer>
+
+<script th:src="@{/js/kinal.js}" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const reveals = document.querySelectorAll(".reveal");
+        const revealOnScroll = () => {
+            const wh = window.innerHeight;
+            reveals.forEach(r => {
+                if (r.getBoundingClientRect().top < wh - 80) r.classList.add("visible");
+            });
+        };
+        window.addEventListener("scroll", revealOnScroll);
+        revealOnScroll();
+
+        const searchInput = document.getElementById("mnSearch");
+        if (searchInput) {
+            searchInput.addEventListener("input", applyFilters);
+        }
+    });
+
+    let currentFilter = "todos";
+
+    function filtrar(btn, tipo) {
+        document.querySelectorAll(".mn-filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentFilter = tipo;
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const q = (document.getElementById("mnSearch")?.value || "").toLowerCase().trim();
+        const rows = document.querySelectorAll(".mn-row");
+        let visible = 0;
+
+        rows.forEach(row => {
+            const nota  = parseFloat(row.dataset.nota || 0);
+            const title = (row.dataset.titulo || "").toLowerCase();
+
+            const matchSearch = !q || title.includes(q);
+            let matchFilter = true;
+            if (currentFilter === "excelente") matchFilter = nota >= 90;
+            else if (currentFilter === "aprobado") matchFilter = nota >= 60;
+            else if (currentFilter === "reprobado") matchFilter = nota < 60;
+
+            const show = matchSearch && matchFilter;
+            row.style.display = show ? "" : "none";
+            if (show) visible++;
+        });
+
+        const counter = document.getElementById("mnVisible");
+        if (counter) counter.textContent = visible;
+    }
+</script>
+</body>
+</html>
