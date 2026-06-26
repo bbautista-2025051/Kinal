@@ -109,8 +109,10 @@ public class SecurityConfig {
                                                 "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
                                                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
                                                 "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; " +
-                                                "img-src 'self' https://static.wixstatic.com data:; " +
-                                                "connect-src 'self'; " +
+                                                "img-src 'self' https://static.wixstatic.com https://www.corporacionbi.com https://www.galileo.edu data:; " +
+                                                // Web Speech API (Chrome) requiere conectarse a servicios de Google.
+                                                // Sin estos dominios en connect-src el navegador bloquea el reconocimiento.
+                                                "connect-src 'self' https://www.google.com https://*.google.com https://*.googleapis.com; " +
                                                 "frame-ancestors 'self'; " +
                                                 "form-action 'self'"
                                 )
@@ -119,7 +121,9 @@ public class SecurityConfig {
                                 .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
                         )
                         .permissionsPolicy(pp -> pp
-                                .policy("camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()")
+                                // microphone=* permite que la página solicite el micrófono al usuario.
+                                // Sin esto el navegador deniega el acceso ANTES de mostrar el diálogo.
+                                .policy("camera=(), microphone=*, geolocation=(), payment=(), usb=(), interest-cohort=()")
                         )
                 )
 

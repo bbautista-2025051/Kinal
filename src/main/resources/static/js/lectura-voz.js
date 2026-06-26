@@ -49,8 +49,26 @@
     if (!SR) {
         btnMic.disabled = true;
         btnMic.style.opacity = '0.4';
-        setMsg('Usa Google Chrome para esta función.');
+        setMsg('⛔ Tu navegador no soporta reconocimiento de voz. Usa Google Chrome.');
         return;
+    }
+
+    /* Verificar si el micrófono ya fue bloqueado previamente */
+    if (navigator.permissions) {
+        navigator.permissions.query({ name: 'microphone' }).then(function(result) {
+            if (result.state === 'denied') {
+                btnMic.style.opacity = '0.6';
+                setMsg('⚠️ Micrófono bloqueado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga la página.');
+            }
+            /* Escuchar cambios de permiso en tiempo real */
+            result.onchange = function() {
+                log('Permiso de micrófono cambió a: ' + result.state);
+                if (result.state === 'granted') {
+                    btnMic.style.opacity = '1';
+                    setMsg('Presiona Iniciar y lee el texto en voz alta');
+                }
+            };
+        }).catch(function() { /* Permissions API no disponible, continuar normal */ });
     }
 
     /* ── Preparar spans ── */
@@ -100,19 +118,36 @@
     /* ── Solicitar permiso de micrófono explícitamente ── */
     function pedirPermisoYArrancar() {
         log('Solicitando permiso con getUserMedia...');
-        setMsg('⏳ Solicitando permiso de micrófono…');
+        setMsg('⏳ Solicitando permiso de micrófono… Acepta el diálogo del navegador.');
 
+        /* Verificar si ya existe el permiso antes de pedirlo */
+        if (navigator.permissions) {
+            navigator.permissions.query({ name: 'microphone' }).then(function(result) {
+                log('Estado actual del permiso: ' + result.state);
+                if (result.state === 'denied') {
+                    active = false;
+                    resetBtn();
+                    setMsg('⛔ Micrófono bloqueado. Haz clic en el ícono 🔒 junto a la URL → Micrófono → Permitir → recarga la página.');
+                    return;
+                }
+                /* Si es 'granted' o 'prompt', proceder con getUserMedia */
+                solicitarMicrofono();
+            }).catch(function() {
+                /* Permissions API no soportada, intentar directamente */
+                solicitarMicrofono();
+            });
+        } else {
+            solicitarMicrofono();
+        }
+    }
+
+    function solicitarMicrofono() {
         navigator.mediaDevices.getUserMedia({ audio: true, video: false })
             .then(function (stream) {
                 log('getUserMedia OK — permiso concedido');
-                /* Detener el stream, ya tenemos el permiso */
+                /* Detener el stream de inmediato, solo necesitábamos el permiso */
                 stream.getTracks().forEach(function(t) { t.stop(); });
-                /* Verificar estado del permiso */
-                if (navigator.permissions) {
-                    navigator.permissions.query({ name: 'microphone' }).then(function(r) {
-                        log('Permissions API: ' + r.state);
-                    });
-                }
+                setMsg('✅ Permiso concedido. Iniciando reconocimiento…');
                 startRec();
             })
             .catch(function (err) {
@@ -120,11 +155,13 @@
                 active = false;
                 resetBtn();
                 if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                    setMsg('⛔ Permiso denegado. Haz clic en el ícono 🎙 o 🔒 junto a la URL → Micrófono → Permitir → recarga.');
-                } else if (err.name === 'NotFoundError') {
+                    setMsg('⛔ Permiso denegado. Haz clic en el ícono 🎙 o 🔒 junto a la URL → Micrófono → Permitir → recarga la página.');
+                } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
                     setMsg('⛔ No se detectó micrófono. Conecta uno e intenta de nuevo.');
+                } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+                    setMsg('⛔ El micrófono está en uso por otra aplicación. Ciérrala e intenta de nuevo.');
                 } else {
-                    setMsg('⛔ Error al acceder al micrófono: ' + err.name);
+                    setMsg('⛔ Error al acceder al micrófono: ' + err.name + '. Intenta recargar la página.');
                 }
             });
     }
