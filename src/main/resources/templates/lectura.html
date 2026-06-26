@@ -11,7 +11,7 @@
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
     <style>
-        /* ══ Barra de escucha de voz ══ */
+        /* ── Barra de voz ── */
         #voiceBar {
             display: flex;
             align-items: center;
@@ -23,7 +23,7 @@
             margin-bottom: 1.25rem;
             flex-wrap: wrap;
         }
-        #voiceBar .v-lbl {
+        .v-lbl {
             font-size: .75rem;
             font-weight: 700;
             color: var(--kinal-blue-dark);
@@ -35,7 +35,7 @@
             display: inline-flex;
             align-items: center;
             gap: .45rem;
-            padding: .45rem 1.1rem;
+            padding: .48rem 1.15rem;
             border-radius: 999px;
             border: none;
             cursor: pointer;
@@ -45,115 +45,69 @@
             color: #fff;
             transition: background .18s;
             white-space: nowrap;
+            flex-shrink: 0;
         }
-        #btnMic:hover { background: var(--kinal-blue-mid); }
-        #btnMic.listening {
-            background: var(--k-red, #C0392B);
+        #btnMic:hover  { background: var(--kinal-blue-mid); }
+        #btnMic.active {
+            background: #c0392b;
             animation: micPulse 1.2s ease-in-out infinite;
         }
         @keyframes micPulse {
-            0%,100% { box-shadow: 0 0 0 0 rgba(192,57,43,.4); }
-            50%      { box-shadow: 0 0 0 8px rgba(192,57,43,0); }
+            0%,100% { box-shadow: 0 0 0 0 rgba(192,57,43,.45); }
+            60%      { box-shadow: 0 0 0 9px rgba(192,57,43,0); }
         }
-        #voiceStatus {
+        #voiceMsg {
             font-size: .78rem;
             color: var(--k-muted);
             flex: 1;
-            min-width: 120px;
+            min-width: 0;
         }
-        /* Barra de progreso de cobertura de voz */
-        #voiceCoverageWrap {
+        /* mini barra de cobertura en la fila */
+        #covWrap {
             display: flex;
             align-items: center;
-            gap: .5rem;
-            min-width: 160px;
+            gap: .45rem;
+            flex-shrink: 0;
         }
-        #voiceCoverageBar {
-            flex: 1;
+        #covTrack {
+            width: 100px;
             height: 6px;
             background: #dde1ea;
             border-radius: 999px;
             overflow: hidden;
         }
-        #voiceCoverageFill {
+        #covFill {
             height: 100%;
             width: 0%;
-            background: var(--k-green);
+            background: #27ae60;
             border-radius: 999px;
-            transition: width .5s ease;
+            transition: width .4s ease;
         }
-        #voiceCoveragePct {
+        #covPct {
             font-size: .78rem;
             font-weight: 700;
-            color: var(--k-green);
-            min-width: 2.8rem;
+            color: #27ae60;
+            min-width: 2.5rem;
             text-align: right;
         }
 
-        /* ══ Resaltado de palabras ══ */
-        .rd-word {
+        /* ── Resaltado de palabras ── */
+        .rw {
             border-radius: 3px;
-            transition: background .3s;
+            transition: background .25s;
         }
-        /* Palabra actualmente reconocida (interim) */
-        .rd-word.interim { background: rgba(245,166,35,.35); }
-        /* Palabra confirmada leída correctamente */
-        .rd-word.read-ok {
+        /* verde = ya reconocida */
+        .rw.ok {
             background: rgba(39,174,96,.18);
-            color: var(--k-green);
+            color: #1a7a42;
             font-weight: 500;
         }
-        /* Palabra que no coincidió */
-        .rd-word.read-miss { background: rgba(192,57,43,.10); }
+        /* amarillo = la que está leyendo ahora */
+        .rw.now {
+            background: rgba(245,166,35,.4);
+        }
 
-        /* ══ Barra TTS (escuchar audio) ══ */
-        #audioBar {
-            display: flex;
-            align-items: center;
-            gap: .75rem;
-            padding: .85rem 1.2rem;
-            background: var(--kinal-blue-light);
-            border: 1px solid rgba(27,58,107,.15);
-            border-radius: var(--k-radius);
-            margin-bottom: 1.25rem;
-            flex-wrap: wrap;
-        }
-        #audioBar .audio-lbl {
-            font-size: .75rem;
-            font-weight: 700;
-            color: var(--kinal-blue-dark);
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            white-space: nowrap;
-        }
-        .audio-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: .4rem;
-            padding: .42rem .9rem;
-            border-radius: 999px;
-            border: none;
-            cursor: pointer;
-            font-size: .83rem;
-            font-weight: 600;
-            transition: all .18s;
-            white-space: nowrap;
-        }
-        #btnPlay  { background: var(--kinal-blue); color: #fff; }
-        #btnPlay:hover { background: var(--kinal-blue-mid); }
-        #btnStop  { background: transparent; color: var(--kinal-blue); border: 1.5px solid var(--kinal-blue); }
-        #btnStop:hover { background: var(--kinal-blue); color: #fff; }
-        #speedSel {
-            padding: .28rem .45rem;
-            border-radius: 6px;
-            border: 1px solid var(--k-border);
-            font-size: .78rem;
-            background: #fff;
-            color: var(--k-text);
-        }
-        #audioStatus { font-size: .75rem; color: var(--k-muted); margin-left: auto; }
-
-        /* ══ Bloqueo del test ══ */
+        /* ── Bloqueo del test ── */
         #lockBox {
             display: flex;
             align-items: center;
@@ -185,20 +139,8 @@
             pointer-events: none;
             filter: grayscale(.5);
         }
-        .side-prog-wrap {
-            height: 8px;
-            background: #e5e8ed;
-            border-radius: 999px;
-            overflow: hidden;
-            flex: 1;
-        }
-        #sideProgFill {
-            height: 100%;
-            width: 0%;
-            background: var(--kinal-blue);
-            border-radius: 999px;
-            transition: width .3s;
-        }
+        .spw { height: 8px; background: #e5e8ed; border-radius: 999px; overflow: hidden; flex: 1; }
+        #sideProgFill { height:100%; width:0%; background:var(--kinal-blue); border-radius:999px; transition:width .3s; }
     </style>
 </head>
 <body>
@@ -225,7 +167,6 @@
     <div class="k-glow k-glow-indigo" style="width:300px;height:300px;top:-30px;right:-50px;"></div>
     <div class="k-container" style="position:relative;z-index:1">
 
-        <!-- Breadcrumb -->
         <div class="fade-up" style="display:flex;align-items:center;gap:.5rem;margin-bottom:2rem;font-size:.875rem;color:var(--k-muted)">
             <a href="/carreras" style="color:var(--kinal-blue)"><i class="fa fa-house"></i> Carreras</a>
             <i class="fa fa-chevron-right" style="font-size:.65rem;opacity:.5"></i>
@@ -236,7 +177,6 @@
 
         <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start" id="mainGrid">
             <div>
-                <!-- Cabecera lectura -->
                 <div class="k-card fade-up" style="margin-bottom:1.5rem;padding:2rem">
                     <h1 class="k-heading" style="margin-bottom:1rem;line-height:1.25" th:text="${lectura.titulo}">Título</h1>
                     <div style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:center">
@@ -246,46 +186,25 @@
                     </div>
                 </div>
 
-                <!-- ══ BARRA TTS (escuchar) ══ -->
-                <div id="audioBar" class="fade-up stagger-1">
-                    <span class="audio-lbl"><i class="fa fa-volume-high"></i> Escuchar</span>
-                    <button id="btnPlay" class="audio-btn">
-                        <i class="fa fa-play" id="playIco"></i>
-                        <span id="playTxt">Reproducir</span>
-                    </button>
-                    <button id="btnStop" class="audio-btn">
-                        <i class="fa fa-stop"></i> Detener
-                    </button>
-                    <label for="speedSel" style="font-size:.75rem;color:var(--k-muted)"><i class="fa fa-gauge-high"></i></label>
-                    <select id="speedSel">
-                        <option value="0.75">0.75×</option>
-                        <option value="1" selected>1×</option>
-                        <option value="1.25">1.25×</option>
-                        <option value="1.5">1.5×</option>
-                        <option value="2">2×</option>
-                    </select>
-                    <span id="audioStatus"></span>
-                </div>
-
-                <!-- ══ BARRA DE RECONOCIMIENTO DE VOZ ══ -->
+                <!-- ── BARRA DE VOZ ── -->
                 <div id="voiceBar" class="fade-up stagger-1">
                     <span class="v-lbl"><i class="fa fa-microphone"></i> Leer en voz alta</span>
-                    <button id="btnMic">
+                    <button id="btnMic" type="button">
                         <i class="fa fa-microphone" id="micIco"></i>
-                        <span id="micTxt">Iniciar reconocimiento</span>
+                        <span id="micTxt">Iniciar</span>
                     </button>
-                    <span id="voiceStatus">Presiona el micrófono y lee el texto en voz alta</span>
-                    <div id="voiceCoverageWrap" title="Porcentaje de la lectura reconocida correctamente">
-                        <div id="voiceCoverageBar"><div id="voiceCoverageFill"></div></div>
-                        <span id="voiceCoveragePct">0%</span>
+                    <span id="voiceMsg">Presiona Iniciar y lee el texto en voz alta</span>
+                    <div id="covWrap">
+                        <div id="covTrack"><div id="covFill"></div></div>
+                        <span id="covPct">0%</span>
                     </div>
                 </div>
 
-                <!-- ══ TARJETA DE CONTENIDO ══ -->
-                <div class="k-card fade-up stagger-2" id="readingCard">
+                <!-- ── CONTENIDO ── -->
+                <div class="k-card fade-up stagger-2">
                     <div style="position:sticky;top:65px;margin:-1.75rem -1.75rem 1.75rem;z-index:10">
                         <div class="k-progress" style="border-radius:0;height:3px">
-                            <div class="k-progress-bar" id="readingProgress" style="width:0%;transition:width .1s linear"></div>
+                            <div class="k-progress-bar" id="readingProgress" style="width:0%;transition:width .15s linear"></div>
                         </div>
                     </div>
                     <div class="k-reading" id="readingContent" th:text="${lectura.contenido}">Contenido...</div>
@@ -293,7 +212,7 @@
                     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
                         <div>
                             <p style="font-size:.875rem;font-weight:600;color:var(--k-text)">¿Terminaste de leer?</p>
-                            <p style="font-size:.8125rem;color:var(--k-muted)" id="scrollHint">Lee en voz alta y desplázate hasta el final</p>
+                            <p style="font-size:.8125rem;color:var(--k-muted)" id="scrollHint">Lee en voz alta hasta alcanzar el 60% para habilitar el test</p>
                         </div>
                         <div th:if="${!yaRealizado}" style="display:flex;flex-direction:column;align-items:flex-end;gap:.5rem">
                             <div id="lockBox"><i class="fa fa-lock"></i> <span id="lockMsg">Lee en voz alta al menos el 60% del texto</span></div>
@@ -311,7 +230,7 @@
                 </div>
             </div>
 
-            <!-- ══ SIDEBAR ══ -->
+            <!-- ── SIDEBAR ── -->
             <div style="position:sticky;top:80px" class="fade-up stagger-1" id="sidebar">
                 <div class="k-card" style="margin-bottom:1.25rem;text-align:center">
                     <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-muted);margin-bottom:.75rem;font-weight:600">
@@ -321,14 +240,13 @@
                     <p style="font-size:.75rem;color:var(--k-caption);margin-top:.6rem">Un buen lector: ~200 ppm</p>
                 </div>
 
-                <!-- Cobertura de voz en sidebar -->
                 <div class="k-card" style="margin-bottom:1.25rem">
                     <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--k-muted);margin-bottom:.75rem;font-weight:600">
-                        <i class="fa fa-microphone"></i> Lectura reconocida
+                        <i class="fa fa-microphone"></i> Palabras reconocidas
                     </p>
-                    <div style="display:flex;align-items:center;gap:.65rem;margin-bottom:.5rem">
-                        <div class="side-prog-wrap"><div id="sideVoiceFill" style="height:100%;width:0%;background:var(--k-green);border-radius:999px;transition:width .5s"></div></div>
-                        <span id="sideVoicePct" style="font-size:.8rem;font-weight:700;color:var(--k-green);min-width:2.5rem;text-align:right">0%</span>
+                    <div style="display:flex;align-items:center;gap:.65rem;margin-bottom:.4rem">
+                        <div class="spw"><div id="sideVoiceFill" style="height:100%;width:0%;background:#27ae60;border-radius:999px;transition:width .5s"></div></div>
+                        <span id="sideVoicePct" style="font-size:.8rem;font-weight:700;color:#27ae60;min-width:2.5rem;text-align:right">0%</span>
                     </div>
                     <p style="font-size:.72rem;color:var(--k-caption)">Necesitas <strong>60%</strong> para desbloquear el test</p>
                 </div>
@@ -338,7 +256,7 @@
                         <i class="fa fa-eye"></i> Progreso de scroll
                     </p>
                     <div style="display:flex;align-items:center;gap:.65rem">
-                        <div class="side-prog-wrap"><div id="sideProgFill"></div></div>
+                        <div class="spw"><div id="sideProgFill"></div></div>
                         <span id="sidePct" style="font-size:.8rem;font-weight:700;color:var(--kinal-blue);min-width:2.5rem;text-align:right">0%</span>
                     </div>
                 </div>
@@ -363,13 +281,20 @@
                     </p>
                     <ul style="list-style:none;display:flex;flex-direction:column;gap:.65rem">
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
-                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> Activa el micrófono y lee en voz alta
+                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.25rem;flex-shrink:0"></i>
+                            Presiona Iniciar y lee en voz alta
                         </li>
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
-                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> Las palabras verdes ya fueron reconocidas
+                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.25rem;flex-shrink:0"></i>
+                            Las palabras verdes ya fueron reconocidas
                         </li>
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
-                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.2rem;flex-shrink:0"></i> Necesitas leer el 60% para continuar
+                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.25rem;flex-shrink:0"></i>
+                            Alcanza el 60% para habilitar el test
+                        </li>
+                        <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
+                            <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.25rem;flex-shrink:0"></i>
+                            Usa Chrome para mejor soporte
                         </li>
                     </ul>
                 </div>
@@ -385,342 +310,287 @@
 <script th:src="@{/js/kinal.js}" defer></script>
 <script th:inline="javascript">
 /*<![CDATA[*/
-const totalPalabras = [[${palabrasLectura}]];
+var totalPalabras = [[${palabrasLectura}]];
 
-// ══ 1. TEMPORIZADOR ══════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
+   1. TEMPORIZADOR
+════════════════════════════════════════════════ */
 var startTime = Date.now();
 var elapsedMs = 0;
-var timerEl   = document.getElementById('readingTimer');
-var ppmEl     = document.getElementById('ppmDisplay');
 
-setInterval(function() {
+setInterval(function () {
     elapsedMs = Date.now() - startTime;
-    var secs = Math.floor(elapsedMs / 1000);
-    timerEl.textContent = pad(Math.floor(secs / 60)) + ':' + pad(secs % 60);
+    var s = Math.floor(elapsedMs / 1000);
+    document.getElementById('readingTimer').textContent =
+        pad(Math.floor(s / 60)) + ':' + pad(s % 60);
     var mins = elapsedMs / 60000;
-    if (mins > 0.1) {
+    if (mins > 0.08) {
         var ppm = Math.round(totalPalabras / mins);
-        ppmEl.textContent = ppm;
-        ppmEl.style.color = ppm >= 300 ? 'var(--k-green)' : ppm >= 200 ? 'var(--k-amber)' : 'var(--k-red)';
+        var el  = document.getElementById('ppmDisplay');
+        el.textContent = ppm;
+        el.style.color = ppm >= 300 ? 'var(--k-green)' : ppm >= 200 ? 'var(--k-amber)' : 'var(--k-red)';
     }
-    checkUnlock();
 }, 1000);
 
-function pad(n) { return String(n).padStart(2,'0'); }
+function pad(n) { return String(n).padStart(2, '0'); }
 
-// ══ 2. PREPARAR PALABRAS DEL TEXTO ══════════════════════════════════════════
+/* ════════════════════════════════════════════════
+   2. DIVIDIR TEXTO EN SPANS
+════════════════════════════════════════════════ */
 var contentEl = document.getElementById('readingContent');
+var rawText   = contentEl.textContent;
 
-// Envolver cada palabra en span con índice
-(function() {
-    var raw   = contentEl.textContent;
-    var parts = raw.split(/(\s+)/);
-    var wi    = 0;
-    contentEl.innerHTML = parts.map(function(p) {
-        if (/^\s+$/.test(p) || p === '') return p;
-        var span = '<span class="rd-word" data-wi="' + wi + '">' +
-                   p.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>';
-        wi++;
-        return span;
-    }).join('');
-})();
+// Dividir conservando espacios y saltos de línea
+var parts = rawText.split(/(\s+)/);
+var wi = 0;
+contentEl.innerHTML = parts.map(function (p) {
+    if (/^\s*$/.test(p)) return p.replace(/\n/g, '<br>');
+    var safe = p.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return '<span class="rw" data-i="' + (wi++) + '">' + safe + '</span>';
+}).join('');
 
-// Array de palabras normalizadas (sin tildes, minúsculas, sin puntuación)
-var allWordSpans = Array.from(contentEl.querySelectorAll('.rd-word'));
-var allWordsNorm = allWordSpans.map(function(s) { return normalize(s.textContent); });
-var readBitmap   = new Array(allWordSpans.length).fill(false); // true = reconocida
-var totalWords   = allWordSpans.length;
+var spans    = Array.from(contentEl.querySelectorAll('.rw'));
+var total    = spans.length;
+var okBits   = new Array(total).fill(false);
+var coverage = 0; // 0-100
 
-function normalize(str) {
-    return str.toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // quitar tildes
-        .replace(/[^a-z0-9]/g,'');                       // quitar puntuación
+// Normalizar: minúsculas, sin tildes, sin puntuación
+function norm(s) {
+    return s.toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]/g, '');
 }
 
-// Índice de búsqueda: palabra → lista de posiciones en el texto
-var wordIndex = {};
-allWordsNorm.forEach(function(w, i) {
+// Índice invertido: palabra → [índices en spans]
+var idx = {};
+spans.forEach(function (sp, i) {
+    var w = norm(sp.textContent);
     if (!w) return;
-    if (!wordIndex[w]) wordIndex[w] = [];
-    wordIndex[w].push(i);
+    if (!idx[w]) idx[w] = [];
+    idx[w].push(i);
 });
 
-// ══ 3. TTS (escuchar el texto) ═══════════════════════════════════════════════
-var plainText = allWordSpans.map(function(s){ return s.textContent; }).join(' ');
-var utterance = null, ttsPlaying = false, ttsPaused = false;
-var btnPlay   = document.getElementById('btnPlay');
-var playIco   = document.getElementById('playIco');
-var playTxt   = document.getElementById('playTxt');
-var btnStop   = document.getElementById('btnStop');
-var speedSel  = document.getElementById('speedSel');
-var audioStat = document.getElementById('audioStatus');
+/* ════════════════════════════════════════════════
+   3. RECONOCIMIENTO DE VOZ
+════════════════════════════════════════════════ */
+var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+var btnMic   = document.getElementById('btnMic');
+var micIco   = document.getElementById('micIco');
+var micTxt   = document.getElementById('micTxt');
+var voiceMsg = document.getElementById('voiceMsg');
 
-function setPlayUI(on) {
-    if (on) {
-        playIco.className = 'fa fa-pause'; playTxt.textContent = 'Pausar';
-        audioStat.textContent = '🔊 Reproduciendo…';
-    } else {
-        playIco.className = 'fa fa-play';
-        playTxt.textContent = ttsPaused ? 'Continuar' : 'Reproducir';
-        audioStat.textContent = ttsPaused ? '⏸ Pausado' : '';
-    }
-}
+var rec         = null;
+var listening   = false;
+var shouldRun   = false;   // intención del usuario
+var cursor      = 0;       // ventana: buscamos desde aquí
+var restartTimer = null;
 
-function startTTS() {
-    if (!window.speechSynthesis) { audioStat.textContent = '❌ Sin soporte TTS'; return; }
-    window.speechSynthesis.cancel();
-    utterance = new SpeechSynthesisUtterance(plainText);
-    utterance.lang = 'es-GT';
-    utterance.rate = parseFloat(speedSel.value);
-    utterance.onboundary = function(e) {
-        if (e.name !== 'word') return;
-        // resaltar palabra TTS con interim class
-        allWordSpans.forEach(function(s){ s.classList.remove('interim'); });
-        var si = charToWordIdx(e.charIndex);
-        if (si >= 0) allWordSpans[si].classList.add('interim');
-    };
-    utterance.onend = function() {
-        ttsPlaying = false; ttsPaused = false;
-        allWordSpans.forEach(function(s){ s.classList.remove('interim'); });
-        setPlayUI(false); audioStat.textContent = '✅ Terminado';
-    };
-    utterance.onerror = function() {
-        ttsPlaying = false; ttsPaused = false; setPlayUI(false); audioStat.textContent = '';
-    };
-    window.speechSynthesis.speak(utterance);
-    ttsPlaying = true; ttsPaused = false; setPlayUI(true);
-}
-
-function charToWordIdx(charIdx) {
-    // reconstruct character offsets on the fly
-    var offset = 0, si = 0;
-    for (var i = 0; i < allWordSpans.length; i++) {
-        var w = allWordSpans[i].textContent;
-        if (charIdx >= offset && charIdx < offset + w.length) return i;
-        offset += w.length + 1; // +1 for space
-    }
-    return -1;
-}
-
-btnPlay.addEventListener('click', function() {
-    if (!window.speechSynthesis) return;
-    if (!ttsPlaying && !ttsPaused) { startTTS(); }
-    else if (ttsPlaying)           { window.speechSynthesis.pause(); ttsPlaying=false; ttsPaused=true; setPlayUI(false); }
-    else                           { window.speechSynthesis.resume(); ttsPlaying=true; ttsPaused=false; setPlayUI(true); }
-});
-btnStop.addEventListener('click', function() {
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel(); ttsPlaying=false; ttsPaused=false;
-    allWordSpans.forEach(function(s){ s.classList.remove('interim'); });
-    setPlayUI(false); audioStat.textContent = '';
-});
-speedSel.addEventListener('change', function() {
-    if (ttsPlaying || ttsPaused) { window.speechSynthesis.cancel(); ttsPlaying=false; ttsPaused=false; startTTS(); }
-});
-window.addEventListener('beforeunload', function() {
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
-});
-
-// ══ 4. RECONOCIMIENTO DE VOZ (STT) ══════════════════════════════════════════
-var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-var btnMic    = document.getElementById('btnMic');
-var micIco    = document.getElementById('micIco');
-var micTxt    = document.getElementById('micTxt');
-var voiceStat = document.getElementById('voiceStatus');
-var coverFill = document.getElementById('voiceCoverageFill');
-var coverPct  = document.getElementById('voiceCoveragePct');
-var sideVoice = document.getElementById('sideVoiceFill');
-var sideVPct  = document.getElementById('sideVoicePct');
-
-var recognition   = null;
-var isListening   = false;
-// ventana deslizante: empezamos a buscar desde la última palabra reconocida
-var searchCursor  = 0;
-var voiceCoverage = 0; // 0-100
-
-if (!SpeechRec) {
+if (!SR) {
     btnMic.disabled = true;
-    btnMic.style.opacity = '.4';
-    voiceStat.textContent = '❌ Tu navegador no soporta reconocimiento de voz (usa Chrome)';
+    btnMic.style.opacity = '.45';
+    voiceMsg.textContent = '⚠ Tu navegador no soporta reconocimiento de voz. Usa Google Chrome.';
 } else {
-    recognition = new SpeechRec();
-    recognition.lang = 'es-GT';
-    recognition.continuous    = true;  // no para después de una pausa
-    recognition.interimResults= true;  // resultados parciales en tiempo real
-    recognition.maxAlternatives = 3;
+    function buildRec() {
+        rec = new SR();
+        rec.lang             = 'es-ES';   // español neutro, mejor soporte cross-browser
+        rec.continuous       = false;      // false = más estable; reiniciamos manualmente
+        rec.interimResults   = true;
+        rec.maxAlternatives  = 1;
 
-    recognition.onstart = function() {
-        isListening = true;
-        btnMic.classList.add('listening');
-        micIco.className = 'fa fa-stop';
-        micTxt.textContent = 'Detener escucha';
-        voiceStat.textContent = '🎤 Escuchando… lee el texto en voz alta';
-    };
+        rec.onstart = function () {
+            listening = true;
+            btnMic.classList.add('active');
+            micIco.className  = 'fa fa-stop';
+            micTxt.textContent = 'Detener';
+            voiceMsg.textContent = '🎤 Escuchando… lee el texto en voz alta';
+        };
 
-    recognition.onend = function() {
-        // Si no lo detuvo el usuario, reiniciar automáticamente
-        if (isListening) {
-            try { recognition.start(); } catch(e) {}
-        } else {
-            btnMic.classList.remove('listening');
-            micIco.className = 'fa fa-microphone';
-            micTxt.textContent = 'Iniciar reconocimiento';
-            voiceStat.textContent = 'Reconocimiento detenido. Palabras verdes = leídas correctamente.';
-        }
-    };
-
-    recognition.onerror = function(e) {
-        if (e.error === 'not-allowed') {
-            isListening = false;
-            voiceStat.textContent = '⛔ Permiso de micrófono denegado. Actívalo en tu navegador.';
-            btnMic.classList.remove('listening');
-            micIco.className = 'fa fa-microphone';
-            micTxt.textContent = 'Iniciar reconocimiento';
-        }
-        // Para otros errores (no-speech, aborted) simplemente ignorar
-    };
-
-    recognition.onresult = function(event) {
-        for (var ri = event.resultIndex; ri < event.results.length; ri++) {
-            var result   = event.results[ri];
-            var isFinal  = result.isFinal;
-            // Recopilar todas las alternativas
-            var texts = [];
-            for (var ai = 0; ai < result.length; ai++) {
-                texts.push(result[ai].transcript);
+        rec.onresult = function (e) {
+            for (var i = e.resultIndex; i < e.results.length; i++) {
+                var transcript = e.results[i][0].transcript;
+                var isFinal    = e.results[i].isFinal;
+                markWords(transcript, isFinal);
             }
-            processTranscript(texts, isFinal);
-        }
-    };
+        };
 
-    btnMic.addEventListener('click', function() {
-        if (!isListening) {
-            isListening = true;
-            try { recognition.start(); } catch(e) { isListening=false; }
+        rec.onerror = function (e) {
+            // 'no-speech' y 'aborted' son normales, ignorar
+            if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+                shouldRun = false;
+                listening = false;
+                resetBtn();
+                voiceMsg.textContent = '⛔ Permiso de micrófono denegado. Habilítalo en el navegador.';
+            }
+            // para otros errores dejamos que onend reinicie
+        };
+
+        rec.onend = function () {
+            listening = false;
+            if (shouldRun) {
+                // Reiniciar con pequeño delay para evitar el error AbortError
+                clearTimeout(restartTimer);
+                restartTimer = setTimeout(function () {
+                    if (shouldRun) {
+                        try { buildRec(); rec.start(); }
+                        catch(ex) { /* silenciar */ }
+                    }
+                }, 300);
+            } else {
+                resetBtn();
+                voiceMsg.textContent = 'Reconocimiento pausado. Las palabras verdes quedan guardadas.';
+            }
+        };
+    }
+
+    function resetBtn() {
+        btnMic.classList.remove('active');
+        micIco.className  = 'fa fa-microphone';
+        micTxt.textContent = 'Iniciar';
+    }
+
+    buildRec();
+
+    btnMic.addEventListener('click', function () {
+        if (!shouldRun) {
+            // INICIAR
+            shouldRun = true;
+            try { rec.start(); }
+            catch(ex) {
+                // si ya hay una instancia activa, reconstruir
+                buildRec();
+                setTimeout(function(){ rec.start(); }, 100);
+            }
         } else {
-            isListening = false;
-            recognition.stop();
+            // DETENER
+            shouldRun = false;
+            clearTimeout(restartTimer);
+            try { rec.stop(); } catch(ex) {}
         }
     });
 }
 
-/**
- * Procesa un transcript (array de alternativas) y marca las palabras leídas.
- * Usa una ventana deslizante ±30 palabras desde el cursor para evitar
- * marcar palabras fuera de orden.
- */
-function processTranscript(alternatives, isFinal) {
-    // Unir todas las alternativas y extraer palabras normalizadas
-    var spokenWords = [];
-    alternatives.forEach(function(alt) {
-        alt.split(/\s+/).forEach(function(w) {
-            var n = normalize(w);
-            if (n) spokenWords.push(n);
-        });
-    });
+/* ════════════════════════════════════════════════
+   4. MARCAR PALABRAS RECONOCIDAS
+════════════════════════════════════════════════ */
+function markWords(transcript, isFinal) {
+    // Mostrar en vivo lo que escucha
+    if (!isFinal) {
+        voiceMsg.textContent = '🎤 "' + transcript.trim() + '"';
+    }
 
-    if (!spokenWords.length) return;
+    var spoken = transcript.trim().split(/\s+/).map(norm).filter(Boolean);
+    var WINDOW = 80; // cuántas posiciones hacia adelante buscar
+    var changed = false;
 
-    var WINDOW = 50; // buscar dentro de ±50 palabras del cursor
-    var matched = false;
-
-    spokenWords.forEach(function(spoken) {
-        var positions = wordIndex[spoken];
+    spoken.forEach(function (word) {
+        var positions = idx[word];
         if (!positions) return;
 
-        // Buscar la posición más cercana al cursor dentro de la ventana
-        var best = -1, bestDist = Infinity;
-        positions.forEach(function(pos) {
-            if (pos < searchCursor) return;                    // ya pasó
-            if (pos > searchCursor + WINDOW) return;          // demasiado lejos
-            var dist = pos - searchCursor;
-            if (dist < bestDist) { bestDist = dist; best = pos; }
-        });
+        // Encontrar la posición más cercana al cursor dentro de la ventana
+        var best = -1, bestD = Infinity;
+        for (var j = 0; j < positions.length; j++) {
+            var p = positions[j];
+            if (p < cursor) continue;
+            if (p > cursor + WINDOW) continue;
+            var d = p - cursor;
+            if (d < bestD) { bestD = d; best = p; }
+        }
 
-        if (best >= 0 && !readBitmap[best]) {
-            readBitmap[best] = true;
-            allWordSpans[best].classList.add('read-ok');
-            allWordSpans[best].classList.remove('rd-word');
-            // Avanzar cursor al siguiente no leído
-            if (best >= searchCursor) searchCursor = best + 1;
-            matched = true;
+        if (best !== -1 && !okBits[best]) {
+            okBits[best] = true;
+            spans[best].classList.add('ok');
+            spans[best].classList.remove('now');
+            // resaltar siguiente como "ahora"
+            if (spans[best + 1]) {
+                spans.forEach(function(s){ s.classList.remove('now'); });
+                spans[best + 1].classList.add('now');
+            }
+            if (best >= cursor) cursor = best + 1;
+            changed = true;
         }
     });
 
-    if (matched || isFinal) updateCoverage();
+    if (changed || isFinal) refreshCoverage();
 }
 
-function updateCoverage() {
-    var count = readBitmap.filter(Boolean).length;
-    voiceCoverage = Math.round((count / totalWords) * 100);
-    coverFill.style.width  = voiceCoverage + '%';
-    coverPct.textContent   = voiceCoverage + '%';
-    if (sideVoice) sideVoice.style.width = voiceCoverage + '%';
-    if (sideVPct)  sideVPct.textContent  = voiceCoverage + '%';
+function refreshCoverage() {
+    var count = okBits.filter(Boolean).length;
+    coverage  = Math.round((count / total) * 100);
 
-    // Actualizar mensaje de bloqueo
+    document.getElementById('covFill').style.width  = coverage + '%';
+    document.getElementById('covPct').textContent   = coverage + '%';
+    document.getElementById('sideVoiceFill').style.width = coverage + '%';
+    document.getElementById('sideVoicePct').textContent  = coverage + '%';
+
     var lockMsg = document.getElementById('lockMsg');
-    if (lockMsg && voiceCoverage < 60) {
-        lockMsg.textContent = 'Lee en voz alta al menos el 60% del texto (' + voiceCoverage + '% actual)';
-    }
+    if (lockMsg && coverage < 60)
+        lockMsg.textContent = 'Lee en voz alta el 60% del texto (' + coverage + '% reconocido)';
+
     checkUnlock();
 }
 
-// ══ 5. PROGRESO DE SCROLL ════════════════════════════════════════════════════
-var progBar    = document.getElementById('readingProgress');
-var sideBar    = document.getElementById('sideProgFill');
-var sidePct    = document.getElementById('sidePct');
-var scrollHint = document.getElementById('scrollHint');
-var lastPct    = 0;
+/* ════════════════════════════════════════════════
+   5. PROGRESO DE SCROLL
+════════════════════════════════════════════════ */
+var progBar  = document.getElementById('readingProgress');
+var sideBar  = document.getElementById('sideProgFill');
+var sidePct  = document.getElementById('sidePct');
 
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function () {
     var rect    = contentEl.getBoundingClientRect();
-    var total   = contentEl.offsetHeight - window.innerHeight;
+    var total_h = contentEl.offsetHeight - window.innerHeight;
     var scrolled = Math.max(0, -rect.top);
-    var pct = Math.min(100, total > 0 ? (scrolled / (total + 150)) * 100 : 100);
-    lastPct = pct;
+    var pct = Math.min(100, total_h > 0 ? (scrolled / (total_h + 150)) * 100 : 100);
     progBar.style.width = pct + '%';
-    if (sideBar) sideBar.style.width = pct + '%';
-    if (sidePct) sidePct.textContent = Math.round(pct) + '%';
-    checkUnlock();
+    sideBar.style.width = pct + '%';
+    sidePct.textContent = Math.round(pct) + '%';
 });
 
-// ══ 6. DESBLOQUEO DEL TEST ═══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
+   6. DESBLOQUEO DEL TEST
+════════════════════════════════════════════════ */
 var testBtn  = document.getElementById('startTestBtn');
 var lockBox  = document.getElementById('lockBox');
 var readyBox = document.getElementById('readyBox');
 var unlocked = false;
 
-// Umbral: 60% de palabras reconocidas por voz
-var VOICE_THRESHOLD = 60;
-
 function checkUnlock() {
-    if (unlocked) return;
-    // Condición: cobertura de voz >= 60%
-    if (voiceCoverage >= VOICE_THRESHOLD) {
-        unlocked = true;
-        if (testBtn)  testBtn.classList.remove('locked');
-        if (lockBox)  lockBox.style.display  = 'none';
-        if (readyBox) readyBox.style.display = 'flex';
-        if (scrollHint) { scrollHint.textContent = '¡Lectura verificada por voz ✓'; scrollHint.style.color = 'var(--k-green)'; }
-        // Parar el reconocimiento automáticamente
-        if (isListening) { isListening = false; if (recognition) recognition.stop(); }
-    }
+    if (unlocked || coverage < 60) return;
+    unlocked = true;
+
+    // Detener reconocimiento automáticamente
+    shouldRun = false;
+    clearTimeout(restartTimer);
+    try { if (rec) rec.stop(); } catch(e) {}
+    resetBtn();
+
+    if (testBtn)  testBtn.classList.remove('locked');
+    if (lockBox)  lockBox.style.display = 'none';
+    if (readyBox) readyBox.style.display = 'flex';
+
+    var hint = document.getElementById('scrollHint');
+    if (hint) { hint.textContent = '✓ Lectura verificada por voz'; hint.style.color = '#198754'; }
+
+    voiceMsg.textContent = '✅ ¡60% alcanzado! El test está desbloqueado.';
 }
 
-// ══ 7. IR AL TEST ════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
+   7. NAVEGAR AL TEST
+════════════════════════════════════════════════ */
 if (testBtn) {
-    testBtn.addEventListener('click', function(e) {
+    testBtn.addEventListener('click', function (e) {
         e.preventDefault();
         if (this.classList.contains('locked')) return;
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
-        if (isListening && recognition) recognition.stop();
+        shouldRun = false;
+        try { if (rec) rec.stop(); } catch(e) {}
         document.cookie = 'lecturaMs=' + elapsedMs + ';path=/;SameSite=Strict';
         window.location.href = this.href;
     });
 }
 
-// ══ 8. RESPONSIVE ════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
+   8. RESPONSIVE
+════════════════════════════════════════════════ */
 if (window.innerWidth < 900) {
     document.getElementById('mainGrid').style.gridTemplateColumns = '1fr';
     var sb = document.getElementById('sidebar');
