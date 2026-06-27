@@ -296,13 +296,13 @@
         if (covPct)  covPct.textContent  = pct + '%';
         if (svFill)  svFill.style.width  = pct + '%';
         if (svPct)   svPct.textContent   = pct + '%';
-        if (lockMsg && pct < 60)
-            lockMsg.textContent = 'Lee en voz alta el 60% (' + pct + '% reconocido)';
+        if (lockMsg && pct < 100)
+            lockMsg.textContent = 'Lee en voz alta el texto completo (' + pct + '% reconocido)';
     }
 
     var unlocked = false;
     function checkUnlock() {
-        if (unlocked || coverage < 60) return;
+        if (unlocked || coverage < 100) return;
         unlocked = true;
         active   = false; reiniciando = false;
         try { if (rec) rec.stop(); } catch(e) {}
@@ -310,8 +310,8 @@
         if (lockBox)    lockBox.style.display  = 'none';
         if (readyBox)   readyBox.style.display = 'flex';
         if (testBtn)    testBtn.classList.remove('locked');
-        if (scrollHint) { scrollHint.textContent = '✓ Lectura verificada'; scrollHint.style.color = '#198754'; }
-        setMsg('✅ ¡60% alcanzado! El test está desbloqueado.');
+        if (scrollHint) { scrollHint.textContent = '✓ Lectura completa verificada'; scrollHint.style.color = '#198754'; }
+        setMsg('✅ ¡Lectura completa! El test está desbloqueado.');
     }
 
     if (testBtn) {

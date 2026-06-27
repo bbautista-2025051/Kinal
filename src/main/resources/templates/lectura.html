@@ -156,10 +156,10 @@
                     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
                         <div>
                             <p style="font-size:.875rem;font-weight:600;color:var(--k-text)">¿Terminaste de leer?</p>
-                            <p style="font-size:.8125rem;color:var(--k-muted)" id="scrollHint">Lee en voz alta hasta alcanzar el 60% para habilitar el test</p>
+                            <p style="font-size:.8125rem;color:var(--k-muted)" id="scrollHint">Lee en voz alta el texto completo para habilitar el test</p>
                         </div>
                         <div th:if="${!yaRealizado}" style="display:flex;flex-direction:column;align-items:flex-end;gap:.5rem">
-                            <div id="lockBox"><i class="fa fa-lock"></i> <span id="lockMsg">Lee en voz alta al menos el 60% del texto</span></div>
+                            <div id="lockBox"><i class="fa fa-lock"></i> <span id="lockMsg">Lee en voz alta el texto completo</span></div>
                             <div id="readyBox"><i class="fa fa-circle-check"></i> ¡Lectura verificada! Puedes iniciar el test.</div>
                             <a th:href="${testUrl}" class="k-btn k-btn-amber k-btn-lg locked" id="startTestBtn">
                                 <i class="fa fa-pen-to-square"></i> Iniciar test
@@ -192,7 +192,7 @@
                         <div class="spw"><div id="sideVoiceFill" style="height:100%;width:0%;background:#27ae60;border-radius:999px;transition:width .5s"></div></div>
                         <span id="sideVoicePct" style="font-size:.8rem;font-weight:700;color:#27ae60;min-width:2.5rem;text-align:right">0%</span>
                     </div>
-                    <p style="font-size:.72rem;color:var(--k-caption)">Necesitas <strong>60%</strong> para desbloquear el test</p>
+                    <p style="font-size:.72rem;color:var(--k-caption)">Necesitas leer el texto <strong>completo</strong> para desbloquear el test</p>
                 </div>
 
                 <div class="k-card" style="margin-bottom:1.25rem">
@@ -234,7 +234,7 @@
                         </li>
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
                             <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.25rem;flex-shrink:0"></i>
-                            Alcanza el 60% para habilitar el test
+                            Debes leer el texto completo para habilitar el test
                         </li>
                         <li style="font-size:.8125rem;color:var(--k-muted);display:flex;gap:.5rem">
                             <i class="fa fa-check" style="color:var(--k-amber);font-size:.7rem;margin-top:.25rem;flex-shrink:0"></i>

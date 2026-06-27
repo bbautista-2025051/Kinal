@@ -93,14 +93,36 @@
     </ul>
 </nav>
 
-<div id="leaveWarning" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center">
-    <div class="k-card" style="max-width:380px;text-align:center;padding:2.5rem;background:#fff">
-        <div style="font-size:2.5rem;margin-bottom:1rem">⚠️</div>
-        <h3 class="k-heading" style="margin-bottom:.75rem">¿Salir del test?</h3>
-        <p class="k-subtext" style="margin-bottom:1.5rem">Si sales, perderás tu progreso y no podrás volver a hacer este test.</p>
+<div id="leaveWarning" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
+    <div class="k-card fade-up" style="max-width:400px;width:90%;text-align:center;padding:2.5rem 2rem;background:#fff;border-radius:1.25rem;box-shadow:0 24px 64px rgba(0,0,0,.22)">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:1.75rem">⚠️</div>
+        <h3 class="k-heading" style="margin-bottom:.6rem;font-size:1.2rem">¿Salir del test?</h3>
+        <p class="k-subtext" style="margin-bottom:1.75rem;font-size:.9rem">Si sales ahora perderás tu progreso y <strong>no podrás volver</strong> a realizar este test.</p>
         <div style="display:flex;gap:.75rem;justify-content:center">
-            <button onclick="hideWarning()" class="k-btn k-btn-ghost">Continuar test</button>
-            <a href="/carreras" class="k-btn k-btn-primary">Salir</a>
+            <button onclick="hideWarning()" class="k-btn k-btn-ghost" style="flex:1;max-width:160px">
+                <i class="fa fa-arrow-left"></i> Seguir test
+            </button>
+            <a href="/carreras" class="k-btn k-btn-primary" style="flex:1;max-width:160px;background:#dc2626;border-color:#dc2626">
+                <i class="fa fa-right-from-bracket"></i> Salir
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación de envío -->
+<div id="submitModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
+    <div class="k-card fade-up" style="max-width:420px;width:90%;text-align:center;padding:2.5rem 2rem;background:#fff;border-radius:1.25rem;box-shadow:0 24px 64px rgba(0,0,0,.22)">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:1.75rem">📋</div>
+        <h3 class="k-heading" style="margin-bottom:.6rem;font-size:1.2rem">¿Enviar respuestas?</h3>
+        <p class="k-subtext" style="margin-bottom:.5rem;font-size:.9rem">Estás a punto de enviar tu test. Revisa que hayas respondido todo correctamente.</p>
+        <p id="submitSummaryText" style="font-size:.85rem;font-weight:600;color:var(--kinal-blue);margin-bottom:1.75rem"></p>
+        <div style="display:flex;gap:.75rem;justify-content:center">
+            <button onclick="hideSubmitModal()" class="k-btn k-btn-ghost" style="flex:1;max-width:160px">
+                <i class="fa fa-pen"></i> Revisar
+            </button>
+            <button onclick="confirmarEnvio()" class="k-btn k-btn-primary" id="confirmSendBtn" style="flex:1;max-width:160px">
+                <i class="fa fa-check-double"></i> Enviar
+            </button>
         </div>
     </div>
 </div>
@@ -207,12 +229,12 @@ const progressBar   = document.getElementById('testProgressBar');
 const tiempoUsadoEl = document.getElementById('tiempoUsado');
 const totalQ        = document.querySelectorAll('.k-question-group').length;
 const answeredNames = new Set();
+let formSubmitting  = false;
 
 // ── Marcadores ──────────────────────────────────────────────────────────────
 function goToQuestion(idx) {
     const card = document.getElementById('qcard_' + idx);
     if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    // solo activar visualmente si aún no está respondida
     const marker = document.getElementById('qmark_' + idx);
     if (marker && !marker.classList.contains('done')) {
         document.querySelectorAll('.k-q-marker.active').forEach(m => m.classList.remove('active'));
@@ -222,44 +244,29 @@ function goToQuestion(idx) {
 
 function onOptionChange(radio) {
     const idx = parseInt(radio.closest('.k-question-group').dataset.idx);
-
-    // Quitar 'selected' de todas las opciones del grupo y marcar la elegida
     radio.closest('.k-question-group').querySelectorAll('.k-option').forEach(o => o.classList.remove('selected'));
     radio.closest('.k-option').classList.add('selected');
-
-    // Registrar como respondida
     answeredNames.add(radio.name);
-
-    // Marcador → done
     const marker = document.getElementById('qmark_' + idx);
     if (marker) {
         document.querySelectorAll('.k-q-marker.active').forEach(m => m.classList.remove('active'));
         marker.classList.remove('active');
         marker.classList.add('done');
     }
-
-    // Activar siguiente marcador no respondido
     for (let i = idx + 1; i < totalQ; i++) {
         const next = document.getElementById('qmark_' + i);
-        if (next && !next.classList.contains('done')) {
-            next.classList.add('active');
-            break;
-        }
+        if (next && !next.classList.contains('done')) { next.classList.add('active'); break; }
     }
-
-    // Progreso
     const pct = (answeredNames.size / totalQ) * 100;
     progressBar.style.width = pct + '%';
     document.getElementById('qSummary').innerHTML =
         '<strong>' + answeredNames.size + '</strong> de <strong>' + totalQ + '</strong> respondidas';
 }
 
-// Adjuntar listener a todos los radios
 document.querySelectorAll('#testForm input[type=radio]').forEach(r => {
     r.addEventListener('change', function() { onOptionChange(this); });
 });
 
-// IntersectionObserver para actualizar marcador activo al hacer scroll
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -272,7 +279,6 @@ const observer = new IntersectionObserver((entries) => {
         }
     });
 }, { threshold: 0.45 });
-
 document.querySelectorAll('.k-question-group').forEach(g => observer.observe(g));
 
 // ── Timer ────────────────────────────────────────────────────────────────────
@@ -289,39 +295,86 @@ function updateTimer() {
     if (remaining === 0) {
         clearInterval(timerInterval);
         timerStopped = true;
+        formSubmitting = true;
         document.getElementById('testForm').submit();
     }
 }
 const timerInterval = setInterval(updateTimer, 500);
 updateTimer();
 
-// ── Envío ────────────────────────────────────────────────────────────────────
-document.getElementById('testForm').addEventListener('submit', function(e) {
-    if (answeredNames.size < totalQ) {
+// ── Modal de salida ───────────────────────────────────────────────────────────
+function hideWarning() {
+    document.getElementById('leaveWarning').style.display = 'none';
+}
+
+// Interceptar navegación con el botón atrás / cierre de pestaña
+// Usamos el modal propio en lugar del diálogo nativo del navegador
+window.addEventListener('beforeunload', function(e) {
+    if (!formSubmitting) {
+        // Mostrar el modal propio si el usuario intenta salir por teclado/tab
+        // Solo mostramos el diálogo nativo como fallback de seguridad
         e.preventDefault();
-        // Scroll a la primera sin responder
+        e.returnValue = '';
+    }
+});
+
+// Interceptar clics en links externos (ej. logo de nav)
+document.querySelectorAll('a:not([href^="/test"]):not([href^="#"])').forEach(function(link) {
+    if (link.id === 'confirmLeaveLink') return;
+    link.addEventListener('click', function(e) {
+        if (formSubmitting) return;
+        const href = this.href;
+        if (href && !href.includes('/test/')) {
+            e.preventDefault();
+            // Actualizar el link de salida con el destino real
+            const leaveBtn = document.querySelector('#leaveWarning a.k-btn-primary');
+            if (leaveBtn) leaveBtn.href = href;
+            const modal = document.getElementById('leaveWarning');
+            modal.style.display = 'flex';
+        }
+    });
+});
+
+// ── Modal de confirmación de envío ───────────────────────────────────────────
+function hideSubmitModal() {
+    document.getElementById('submitModal').style.display = 'none';
+}
+
+function confirmarEnvio() {
+    clearInterval(timerInterval);
+    timerStopped  = true;
+    formSubmitting = true;
+    const btn = document.getElementById('confirmSendBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="k-spinner"></span> Enviando…';
+    // Limpiar el beforeunload para que no aparezca el diálogo nativo al enviar
+    window.onbeforeunload = null;
+    document.getElementById('testForm').submit();
+}
+
+document.getElementById('testForm').addEventListener('submit', function(e) {
+    if (formSubmitting) return; // envío por tiempo → dejar pasar
+    e.preventDefault();
+
+    // Verificar que todas estén respondidas
+    if (answeredNames.size < totalQ) {
         for (let i = 0; i < totalQ; i++) {
-            const name = 'respuestas[' + i + ']';
-            if (!answeredNames.has(name)) { goToQuestion(i); break; }
+            if (!answeredNames.has('respuestas[' + i + ']')) { goToQuestion(i); break; }
         }
         const toast = document.createElement('div');
         toast.className = 'k-alert k-alert-danger auto-dismiss fade-up';
         toast.style.cssText = 'position:fixed;bottom:2rem;right:2rem;z-index:500;max-width:360px';
-        toast.innerHTML = '<i class="fa fa-circle-exclamation"></i><span>Por favor responde todas las preguntas antes de enviar.</span>';
+        toast.innerHTML = '<i class="fa fa-circle-exclamation"></i><span>Responde todas las preguntas antes de enviar.</span>';
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 4000);
         return;
     }
-    clearInterval(timerInterval);
-    timerStopped = true;
-    const btn = document.getElementById('submitTestBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="k-spinner"></span> Evaluando...';
-    window.onbeforeunload = null;
-});
 
-window.addEventListener('beforeunload', function(e) { e.preventDefault(); e.returnValue = ''; });
-function hideWarning() { document.getElementById('leaveWarning').style.display = 'none'; }
+    // Mostrar modal de confirmación con resumen
+    const resumen = document.getElementById('submitSummaryText');
+    if (resumen) resumen.textContent = answeredNames.size + ' de ' + totalQ + ' preguntas respondidas';
+    document.getElementById('submitModal').style.display = 'flex';
+});
 /*]]>*/
 </script>
 </body>
