@@ -18,9 +18,8 @@
 
     if (!btnMic || !contentEl) return;
 
-    /* ── Verificar API ── */
+    /* ── Verificar soporte ── */
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-
     if (!SR) {
         btnMic.disabled = true;
         btnMic.style.opacity = '0.4';
@@ -28,44 +27,36 @@
         return;
     }
 
-    /* Verificar si el micrófono ya fue bloqueado previamente */
+    /* Avisar si el micrófono ya está bloqueado */
     if (navigator.permissions) {
-        navigator.permissions.query({ name: 'microphone' }).then(function(result) {
-            if (result.state === 'denied') {
+        navigator.permissions.query({ name: 'microphone' }).then(function(r) {
+            if (r.state === 'denied') {
                 btnMic.style.opacity = '0.6';
-                setMsg('⚠️ Micrófono bloqueado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga la página.');
+                setMsg('⚠️ Micrófono bloqueado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga.');
             }
-            result.onchange = function() {
-                if (result.state === 'granted') {
+            r.onchange = function() {
+                if (r.state === 'granted') {
                     btnMic.style.opacity = '1';
                     setMsg('Presiona Iniciar y lee el texto en voz alta');
                 }
             };
-        }).catch(function() {});
+        }).catch(function(){});
     }
 
-    /* ── Preparar spans: una palabra por span ── */
+    /* ── Preparar spans ── */
     var raw = contentEl.textContent;
     var wi  = 0;
-    contentEl.innerHTML = raw.split(/(\s+)/).map(function (p) {
+    contentEl.innerHTML = raw.split(/(\s+)/).map(function(p) {
         if (/^\s*$/.test(p)) return p.replace(/\n/g, '<br>');
         return '<span class="rw" data-i="' + (wi++) + '">' +
                p.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>';
     }).join('');
 
-    var spans  = Array.from(contentEl.querySelectorAll('.rw'));
-    var total  = spans.length;
-    var okBits = new Array(total).fill(false);
-    var coverage = 0;
-
-    /*
-     * ── CURSOR SECUENCIAL ──
-     * El cursor apunta a la siguiente palabra esperada en el texto.
-     * Solo avanzamos hacia adelante, nunca hacia atrás.
-     * Esto obliga al usuario a leer en orden y hace la detección mucho
-     * más precisa porque eliminamos ambigüedad en palabras repetidas.
-     */
-    var cursor = 0;
+    var spans     = Array.from(contentEl.querySelectorAll('.rw'));
+    var total     = spans.length;
+    var okBits    = new Array(total).fill(false);
+    var coverage  = 0;
+    var cursor    = 0;   /* próxima posición esperada en el texto */
 
     /* Normalizar: minúsculas, sin tildes, solo alfanumérico */
     function norm(s) {
@@ -73,14 +64,25 @@
             .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
             .replace(/[^a-z0-9]/g, '');
     }
-
-    /* Texto normalizado de cada span, precalculado */
     var spanNorms = spans.map(function(sp) { return norm(sp.textContent); });
 
     /* ── Estado ── */
-    var active = false, rec = null;
+    var active       = false;
+    var rec          = null;
+    var reiniciando  = false;
+
+    /*
+     * lastInterimCursor: guardamos dónde estaba el cursor cuando llegó
+     * el último resultado interim. Al llegar el resultado FINAL de esa
+     * misma frase, restauramos el cursor a ese punto y procesamos de nuevo
+     * con el texto definitivo (más preciso). Así evitamos que los interim
+     * "consuman" posiciones que el resultado final corregiría.
+     */
+    var cursorAntesDeFrase = 0;
+    var okBitsSnapshot     = null;   /* copia de okBits antes de cada frase */
 
     function setMsg(t) { if (voiceMsg) voiceMsg.textContent = t; }
+
     function resetBtn() {
         btnMic.classList.remove('active');
         if (micIco) micIco.className   = 'fa fa-microphone';
@@ -96,17 +98,17 @@
 
     /* ── Solicitar permiso ── */
     function pedirPermisoYArrancar() {
-        setMsg('⏳ Solicitando permiso de micrófono… Acepta el diálogo del navegador.');
+        setMsg('⏳ Solicitando permiso… acepta el diálogo del navegador.');
         if (navigator.permissions) {
-            navigator.permissions.query({ name: 'microphone' }).then(function(result) {
-                if (result.state === 'denied') {
-                    active = false;
-                    resetBtn();
-                    setMsg('⛔ Micrófono bloqueado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga.');
-                    return;
-                }
-                solicitarMicrofono();
-            }).catch(solicitarMicrofono);
+            navigator.permissions.query({ name: 'microphone' })
+                .then(function(r) {
+                    if (r.state === 'denied') {
+                        active = false; resetBtn();
+                        setMsg('⛔ Micrófono bloqueado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga.');
+                        return;
+                    }
+                    solicitarMicrofono();
+                }).catch(solicitarMicrofono);
         } else {
             solicitarMicrofono();
         }
@@ -114,77 +116,134 @@
 
     function solicitarMicrofono() {
         navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-            .then(function (stream) {
+            .then(function(stream) {
                 stream.getTracks().forEach(function(t) { t.stop(); });
-                setMsg('✅ Permiso concedido. Iniciando reconocimiento…');
+                setMsg('✅ Permiso concedido. Iniciando…');
                 startRec();
             })
-            .catch(function (err) {
-                active = false;
-                resetBtn();
-                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+            .catch(function(err) {
+                active = false; resetBtn();
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')
                     setMsg('⛔ Permiso denegado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga.');
-                } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+                else if (err.name === 'NotFoundError')
                     setMsg('⛔ No se detectó micrófono. Conecta uno e intenta de nuevo.');
-                } else if (err.name === 'NotReadableError') {
+                else if (err.name === 'NotReadableError')
                     setMsg('⛔ El micrófono está en uso por otra aplicación. Ciérrala e intenta.');
-                } else {
-                    setMsg('⛔ Error al acceder al micrófono: ' + err.name + '. Recarga la página.');
-                }
+                else
+                    setMsg('⛔ Error: ' + err.name + '. Recarga la página.');
             });
     }
 
+    /* ─────────────────────────────────────────────────────────────────
+     * ESTRATEGIA DE RECONOCIMIENTO EN TIEMPO REAL
+     *
+     * Problema con continuous=true:
+     *   Chrome acumula 5-10 segundos de audio antes de emitir un
+     *   resultado, lo que causa el retraso que se nota.
+     *
+     * Solución — sesiones cortas (non-continuous):
+     *   Cada sesión dura hasta que el motor emite su primer resultado
+     *   final (normalmente 1-3 segundos de habla). Al recibir ese
+     *   resultado, paramos y arrancamos una nueva sesión de inmediato.
+     *   Esto da resultados cada 1-3 segundos en lugar de cada 8-10.
+     *
+     * Procesamiento de interim:
+     *   Los resultados interim se procesan para marcar palabras
+     *   visualmente EN TIEMPO REAL mientras el usuario habla.
+     *   Antes de aplicarlos, guardamos una "foto" del estado actual
+     *   (cursor + okBits). Cuando llega el resultado FINAL (más preciso),
+     *   restauramos esa foto y re-procesamos con el texto definitivo,
+     *   corrigiendo cualquier error del interim.
+     * ───────────────────────────────────────────────────────────────── */
     function startRec() {
-        if (!active) return;
+        if (!active || reiniciando) return;
 
         rec = new SR();
-        rec.lang            = 'es-GT';   // español guatemalteco para mejor precisión local
-        rec.continuous      = true;
-        rec.interimResults  = true;
-        rec.maxAlternatives = 3;         // pedir 3 alternativas mejora la cobertura
+        rec.lang            = 'es-GT';
+        rec.continuous      = false;   /* sesiones cortas = resultados frecuentes */
+        rec.interimResults  = true;    /* marcar palabras en tiempo real */
+        rec.maxAlternatives = 3;       /* más alternativas = mejor cobertura */
+
+        /* Al iniciar cada sesión guardamos el estado para poder revertir
+           si el interim marcó algo que el final corrija */
+        cursorAntesDeFrase = cursor;
+        okBitsSnapshot     = okBits.slice();
 
         rec.onstart = function() {
             setActiveBtn();
-            setMsg('🎤 Escuchando… lee el texto en voz alta');
+            setMsg('🎤 Escuchando… lee en voz alta');
         };
 
         rec.onresult = function(e) {
-            var interim = '';
             for (var i = e.resultIndex; i < e.results.length; i++) {
-                if (e.results[i].isFinal) {
-                    /* Procesar todas las alternativas disponibles */
-                    for (var a = 0; a < e.results[i].length; a++) {
-                        markWords(e.results[i][a].transcript);
-                    }
+                var resultado = e.results[i];
+
+                if (!resultado.isFinal) {
+                    /*
+                     * INTERIM: marcar en tiempo real.
+                     * Revertimos al estado previo a la frase y re-aplicamos
+                     * el interim desde ahí, para no acumular marcas falsas.
+                     */
+                    cursor = cursorAntesDeFrase;
+                    okBits = okBitsSnapshot.slice();
+                    /* Limpiar marcas .ok que no estaban antes */
+                    spans.forEach(function(s, idx) {
+                        if (!okBits[idx]) s.classList.remove('ok');
+                        s.classList.remove('now');
+                    });
+                    markWords(resultado[0].transcript, false);
+                    setMsg('🎤 "' + resultado[0].transcript.trim() + '"');
+
                 } else {
-                    interim = e.results[i][0].transcript;
+                    /*
+                     * FINAL: resultado definitivo y más preciso.
+                     * Revertimos al snapshot y aplicamos el final limpio.
+                     * Procesamos todas las alternativas.
+                     */
+                    cursor = cursorAntesDeFrase;
+                    okBits = okBitsSnapshot.slice();
+                    spans.forEach(function(s, idx) {
+                        if (!okBits[idx]) s.classList.remove('ok');
+                        s.classList.remove('now');
+                    });
+                    for (var a = 0; a < resultado.length; a++) {
+                        markWords(resultado[a].transcript, true);
+                    }
+                    setMsg('🎤 Escuchando… lee en voz alta');
+
+                    /* Actualizar snapshot para la siguiente frase */
+                    cursorAntesDeFrase = cursor;
+                    okBitsSnapshot     = okBits.slice();
                 }
             }
-            if (interim) setMsg('🎤 "' + interim.trim() + '"');
         };
 
         rec.onerror = function(e) {
             if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-                active = false;
-                resetBtn();
-                setMsg('⛔ Permiso denegado. Recarga y permite el micrófono cuando Chrome lo solicite.');
+                active = false; resetBtn();
+                setMsg('⛔ Permiso denegado. Recarga y permite el micrófono.');
             }
-            /* 'no-speech' y 'aborted' son normales, simplemente reiniciar */
+            /* 'no-speech', 'aborted', 'network': se reinicia solo con onend */
         };
 
         rec.onend = function() {
             if (!active) { resetBtn(); setMsg('Detenido.'); return; }
-            setTimeout(startRec, 80);
+            /* Reiniciar de inmediato para capturar la siguiente frase */
+            reiniciando = false;
+            setTimeout(startRec, 30);
         };
 
+        reiniciando = true;
         try {
             rec.start();
+            reiniciando = false;
         } catch(ex) {
-            setTimeout(startRec, 300);
+            reiniciando = false;
+            setTimeout(startRec, 200);
         }
     }
 
-    /* ── Clic del botón ── */
+    /* ── Botón ── */
     btnMic.addEventListener('click', function() {
         if (!active) {
             active = true;
@@ -192,67 +251,52 @@
             pedirPermisoYArrancar();
         } else {
             active = false;
+            reiniciando = false;
             try { if (rec) rec.stop(); } catch(ex) {}
             resetBtn();
             setMsg('Detenido.');
         }
     });
 
-    /*
-     * ── ALGORITMO DE MARCADO MEJORADO ──
+    /* ─────────────────────────────────────────────────────────────────
+     * ALGORITMO DE MARCADO — coincidencia secuencial con ventana
      *
-     * Estrategia: coincidencia secuencial estricta.
+     * Recorre las palabras dichas en orden y las busca en el texto
+     * desde el cursor hacia adelante (ventana de 40 palabras).
+     * El cursor solo avanza, nunca retrocede.
      *
-     * En lugar de buscar la palabra en un índice de posiciones (que falla
-     * con palabras repetidas), recorremos las palabras del transcript en
-     * orden y las buscamos en el texto a partir del cursor actual con una
-     * ventana hacia adelante. Esto garantiza que:
-     *   1. Las palabras se marcan en el orden en que aparecen en el texto.
-     *   2. Una palabra repetida solo se marca si está en el lugar correcto.
-     *   3. El cursor nunca retrocede, así que palabras anteriores no se
-     *      cuentan dos veces.
-     *
-     * VENTANA_ADELANTE: cuántas palabras hacia adelante buscamos desde el
-     * cursor. Un valor pequeño (15-20) fuerza precisión pero puede perder
-     * palabras si el reconocedor omite alguna. Un valor mayor (40-60) es
-     * más tolerante con errores de reconocimiento.
-     */
-    var VENTANA_ADELANTE = 40;
+     * commitFinal=false → modo interim (visual, reversible)
+     * commitFinal=true  → modo final (definitivo)
+     * ───────────────────────────────────────────────────────────────── */
+    var VENTANA = 40;
 
-    function markWords(transcript) {
+    function markWords(transcript, commitFinal) {
         var spoken  = transcript.trim().split(/\s+/).map(norm).filter(Boolean);
         var changed = false;
 
-        /* Recorrer cada palabra dicha en el orden en que fue dicha */
         for (var si = 0; si < spoken.length; si++) {
-            var word = spoken[si];
+            var word   = spoken[si];
             if (!word) continue;
 
-            /* Buscar la palabra desde el cursor hasta cursor+VENTANA */
-            var limite = Math.min(cursor + VENTANA_ADELANTE, total);
+            var limite    = Math.min(cursor + VENTANA, total);
             var encontrado = -1;
 
             for (var ti = cursor; ti < limite; ti++) {
-                if (okBits[ti]) continue;          /* ya marcada, saltar */
-                if (spanNorms[ti] === word) {
-                    encontrado = ti;
-                    break;
-                }
+                if (okBits[ti]) continue;
+                if (spanNorms[ti] === word) { encontrado = ti; break; }
             }
 
             if (encontrado !== -1) {
                 okBits[encontrado] = true;
                 spans[encontrado].classList.add('ok');
-
-                /* Resaltar la siguiente palabra esperada */
                 spans.forEach(function(s) { s.classList.remove('now'); });
-                var siguiente = encontrado + 1;
-                /* Saltar palabras ya marcadas para señalar la próxima pendiente */
-                while (siguiente < total && okBits[siguiente]) siguiente++;
-                if (siguiente < total) spans[siguiente].classList.add('now');
 
-                /* Avanzar el cursor a justo después de la palabra marcada */
-                cursor = encontrado + 1;
+                /* Señalar la próxima palabra pendiente */
+                var sig = encontrado + 1;
+                while (sig < total && okBits[sig]) sig++;
+                if (sig < total) spans[sig].classList.add('now');
+
+                cursor  = encontrado + 1;
                 changed = true;
             }
         }
@@ -276,13 +320,17 @@
     function checkUnlock() {
         if (unlocked || coverage < 60) return;
         unlocked = true;
-        active = false;
+        active   = false;
+        reiniciando = false;
         try { if (rec) rec.stop(); } catch(e) {}
         resetBtn();
         if (lockBox)    lockBox.style.display  = 'none';
         if (readyBox)   readyBox.style.display = 'flex';
         if (testBtn)    testBtn.classList.remove('locked');
-        if (scrollHint) { scrollHint.textContent = '✓ Lectura verificada'; scrollHint.style.color = '#198754'; }
+        if (scrollHint) {
+            scrollHint.textContent = '✓ Lectura verificada';
+            scrollHint.style.color = '#198754';
+        }
         setMsg('✅ ¡60% alcanzado! El test está desbloqueado.');
     }
 
@@ -290,7 +338,7 @@
         testBtn.addEventListener('click', function(e) {
             e.preventDefault();
             if (this.classList.contains('locked')) return;
-            active = false;
+            active = false; reiniciando = false;
             try { if (rec) rec.stop(); } catch(ex) {}
             document.cookie = 'lecturaMs=' + (window._lecturaElapsed || 0) + ';path=/;SameSite=Strict';
             window.location.href = this.href;
