@@ -50,35 +50,77 @@
     var spans  = Array.from(contentEl.querySelectorAll('.rw'));
     var total  = spans.length;
 
+    /* ─────────────────────────────────────────────────────────────────
+     * NORMALIZACIÓN
+     * Elimina tildes, puntuación, convierte a minúsculas.
+     * ───────────────────────────────────────────────────────────────── */
     function norm(s) {
         return s.toLowerCase()
             .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
             .replace(/[^a-z0-9]/g, '');
     }
+
     var spanNorms = spans.map(function(sp) { return norm(sp.textContent); });
 
-    /*
-     * ═══════════════════════════════════════════════════════════════
-     * ESTADO DE LA LECTURA
+    /* ─────────────────────────────────────────────────────────────────
+     * DISTANCIA DE LEVENSHTEIN (edición)
+     * Cuántos caracteres hay que cambiar/insertar/borrar para
+     * transformar una cadena en otra. Permite detectar palabras mal
+     * reconocidas fonéticamente.
      *
-     * cursor   → índice de la PRÓXIMA palabra que esperamos escuchar.
-     *            Avanza de uno en uno, estrictamente en orden.
+     * Ejemplo: "electromotris" vs "electromotriz" → distancia 1 ✓
+     *          "westing"       vs "westinghouse"  → distancia 5 ✗
+     * ───────────────────────────────────────────────────────────────── */
+    function levenshtein(a, b) {
+        if (a === b) return 0;
+        if (!a.length) return b.length;
+        if (!b.length) return a.length;
+        var la = a.length, lb = b.length;
+        /* Limitar cómputo para palabras muy largas */
+        if (Math.abs(la - lb) > 4) return 99;
+        var prev = [], curr = [];
+        for (var j = 0; j <= lb; j++) prev[j] = j;
+        for (var i = 1; i <= la; i++) {
+            curr[0] = i;
+            for (var k = 1; k <= lb; k++) {
+                curr[k] = a[i-1] === b[k-1]
+                    ? prev[k-1]
+                    : 1 + Math.min(prev[k-1], prev[k], curr[k-1]);
+            }
+            var tmp = prev; prev = curr; curr = tmp;
+        }
+        return prev[lb];
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+     * FUNCIÓN DE COINCIDENCIA
+     * Para palabras cortas (≤4 chars): coincidencia exacta.
+     * Para palabras medias (5-7 chars): toleramos 1 error de edición.
+     * Para palabras largas (≥8 chars): toleramos hasta 2 errores.
      *
-     * okBits[] → palabras definitivamente confirmadas (resultado final).
-     *
-     * La única forma de avanzar el cursor es que la palabra en
-     * spanNorms[cursor] coincida con la primera palabra del transcript.
-     * Si no coincide, el cursor NO avanza — el usuario debe repetir.
-     * ═══════════════════════════════════════════════════════════════
-     */
+     * Esto cubre errores comunes del motor:
+     *   - "electromotriz" → "electromotris"  (1 error)
+     *   - "disyuntores"   → "disyuntores"    (0 errores)
+     *   - "conductores"   → "conductore"     (1 error)
+     *   - "instalaciones" → "instalacion"    (2 errores)
+     * ───────────────────────────────────────────────────────────────── */
+    function coincide(spoken, target) {
+        if (spoken === target) return true;
+        var ls = spoken.length, lt = target.length;
+        /* Palabras muy cortas: exacto */
+        if (lt <= 4) return spoken === target;
+        /* Palabras medias: 1 error */
+        if (lt <= 7) return levenshtein(spoken, target) <= 1;
+        /* Palabras largas: 2 errores */
+        return levenshtein(spoken, target) <= 2;
+    }
+
+    /* Estado */
     var cursor   = 0;
     var okBits   = new Array(total).fill(false);
     var coverage = 0;
-
-    /* Snapshot del estado al inicio de cada frase (para revertir interims) */
     var snapCursor = 0;
     var snapBits   = null;
-
     var active      = false;
     var rec         = null;
     var reiniciando = false;
@@ -104,7 +146,11 @@
         if (navigator.permissions) {
             navigator.permissions.query({ name: 'microphone' })
                 .then(function(r) {
-                    if (r.state === 'denied') { active = false; resetBtn(); setMsg('⛔ Micrófono bloqueado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga.'); return; }
+                    if (r.state === 'denied') {
+                        active = false; resetBtn();
+                        setMsg('⛔ Micrófono bloqueado. Haz clic en 🔒 junto a la URL → Micrófono → Permitir → recarga.');
+                        return;
+                    }
                     solicitarMicrofono();
                 }).catch(solicitarMicrofono);
         } else { solicitarMicrofono(); }
@@ -134,34 +180,56 @@
     function startRec() {
         if (!active || reiniciando) return;
 
-        /* Guardar snapshot ANTES de cada frase */
         snapCursor = cursor;
         snapBits   = okBits.slice();
 
         rec = new SR();
         rec.lang            = 'es-GT';
-        rec.continuous      = false;   /* sesiones cortas: resultados cada ~2 seg */
+        rec.continuous      = false;
         rec.interimResults  = true;
-        rec.maxAlternatives = 1;       /* UNA sola alternativa: evita saltos por alternativas erróneas */
+        rec.maxAlternatives = 3;   /* 3 alternativas: procesamos todas para mayor cobertura */
 
         rec.onstart = function() { setActiveBtn(); setMsg('🎤 Escuchando… lee en voz alta'); };
 
         rec.onresult = function(e) {
             for (var i = e.resultIndex; i < e.results.length; i++) {
                 var res = e.results[i];
-                var transcript = res[0].transcript;
 
                 if (!res.isFinal) {
-                    /* INTERIM: mostrar visualmente, revertible */
-                    aplicarTranscript(transcript, snapCursor, snapBits, false);
-                    setMsg('🎤 "' + transcript.trim() + '"');
+                    /* Interim: solo la alternativa más probable */
+                    aplicarTranscript(res[0].transcript, snapCursor, snapBits, false);
+                    setMsg('🎤 "' + res[0].transcript.trim() + '"');
                 } else {
-                    /* FINAL: confirmar definitivamente desde el snapshot */
-                    aplicarTranscript(transcript, snapCursor, snapBits, true);
-                    setMsg('🎤 Escuchando… lee en voz alta');
-                    /* Nuevo snapshot para la siguiente frase */
+                    /*
+                     * Final: intentar con cada alternativa desde el snapshot.
+                     * Nos quedamos con la que avanza MÁS el cursor.
+                     * Esto permite que si la alternativa 0 no reconoce
+                     * "electromotriz" pero la alternativa 1 la dice diferente
+                     * y coincide fonéticamente, igual se marca.
+                     */
+                    var mejorCursor = snapCursor;
+                    var mejorBits   = snapBits.slice();
+
+                    for (var a = 0; a < res.length; a++) {
+                        var result = aplicarTranscriptSilencioso(
+                            res[a].transcript, snapCursor, snapBits.slice()
+                        );
+                        /* Elegir la alternativa que avanzó más */
+                        if (result.cur > mejorCursor) {
+                            mejorCursor = result.cur;
+                            mejorBits   = result.bits;
+                        }
+                    }
+
+                    /* Aplicar la mejor alternativa */
+                    cursor = mejorCursor;
+                    okBits = mejorBits;
+                    renderBits(okBits, cursor);
+                    refreshCoverage();
+
                     snapCursor = cursor;
                     snapBits   = okBits.slice();
+                    setMsg('🎤 Escuchando… lee en voz alta');
                 }
             }
         };
@@ -197,84 +265,63 @@
         }
     });
 
-    /*
-     * ═══════════════════════════════════════════════════════════════
-     * ALGORITMO DE SECUENCIA ESTRICTA
+    /* ─────────────────────────────────────────────────────────────────
+     * ALGORITMO DE MARCADO — secuencial con similitud fonética
      *
-     * Regla fundamental: cada palabra dicha debe coincidir con la
-     * palabra en `cursor` o en las SIGUIENTES 3 posiciones como máximo
-     * (tolerancia mínima para palabras que el motor omite/confunde).
+     * VENTANA = 6: permite saltar hasta 6 posiciones para tolerar
+     * artículos omitidos ("el", "la", "de", "y", "a", "en") que el
+     * motor frecuentemente se come.
      *
-     * Si la palabra NO coincide en esa ventana pequeña → se descarta.
-     * El cursor avanza SOLO cuando hay coincidencia.
-     *
-     * TOLERANCIA = 3: si el motor se "come" 1-2 palabras cortas como
-     * artículos ("el", "la", "de") podemos saltar sobre ellas.
-     * Pero NO permite saltar hasta posiciones lejanas del texto como
-     * antes hacía la ventana de 40, que rompía el orden.
-     *
-     * isFinal=false → modo interim: usamos fromCursor/fromBits del
-     *                 snapshot para no contaminar el estado real.
-     * isFinal=true  → confirma y actualiza cursor/okBits globales.
-     * ═══════════════════════════════════════════════════════════════
-     */
-    var TOLERANCIA = 3;   /* palabras que podemos saltar si el motor las omite */
+     * La coincidencia NO es exacta: usa la función `coincide()` que
+     * aplica distancia de Levenshtein proporcional al largo de la palabra.
+     * ───────────────────────────────────────────────────────────────── */
+    var VENTANA = 6;
 
-    function aplicarTranscript(transcript, fromCursor, fromBits, isFinal) {
+    function aplicarTranscriptSilencioso(transcript, fromCursor, fromBits) {
         var spoken = transcript.trim().split(/\s+/).map(norm).filter(Boolean);
-        if (!spoken.length) return;
-
-        /* Trabajamos sobre copias locales para no mutar el estado si es interim */
         var cur  = fromCursor;
-        var bits = fromBits.slice();
-        var changed = false;
+        var bits = fromBits;
 
         for (var si = 0; si < spoken.length; si++) {
-            var word = spoken[si];
+            var word   = spoken[si];
             if (!word) continue;
-
-            /*
-             * Buscar la palabra SOLO dentro de [cur, cur + TOLERANCIA].
-             * Si no está ahí, descartamos esta palabra del transcript
-             * (el usuario dijo algo fuera de orden o el motor lo inventó).
-             */
-            var limite    = Math.min(cur + TOLERANCIA + 1, total);
+            var limite = Math.min(cur + VENTANA + 1, total);
             var encontrado = -1;
 
             for (var ti = cur; ti < limite; ti++) {
-                if (bits[ti]) continue;            /* ya marcada */
-                if (spanNorms[ti] === word) { encontrado = ti; break; }
+                if (bits[ti]) continue;
+                if (coincide(word, spanNorms[ti])) { encontrado = ti; break; }
             }
 
             if (encontrado !== -1) {
                 bits[encontrado] = true;
                 cur = encontrado + 1;
-                changed = true;
-            }
-            /* Si no encontrado: ignorar esta palabra, cursor NO avanza */
-        }
-
-        /* Aplicar cambios visuales */
-        if (changed || isFinal) {
-            /* Sincronizar clases .ok */
-            spans.forEach(function(s, idx) {
-                if (bits[idx]) s.classList.add('ok');
-                else           s.classList.remove('ok');
-                s.classList.remove('now');
-            });
-            /* Resaltar la próxima palabra pendiente */
-            if (cur < total) spans[cur].classList.add('now');
-
-            if (isFinal) {
-                /* Confirmar estado global */
-                cursor = cur;
-                okBits = bits;
-                refreshCoverage();
-            } else {
-                /* Solo visual, no toca cursor/okBits globales */
-                refreshCoverageVisual(bits);
             }
         }
+        return { cur: cur, bits: bits };
+    }
+
+    function aplicarTranscript(transcript, fromCursor, fromBits, isFinal) {
+        var result = aplicarTranscriptSilencioso(transcript, fromCursor, fromBits.slice());
+
+        if (isFinal) {
+            cursor = result.cur;
+            okBits = result.bits;
+            renderBits(okBits, cursor);
+            refreshCoverage();
+        } else {
+            renderBits(result.bits, result.cur);
+            refreshCoverageVisual(result.bits);
+        }
+    }
+
+    function renderBits(bits, cur) {
+        spans.forEach(function(s, idx) {
+            if (bits[idx]) s.classList.add('ok');
+            else           s.classList.remove('ok');
+            s.classList.remove('now');
+        });
+        if (cur < total) spans[cur].classList.add('now');
     }
 
     function refreshCoverage() {
@@ -285,10 +332,8 @@
     }
 
     function refreshCoverageVisual(bits) {
-        /* Para interims: actualiza barras visualmente sin modificar coverage real */
         var count = bits.filter(Boolean).length;
-        var pct   = Math.round((count / total) * 100);
-        actualizarUI(pct);
+        actualizarUI(Math.round((count / total) * 100));
     }
 
     function actualizarUI(pct) {

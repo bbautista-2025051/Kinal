@@ -20,6 +20,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // Parche: corregir textos truncados de electricidad si están en la BD
+        actualizarTextosElectricidad();
+
         if (carreraRepository.count() == 0) {
             // ==================== CARRERAS ====================
             Carrera informatica = new Carrera("Perito en Informática",
@@ -85,6 +88,116 @@ public class DataInitializer implements CommandLineRunner {
     // ================================================================
     // MÉTODOS AUXILIARES PARA CADA LECTURA
     // ================================================================
+
+
+    // ================================================================
+    // PARCHE: actualiza textos truncados de electricidad en BD existente
+    // ================================================================
+    private void actualizarTextosElectricidad() {
+        try {
+            java.util.List<Lectura> lecturas = lecturaRepository.findAll();
+            for (Lectura l : lecturas) {
+                String titulo = l.getTitulo();
+                String textoActual = l.getContenido();
+                String textoNuevo = null;
+
+                if ("Fundamentos de la Corriente Eléctrica".equals(titulo) && textoActual != null && textoActual.endsWith("...")) {
+                    textoNuevo = "Fundamentos de la Corriente Eléctrica y el Circuito de Carga\n\n" +
+                        "La electricidad no es una invención humana, sino una fuerza fundamental de la naturaleza que hemos aprendido a canalizar. " +
+                        "En su nivel más básico, la corriente eléctrica es el flujo ordenado de electrones a través de un material conductor. " +
+                        "Para que ese flujo ocurra se necesitan cuatro elementos esenciales: una fuente de energía, un conductor, un receptor y un dispositivo de control.\n\n" +
+                        "La fuente de energía, como una batería o un generador, proporciona la fuerza electromotriz que pone a los electrones en movimiento. " +
+                        "El conductor, generalmente cobre o aluminio, ofrece poca resistencia al paso de los electrones. " +
+                        "El receptor es el dispositivo que aprovecha la energía eléctrica, como una bombilla o un motor. " +
+                        "El dispositivo de control, como un interruptor, permite abrir o cerrar el circuito según se necesite.\n\n" +
+                        "Un circuito cerrado permite el flujo continuo de electrones, mientras que un circuito abierto interrumpe ese flujo por completo. " +
+                        "Para proteger las instalaciones se usan fusibles y disyuntores que aprovechan el Efecto Joule: " +
+                        "cuando circula demasiada corriente, el calor generado funde el fusible y corta el circuito antes de que ocurra un daño mayor.\n\n" +
+                        "Una analogía útil es la del sistema hidráulico: el voltaje equivale a la presión del agua, la corriente al caudal y la resistencia al diámetro de la tubería. " +
+                        "Comprender estos fundamentos es el primer paso para cualquier técnico en electricidad.";
+                } else if ("La Ley de Ohm y la Eficiencia en Instalaciones".equals(titulo) && textoActual != null && textoActual.endsWith("...")) {
+                    textoNuevo = "LA LEY DE OHM Y LA EFICIENCIA EN INSTALACIONES\n\n" +
+                        "La Ley de Ohm es la regla de oro para cualquier técnico en electricidad. " +
+                        "Esta ley establece una relación matemática simple y poderosa entre tres magnitudes fundamentales: " +
+                        "el voltaje, la intensidad de corriente y la resistencia. " +
+                        "La fórmula se expresa como V igual a I por R, donde V es el voltaje en voltios, I es la intensidad en amperios y R es la resistencia en ohmios.\n\n" +
+                        "Gracias a esta ley, si conocemos dos de las tres magnitudes, podemos calcular la tercera. " +
+                        "Por ejemplo, si un motor funciona a doce voltios y tiene una resistencia de cuatro ohmios, " +
+                        "la corriente que consume será de tres amperios. " +
+                        "Esto permite al técnico dimensionar correctamente los cables, fusibles y fuentes de alimentación.\n\n" +
+                        "Uno de los problemas más comunes en instalaciones es la caída de tensión, " +
+                        "que ocurre cuando los cables son demasiado delgados o demasiado largos. " +
+                        "Según la Ley de Ohm, una mayor resistencia en el cable significa que parte del voltaje se pierde en él, " +
+                        "llegando menos energía al receptor. " +
+                        "Esto reduce el rendimiento de los equipos y puede dañarlos con el tiempo.\n\n" +
+                        "El multímetro es la herramienta fundamental que permite al técnico medir voltaje, corriente y resistencia " +
+                        "para verificar los cálculos teóricos con la realidad del circuito. " +
+                        "Desarrollar un sentido técnico para predecir el comportamiento eléctrico antes de medir " +
+                        "es lo que distingue a un técnico experto de uno principiante.";
+                } else if ("Arquitectura de Circuitos: Serie y Paralelo".equals(titulo) && textoActual != null && textoActual.endsWith("...")) {
+                    textoNuevo = "Arquitectura de Circuitos: Serie y Paralelo\n\n" +
+                        "La disposición física y eléctrica de los componentes determina el comportamiento de toda la red eléctrica. " +
+                        "Existen dos formas básicas de conectar los componentes en un circuito: en serie y en paralelo, " +
+                        "cada una con características muy distintas que el técnico debe conocer para diseñar instalaciones seguras y eficientes.\n\n" +
+                        "En un circuito en serie, todos los componentes están conectados uno tras otro formando una sola cadena. " +
+                        "La corriente es la misma en todos los puntos del circuito, pero el voltaje se reparte entre cada receptor. " +
+                        "La gran desventaja del circuito en serie es que si un componente falla, todo el circuito deja de funcionar. " +
+                        "Un ejemplo clásico son las antiguas luces navideñas: si una bombilla se quemaba, todas se apagaban.\n\n" +
+                        "En un circuito en paralelo, cada componente tiene su propia rama conectada directamente a la fuente. " +
+                        "El voltaje en cada receptor es igual al voltaje de la fuente, y si uno falla, los demás continúan funcionando. " +
+                        "Esta es la razón por la que las instalaciones domésticas se realizan en paralelo: " +
+                        "apagar una lámpara no afecta a las demás.\n\n" +
+                        "Sin embargo, el paralelo tiene un riesgo: al agregar más dispositivos, la corriente total aumenta. " +
+                        "Si se superan los límites del cableado se produce una sobrecarga que puede causar un incendio. " +
+                        "Los interruptores y fusibles se colocan en serie con cada rama para proteger el sistema. " +
+                        "Conocer cuándo usar serie o paralelo es una decisión técnica fundamental en cualquier instalación eléctrica.";
+                } else if ("La Guerra de las Corrientes: CA versus CC".equals(titulo) && textoActual != null && textoActual.endsWith("...")) {
+                    textoNuevo = "La Guerra de las Corrientes: CA versus CC\n\n" +
+                        "La historia de la electricidad está marcada por una de las disputas tecnológicas más famosas del siglo diecinueve: " +
+                        "la competencia entre la Corriente Continua y la Corriente Alterna. " +
+                        "Thomas Edison defendía la Corriente Continua, mientras que Nikola Tesla y George Westinghouse apostaban por la Corriente Alterna. " +
+                        "Esta batalla, conocida como la Guerra de las Corrientes, cambió para siempre la forma en que la electricidad llegó a los hogares.\n\n" +
+                        "La Corriente Continua fluye siempre en la misma dirección. Las baterías y los paneles solares producen este tipo de corriente. " +
+                        "Su mayor desventaja es que no puede transportarse eficientemente a largas distancias sin grandes pérdidas de energía.\n\n" +
+                        "La Corriente Alterna, en cambio, cambia de dirección muchas veces por segundo. " +
+                        "Su frecuencia se mide en Hertz. En Guatemala y gran parte de América la frecuencia estándar es de sesenta hercios. " +
+                        "La ventaja clave de la Corriente Alterna es que puede transformarse fácilmente a voltajes muy altos para el transporte " +
+                        "y luego reducirse al voltaje de uso doméstico mediante transformadores, reduciendo enormemente las pérdidas por calor.\n\n" +
+                        "Hoy vivimos en un mundo híbrido: la Corriente Alterna se usa para el transporte y distribución de la energía, " +
+                        "mientras que la Corriente Continua se usa internamente en casi todos los dispositivos electrónicos. " +
+                        "Los cargadores de celulares, las computadoras y los televisores convierten la Corriente Alterna de la red en Corriente Continua " +
+                        "mediante circuitos rectificadores. Tesla y Edison tenían razón en contextos distintos.";
+                } else if ("Seguridad Eléctrica: La Prevención como Herramienta Técnica".equals(titulo) && textoActual != null && textoActual.endsWith("...")) {
+                    textoNuevo = "Seguridad Eléctrica: La Prevención como Herramienta Técnica\n\n" +
+                        "En electricidad, el error suele pagarse caro. El riesgo eléctrico no es solo el choque directo por contacto con un cable energizado. " +
+                        "También incluye los arcos eléctricos, que pueden ocurrir sin contacto físico y generan temperaturas extremas, " +
+                        "los incendios por sobrecalentamiento de cables y los gases tóxicos liberados al quemar aislamientos.\n\n" +
+                        "El cuerpo humano es un conductor de electricidad. " +
+                        "La corriente busca siempre el camino de menor resistencia para llegar a tierra, " +
+                        "y si ese camino pasa por una persona, las consecuencias pueden ser fatales. " +
+                        "Por eso la puesta a tierra es fundamental: proporciona un camino seguro para que las corrientes de falla fluyan al suelo " +
+                        "sin pasar por las personas ni dañar los equipos.\n\n" +
+                        "Todo técnico en electricidad debe conocer y aplicar las Cinco Reglas de Oro antes de intervenir cualquier instalación: " +
+                        "desconectar la fuente de energía, bloquear los dispositivos de mando para que nadie los reactive, " +
+                        "verificar la ausencia de tensión con un instrumento de medición, " +
+                        "poner a tierra y en cortocircuito la instalación, y delimitar y señalizar la zona de trabajo.\n\n" +
+                        "El equipo de protección personal es igualmente esencial: guantes dieléctricos, calzado aislante, casco y lentes de seguridad. " +
+                        "Un técnico que trabaja sin protección, por comodidad o exceso de confianza, pone en riesgo su vida. " +
+                        "En caso de incendio eléctrico, nunca se debe usar agua, pues conduce la electricidad. " +
+                        "Se deben usar extintores de tipo C especialmente diseñados para fuegos eléctricos. " +
+                        "La prevención es la herramienta más importante del electricista.";
+                }
+
+                if (textoNuevo != null) {
+                    l.setContenido(textoNuevo);
+                    lecturaRepository.save(l);
+                    System.out.println("Texto actualizado: " + titulo);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error al actualizar textos de electricidad: " + e.getMessage());
+        }
+    }
 
     private void crearLecturaJava(Carrera c) {
         String texto = "Introducción a Java: El Lenguaje Universal\n\n" +
@@ -573,7 +686,18 @@ public class DataInitializer implements CommandLineRunner {
     // ==================== ELECTRICIDAD ====================
     private void crearLecturaElectricidad1(Carrera c) {
         String texto = "Fundamentos de la Corriente Eléctrica y el Circuito de Carga\n\n" +
-                "La electricidad no es una invención humana, sino una fuerza fundamental de la naturaleza que hemos aprendido a canalizar...";
+                "La electricidad no es una invención humana, sino una fuerza fundamental de la naturaleza que hemos aprendido a canalizar. " +
+                "En su nivel más básico, la corriente eléctrica es el flujo ordenado de electrones a través de un material conductor. " +
+                "Para que ese flujo ocurra se necesitan cuatro elementos esenciales: una fuente de energía, un conductor, un receptor y un dispositivo de control.\n\n" +
+                "La fuente de energía, como una batería o un generador, proporciona la fuerza electromotriz que pone a los electrones en movimiento. " +
+                "El conductor, generalmente cobre o aluminio, ofrece poca resistencia al paso de los electrones. " +
+                "El receptor es el dispositivo que aprovecha la energía eléctrica, como una bombilla o un motor. " +
+                "El dispositivo de control, como un interruptor, permite abrir o cerrar el circuito según se necesite.\n\n" +
+                "Un circuito cerrado permite el flujo continuo de electrones, mientras que un circuito abierto interrumpe ese flujo por completo. " +
+                "Para proteger las instalaciones se usan fusibles y disyuntores que aprovechan el Efecto Joule: " +
+                "cuando circula demasiada corriente, el calor generado funde el fusible y corta el circuito antes de que ocurra un daño mayor.\n\n" +
+                "Una analogía útil es la del sistema hidráulico: el voltaje equivale a la presión del agua, la corriente al caudal y la resistencia al diámetro de la tubería. " +
+                "Comprender estos fundamentos es el primer paso para cualquier técnico en electricidad.";
         Lectura l = new Lectura("Fundamentos de la Corriente Eléctrica", texto, c);
         lecturaRepository.save(l);
 
@@ -601,7 +725,23 @@ public class DataInitializer implements CommandLineRunner {
 
     private void crearLecturaElectricidad2(Carrera c) {
         String texto = "LA LEY DE OHM Y LA EFICIENCIA EN INSTALACIONES\n\n" +
-                "La Ley de Ohm es la regla de oro para cualquier técnico en electricidad...";
+                "La Ley de Ohm es la regla de oro para cualquier técnico en electricidad. " +
+                "Esta ley establece una relación matemática simple y poderosa entre tres magnitudes fundamentales: " +
+                "el voltaje, la intensidad de corriente y la resistencia. " +
+                "La fórmula se expresa como V igual a I por R, donde V es el voltaje en voltios, I es la intensidad en amperios y R es la resistencia en ohmios.\n\n" +
+                "Gracias a esta ley, si conocemos dos de las tres magnitudes, podemos calcular la tercera. " +
+                "Por ejemplo, si un motor funciona a doce voltios y tiene una resistencia de cuatro ohmios, " +
+                "la corriente que consume será de tres amperios. " +
+                "Esto permite al técnico dimensionar correctamente los cables, fusibles y fuentes de alimentación.\n\n" +
+                "Uno de los problemas más comunes en instalaciones es la caída de tensión, " +
+                "que ocurre cuando los cables son demasiado delgados o demasiado largos. " +
+                "Según la Ley de Ohm, una mayor resistencia en el cable significa que parte del voltaje se pierde en él, " +
+                "llegando menos energía al receptor. " +
+                "Esto reduce el rendimiento de los equipos y puede dañarlos con el tiempo.\n\n" +
+                "El multímetro es la herramienta fundamental que permite al técnico medir voltaje, corriente y resistencia " +
+                "para verificar los cálculos teóricos con la realidad del circuito. " +
+                "Desarrollar un sentido técnico para predecir el comportamiento eléctrico antes de medir " +
+                "es lo que distingue a un técnico experto de uno principiante.";
         Lectura l = new Lectura("La Ley de Ohm y la Eficiencia en Instalaciones", texto, c);
         lecturaRepository.save(l);
 
@@ -629,7 +769,21 @@ public class DataInitializer implements CommandLineRunner {
 
     private void crearLecturaElectricidad3(Carrera c) {
         String texto = "Arquitectura de Circuitos: Serie y Paralelo\n\n" +
-                "La disposición física y eléctrica de los componentes determina el comportamiento de toda la red...";
+                "La disposición física y eléctrica de los componentes determina el comportamiento de toda la red eléctrica. " +
+                "Existen dos formas básicas de conectar los componentes en un circuito: en serie y en paralelo, " +
+                "cada una con características muy distintas que el técnico debe conocer para diseñar instalaciones seguras y eficientes.\n\n" +
+                "En un circuito en serie, todos los componentes están conectados uno tras otro formando una sola cadena. " +
+                "La corriente es la misma en todos los puntos del circuito, pero el voltaje se reparte entre cada receptor. " +
+                "La gran desventaja del circuito en serie es que si un componente falla, todo el circuito deja de funcionar. " +
+                "Un ejemplo clásico son las antiguas luces navideñas: si una bombilla se quemaba, todas se apagaban.\n\n" +
+                "En un circuito en paralelo, cada componente tiene su propia rama conectada directamente a la fuente. " +
+                "El voltaje en cada receptor es igual al voltaje de la fuente, y si uno falla, los demás continúan funcionando. " +
+                "Esta es la razón por la que las instalaciones domésticas se realizan en paralelo: " +
+                "apagar una lámpara no afecta a las demás.\n\n" +
+                "Sin embargo, el paralelo tiene un riesgo: al agregar más dispositivos, la corriente total aumenta. " +
+                "Si se superan los límites del cableado se produce una sobrecarga que puede causar un incendio. " +
+                "Los interruptores y fusibles se colocan en serie con cada rama para proteger el sistema. " +
+                "Conocer cuándo usar serie o paralelo es una decisión técnica fundamental en cualquier instalación eléctrica.";
         Lectura l = new Lectura("Arquitectura de Circuitos: Serie y Paralelo", texto, c);
         lecturaRepository.save(l);
 
@@ -657,7 +811,20 @@ public class DataInitializer implements CommandLineRunner {
 
     private void crearLecturaElectricidad4(Carrera c) {
         String texto = "La Guerra de las Corrientes: CA versus CC\n\n" +
-                "La historia de la electricidad está marcada por la competencia entre la Corriente Continua (CC) y la Corriente Alterna (CA)...";
+                "La historia de la electricidad está marcada por una de las disputas tecnológicas más famosas del siglo diecinueve: " +
+                "la competencia entre la Corriente Continua y la Corriente Alterna. " +
+                "Thomas Edison defendía la Corriente Continua, mientras que Nikola Tesla y George Westinghouse apostaban por la Corriente Alterna. " +
+                "Esta batalla, conocida como la Guerra de las Corrientes, cambió para siempre la forma en que la electricidad llegó a los hogares.\n\n" +
+                "La Corriente Continua fluye siempre en la misma dirección. Las baterías y los paneles solares producen este tipo de corriente. " +
+                "Su mayor desventaja es que no puede transportarse eficientemente a largas distancias sin grandes pérdidas de energía.\n\n" +
+                "La Corriente Alterna, en cambio, cambia de dirección muchas veces por segundo. " +
+                "Su frecuencia se mide en Hertz. En Guatemala y gran parte de América la frecuencia estándar es de sesenta hercios. " +
+                "La ventaja clave de la Corriente Alterna es que puede transformarse fácilmente a voltajes muy altos para el transporte " +
+                "y luego reducirse al voltaje de uso doméstico mediante transformadores, reduciendo enormemente las pérdidas por calor.\n\n" +
+                "Hoy vivimos en un mundo híbrido: la Corriente Alterna se usa para el transporte y distribución de la energía, " +
+                "mientras que la Corriente Continua se usa internamente en casi todos los dispositivos electrónicos. " +
+                "Los cargadores de celulares, las computadoras y los televisores convierten la Corriente Alterna de la red en Corriente Continua " +
+                "mediante circuitos rectificadores. Tesla y Edison tenían razón en contextos distintos.";
         Lectura l = new Lectura("La Guerra de las Corrientes: CA versus CC", texto, c);
         lecturaRepository.save(l);
 
@@ -684,8 +851,24 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void crearLecturaElectricidad5(Carrera c) {
-        String texto = "Seguridad: La Prevención como Herramienta Técnica\n\n" +
-                "En electricidad, el error suele pagarse caro. El riesgo eléctrico no es solo el choque directo...";
+        String texto = "Seguridad Eléctrica: La Prevención como Herramienta Técnica\n\n" +
+                "En electricidad, el error suele pagarse caro. El riesgo eléctrico no es solo el choque directo por contacto con un cable energizado. " +
+                "También incluye los arcos eléctricos, que pueden ocurrir sin contacto físico y generan temperaturas extremas, " +
+                "los incendios por sobrecalentamiento de cables y los gases tóxicos liberados al quemar aislamientos.\n\n" +
+                "El cuerpo humano es un conductor de electricidad. " +
+                "La corriente busca siempre el camino de menor resistencia para llegar a tierra, " +
+                "y si ese camino pasa por una persona, las consecuencias pueden ser fatales. " +
+                "Por eso la puesta a tierra es fundamental: proporciona un camino seguro para que las corrientes de falla fluyan al suelo " +
+                "sin pasar por las personas ni dañar los equipos.\n\n" +
+                "Todo técnico en electricidad debe conocer y aplicar las Cinco Reglas de Oro antes de intervenir cualquier instalación: " +
+                "desconectar la fuente de energía, bloquear los dispositivos de mando para que nadie los reactive, " +
+                "verificar la ausencia de tensión con un instrumento de medición, " +
+                "poner a tierra y en cortocircuito la instalación, y delimitar y señalizar la zona de trabajo.\n\n" +
+                "El equipo de protección personal es igualmente esencial: guantes dieléctricos, calzado aislante, casco y lentes de seguridad. " +
+                "Un técnico que trabaja sin protección, por comodidad o exceso de confianza, pone en riesgo su vida. " +
+                "En caso de incendio eléctrico, nunca se debe usar agua, pues conduce la electricidad. " +
+                "Se deben usar extintores de tipo C especialmente diseñados para fuegos eléctricos. " +
+                "La prevención es la herramienta más importante del electricista.";
         Lectura l = new Lectura("Seguridad Eléctrica: La Prevención como Herramienta Técnica", texto, c);
         lecturaRepository.save(l);
 
