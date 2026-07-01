@@ -125,6 +125,53 @@
     var rec         = null;
     var reiniciando = false;
 
+    /* ── Auto-avance: si el cursor no se mueve en 4 s, saltar esa palabra ── */
+    var autoAvanceTimer  = null;
+    var lastCursorChange = Date.now();
+
+    function resetAutoAvance() {
+        lastCursorChange = Date.now();
+        clearTimeout(autoAvanceTimer);
+        if (!active) return;
+        autoAvanceTimer = setTimeout(function saltarPalabra() {
+            if (!active) return;
+            if (cursor < total && Date.now() - lastCursorChange >= 3800) {
+                /* Marcar palabra como superada y avanzar */
+                okBits[cursor] = true;
+                cursor++;
+                /* Saltar también artículos cortos seguidos */
+                while (cursor < total && spanNorms[cursor].length <= 2) {
+                    okBits[cursor] = true;
+                    cursor++;
+                }
+                snapCursor = cursor;
+                snapBits   = okBits.slice();
+                renderBits(okBits, cursor);
+                refreshCoverage();
+                lastCursorChange = Date.now();
+            }
+            autoAvanceTimer = setTimeout(saltarPalabra, 4000);
+        }, 4000);
+    }
+
+    /* ── Desbloqueo por scroll: si llegó al final, desbloquear con >= 70% ── */
+    var scrollAlFinal = false;
+    window.addEventListener('scroll', function () {
+        if (unlocked) return;
+        var content = document.getElementById('readingContent');
+        if (!content) return;
+        var rect    = content.getBoundingClientRect();
+        var total_h = content.offsetHeight - window.innerHeight;
+        var scrolled = Math.max(0, -rect.top);
+        var pct = total_h > 0 ? (scrolled / (total_h + 150)) * 100 : 100;
+        if (pct >= 98 && !scrollAlFinal) {
+            scrollAlFinal = true;
+            if (coverage >= 70) {
+                desbloquearTest('scroll');
+            }
+        }
+    });
+
     function setMsg(t) { if (voiceMsg) voiceMsg.textContent = t; }
 
     function resetBtn() {
@@ -189,7 +236,7 @@
         rec.interimResults  = true;
         rec.maxAlternatives = 3;   /* 3 alternativas: procesamos todas para mayor cobertura */
 
-        rec.onstart = function() { setActiveBtn(); setMsg('🎤 Escuchando… lee en voz alta'); };
+        rec.onstart = function() { setActiveBtn(); setMsg('🎤 Escuchando… lee en voz alta'); resetAutoAvance(); };
 
         rec.onresult = function(e) {
             for (var i = e.resultIndex; i < e.results.length; i++) {
@@ -226,6 +273,8 @@
                     okBits = mejorBits;
                     renderBits(okBits, cursor);
                     refreshCoverage();
+                    /* Reiniciar temporizador de auto-avance si el cursor avanzó */
+                    if (mejorCursor > snapCursor) resetAutoAvance();
 
                     snapCursor = cursor;
                     snapBits   = okBits.slice();
@@ -260,6 +309,7 @@
             pedirPermisoYArrancar();
         } else {
             active = false; reiniciando = false;
+            clearTimeout(autoAvanceTimer);
             try { if (rec) rec.stop(); } catch(ex) {}
             resetBtn(); setMsg('Detenido.');
         }
@@ -346,17 +396,29 @@
     }
 
     var unlocked = false;
+
     function checkUnlock() {
-        if (unlocked || coverage < 100) return;
+        /* Desbloqueo por reconocimiento: 100% */
+        if (!unlocked && coverage >= 100) desbloquearTest('voz');
+        /* Desbloqueo por scroll + voz: llegó al final con >= 70% */
+        if (!unlocked && scrollAlFinal && coverage >= 70) desbloquearTest('scroll');
+    }
+
+    function desbloquearTest(motivo) {
+        if (unlocked) return;
         unlocked = true;
         active   = false; reiniciando = false;
+        clearTimeout(autoAvanceTimer);
         try { if (rec) rec.stop(); } catch(e) {}
         resetBtn();
         if (lockBox)    lockBox.style.display  = 'none';
         if (readyBox)   readyBox.style.display = 'flex';
         if (testBtn)    testBtn.classList.remove('locked');
-        if (scrollHint) { scrollHint.textContent = '✓ Lectura completa verificada'; scrollHint.style.color = '#198754'; }
-        setMsg('✅ ¡Lectura completa! El test está desbloqueado.');
+        var msg = motivo === 'scroll'
+            ? '✓ Lectura completada — test desbloqueado'
+            : '✓ Lectura completa verificada';
+        if (scrollHint) { scrollHint.textContent = msg; scrollHint.style.color = '#198754'; }
+        setMsg('✅ ¡Test desbloqueado! Ya puedes comenzar.');
     }
 
     if (testBtn) {
