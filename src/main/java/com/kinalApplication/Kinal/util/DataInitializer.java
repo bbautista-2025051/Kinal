@@ -49,6 +49,17 @@ public class DataInitializer implements CommandLineRunner {
                     "Fundamentos y principios de la electrónica moderna, semiconductores y circuitos.");
             carreraRepository.save(electronica);
 
+            Carrera dibujoTecnico = new Carrera("Dibujo Técnico",
+                    "Fundamentos del dibujo técnico, normalización, geometría descriptiva, vistas y representación gráfica aplicada a la ingeniería.");
+            carreraRepository.save(dibujoTecnico);
+
+            // ==================== LECTURAS DIBUJO TÉCNICO ====================
+            crearLecturaDibujoTecnico1(dibujoTecnico);
+            crearLecturaDibujoTecnico2(dibujoTecnico);
+            crearLecturaDibujoTecnico3(dibujoTecnico);
+            crearLecturaDibujoTecnico4(dibujoTecnico);
+            crearLecturaDibujoTecnico5(dibujoTecnico);
+
             // ==================== LECTURAS ELECTRÓNICA ====================
             crearLecturaElectronica1(electronica);
             crearLecturaElectronica2(electronica);
@@ -2278,6 +2289,374 @@ public class DataInitializer implements CommandLineRunner {
                         "Que es mejor viajar de día y evitar caminar de noche solo, especialmente bajo efectos del alcohol.",
                         "Que quienes no creen en las leyendas serán castigados por los espíritus.",
                         "Que el Cadejo Blanco solo aparece en los pueblos del altiplano, no en la costa."}, 1);
+    }
+
+
+    // ==================== DIBUJO TÉCNICO ====================
+
+    private void crearLecturaDibujoTecnico1(Carrera c) {
+        String texto = "Introducción al Dibujo Técnico: Herramientas, Normas y Material de Trabajo\n\n" +
+                "El dibujo técnico es el lenguaje universal de la ingeniería y la tecnología. " +
+                "A diferencia del dibujo artístico, que busca expresar emociones o ideas abstractas, el dibujo técnico tiene un propósito preciso: " +
+                "comunicar con exactitud la forma, las dimensiones y las características de un objeto para que pueda ser fabricado, construido o analizado por cualquier profesional en cualquier parte del mundo. " +
+                "En la Fundación Kinal de Guatemala, el dibujo técnico es una asignatura fundamental que desarrolla la capacidad de abstracción espacial, la precisión y el orden metodológico del estudiante.\n\n" +
+                "Para realizar dibujo técnico correctamente se requiere un conjunto específico de instrumentos. " +
+                "El tablero de dibujo proporciona la superficie plana y estable sobre la que se trabaja. " +
+                "La escuadra de cuarenta y cinco grados y el cartabón de treinta y sesenta grados permiten trazar líneas a ángulos precisos. " +
+                "El compás se utiliza para trazar arcos y circunferencias con radio exacto. " +
+                "El rapidógrafo o el lápiz técnico, graduado en distintos espesores como cero punto dos, cero punto four y cero punto siete milímetros, garantizan trazos uniformes según el tipo de línea requerido. " +
+                "La regla T o paralela permite trazar horizontales perfectamente alineadas.\n\n" +
+                "Las normas que regulan el dibujo técnico a nivel internacional son emitidas por organismos como la ISO, que es la Organización Internacional de Normalización, " +
+                "y a nivel guatemalteco se aplican las normas COGUANOR. " +
+                "Estas normas definen el tamaño de los formatos de papel, que van desde el A0 hasta el A4, el grosor de las líneas, los tipos de letra técnica y el cajetín o cuadro de rotulación. " +
+                "El cajetín es el recuadro ubicado en la esquina inferior derecha de toda lámina técnica y contiene información como el nombre del proyecto, el autor, la escala, la fecha y el número de lámina.\n\n" +
+                "Dominar el uso correcto del material de dibujo y conocer las normas técnicas es el primer paso para comunicar ideas de ingeniería con precisión y profesionalismo.";
+        Lectura l = new Lectura("Introducción al Dibujo Técnico", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Cuál es la diferencia fundamental entre el dibujo técnico y el dibujo artístico?",
+                new String[]{"El dibujo artístico usa reglas y el técnico usa pinceles.",
+                        "El dibujo técnico comunica con exactitud dimensiones y formas para fabricar objetos, mientras el artístico expresa ideas subjetivas.",
+                        "El dibujo técnico solo se usa en computadora y el artístico en papel.",
+                        "El dibujo artístico es más preciso porque no tiene normas que lo limiten."}, 1);
+        agregarPregunta(l, "¿Para qué se utiliza el compás en el dibujo técnico?",
+                new String[]{"Para medir ángulos de noventa grados entre dos líneas rectas.",
+                        "Para trazar líneas paralelas a distancias iguales en el tablero.",
+                        "Para trazar arcos y circunferencias con radio exacto y controlado.",
+                        "Para escribir la rotulación técnica con letras de tamaño uniforme."}, 2);
+        agregarPregunta(l, "¿Qué información debe contener el cajetín de una lámina de dibujo técnico?",
+                new String[]{"Solo el nombre del estudiante y la fecha de entrega del trabajo.",
+                        "El nombre del proyecto, el autor, la escala, la fecha y el número de lámina.",
+                        "Únicamente la escala utilizada y el tipo de proyección empleada en el dibujo.",
+                        "El color de cada línea y el material de fabricación del objeto representado."}, 1);
+        agregarPregunta(l, "¿Qué organismo internacional emite las normas que regulan el dibujo técnico a nivel mundial?",
+                new String[]{"La NASA, que estandariza los formatos para uso aeroespacial internacional.",
+                        "La COGUANOR, que define todas las normas técnicas aplicadas en el mundo.",
+                        "La ISO, que es la Organización Internacional de Normalización.",
+                        "La ONU, que aprueba los formatos de papel utilizados en ingeniería."}, 2);
+        agregarPregunta(l, "¿Cuál es la función principal de la escuadra de cuarenta y cinco grados en el dibujo técnico?",
+                new String[]{"Medir la longitud exacta de las líneas trazadas en el dibujo.",
+                        "Trazar circunferencias y arcos con radio variable en el tablero.",
+                        "Trazar líneas a ángulos precisos de cuarenta y cinco y noventa grados.",
+                        "Mantener el papel sujeto al tablero durante el proceso de dibujo."}, 2);
+        agregarPregunta(l, "¿Por qué el dibujo técnico es considerado el lenguaje universal de la ingeniería?",
+                new String[]{"Porque se escribe en inglés, que es el idioma más hablado en el mundo.",
+                        "Porque usa colores estándar que cualquier persona puede interpretar sin capacitación.",
+                        "Porque comunica con exactitud la forma y dimensiones de un objeto para que cualquier profesional lo interprete igual.",
+                        "Porque reemplaza completamente a los planos digitales en la industria moderna."}, 2);
+        agregarPregunta(l, "Los formatos de papel en el dibujo técnico van desde el tamaño A0 hasta el A4. ¿Cuál es el más grande?",
+                new String[]{"El A4, porque tiene el número más alto de la serie normalizada.",
+                        "El A2, porque es el formato estándar utilizado en Fundación Kinal.",
+                        "El A0, porque es el formato base del cual se derivan los demás tamaños.",
+                        "El A1, porque duplica las dimensiones del formato A4 convencional."}, 2);
+        agregarPregunta(l, "¿Qué ventaja ofrece el uso de lápices técnicos graduados en distintos espesores?",
+                new String[]{"Permiten dibujar más rápido porque no necesitan ser afilados frecuentemente.",
+                        "Garantizan trazos uniformes y diferenciados según el tipo de línea requerido por las normas.",
+                        "Son más baratos que los lápices comunes utilizados en el dibujo artístico.",
+                        "Permiten borrar las líneas sin dejar rastro en el papel técnico normalizado."}, 1);
+        agregarPregunta(l, "¿Cuál es la ubicación correcta del cajetín en una lámina de dibujo técnico?",
+                new String[]{"En la esquina superior izquierda para que sea lo primero que se lea.",
+                        "En el centro de la lámina para equilibrar visualmente el dibujo con los datos.",
+                        "En la esquina inferior derecha de toda lámina técnica, según norma internacional.",
+                        "En la parte superior central, debajo del título principal del proyecto."}, 2);
+        agregarPregunta(l, "¿Por qué en Fundación Kinal se enseña dibujo técnico como asignatura fundamental?",
+                new String[]{"Porque es el único curso que no requiere matemáticas para ser aprobado.",
+                        "Porque desarrolla la capacidad de abstracción espacial, la precisión y el orden metodológico del estudiante.",
+                        "Porque es obligatorio para obtener el título universitario en todas las carreras.",
+                        "Porque permite decorar los proyectos de ingeniería con elementos artísticos y creativos."}, 1);
+    }
+
+    private void crearLecturaDibujoTecnico2(Carrera c) {
+        String texto = "Tipos de Líneas y su Aplicación en el Dibujo Técnico\n\n" +
+                "Uno de los fundamentos más importantes del dibujo técnico es el uso correcto de los diferentes tipos de líneas. " +
+                "Cada tipo de línea tiene un significado específico y su uso inadecuado puede generar interpretaciones erróneas en la fabricación o construcción de un objeto. " +
+                "Las normas ISO establecen con precisión el grosor, el estilo y la aplicación de cada tipo de línea.\n\n" +
+                "La línea continua gruesa es la más importante del dibujo técnico. Se utiliza para representar los contornos visibles del objeto, " +
+                "es decir, todas las aristas y bordes que se pueden ver directamente desde el punto de vista elegido para la vista. " +
+                "Su grosor es el mayor de todos los utilizados en el dibujo, lo que la hace inmediatamente identificable.\n\n" +
+                "La línea continua fina tiene múltiples aplicaciones: se usa para las líneas de cota, que son las que indican las medidas del objeto; " +
+                "para las líneas de referencia o directriz, que señalan con una flecha un elemento específico; " +
+                "y para las líneas auxiliares de prolongación, que extienden los bordes del objeto para colocar las cotas fuera de la figura. " +
+                "También se utiliza para representar superficies de corte en secciones y para trazar las líneas de la cuadrícula cuando se trabaja en papel milimetrado.\n\n" +
+                "La línea de trazos o discontinua representa las aristas y contornos que no son visibles desde el punto de vista elegido, " +
+                "es decir, las partes interiores o ocultas del objeto. Su correcta representación evita la necesidad de hacer cortes adicionales para mostrar el interior. " +
+                "La línea de punto y raya, también llamada línea de eje o línea mixta, se utiliza para marcar los ejes de simetría de figuras simétricas, " +
+                "los ejes de rotación y los ejes de circunferencias. Sin esta línea sería imposible definir el centro de un agujero o el eje de un cilindro.\n\n" +
+                "Conocer y aplicar correctamente los tipos de líneas es esencial para producir planos técnicos que puedan ser leídos e interpretados sin ambigüedad por cualquier técnico o ingeniero.";
+        Lectura l = new Lectura("Tipos de Líneas en el Dibujo Técnico", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Cuál es la función principal de la línea continua gruesa en el dibujo técnico?",
+                new String[]{"Representar los ejes de simetría y los centros de circunferencias.",
+                        "Indicar las cotas y medidas del objeto representado en el plano.",
+                        "Representar los contornos visibles y aristas del objeto desde el punto de vista elegido.",
+                        "Señalar las partes interiores u ocultas que no pueden verse directamente."}, 2);
+        agregarPregunta(l, "¿Para qué se utiliza la línea de trazos o discontinua en un plano técnico?",
+                new String[]{"Para marcar los ejes de simetría de figuras y agujeros circulares.",
+                        "Para representar aristas y contornos que no son visibles desde el punto de vista elegido.",
+                        "Para trazar las líneas de cota y las cifras de dimensionado del objeto.",
+                        "Para delimitar el área del cajetín y el marco del formato de papel."}, 1);
+        agregarPregunta(l, "¿Cuál es la aplicación correcta de la línea continua fina?",
+                new String[]{"Representar únicamente los contornos exteriores visibles del objeto dibujado.",
+                        "Marcar los ejes de rotación y los ejes de circunferencias en el plano.",
+                        "Usarse para líneas de cota, líneas de referencia y líneas auxiliares de prolongación.",
+                        "Indicar los materiales de fabricación mediante símbolos de rayado estándar."}, 2);
+        agregarPregunta(l, "¿Qué pasaría si un técnico confunde la línea de trazos con la línea continua gruesa en un plano?",
+                new String[]{"No ocurriría nada, ya que ambas líneas tienen el mismo significado técnico.",
+                        "Se interpretarían como visibles partes que son ocultas o interiores, generando errores en la fabricación.",
+                        "El plano quedaría más bonito visualmente aunque perdería precisión técnica.",
+                        "Solo afectaría la estética del dibujo pero no la interpretación del objeto."}, 1);
+        agregarPregunta(l, "¿Para qué sirve la línea de punto y raya, también llamada línea de eje?",
+                new String[]{"Para representar superficies que han sido cortadas en una sección transversal.",
+                        "Para indicar los contornos de piezas adyacentes que no forman parte del objeto principal.",
+                        "Para marcar los ejes de simetría, ejes de rotación y centros de circunferencias.",
+                        "Para delimitar las zonas de la lámina que contienen notas y especificaciones técnicas."}, 2);
+        agregarPregunta(l, "¿Por qué el uso incorrecto de los tipos de líneas puede generar problemas graves?",
+                new String[]{"Porque hace que el dibujo sea difícil de fotografiar para el archivo digital.",
+                        "Porque puede generar interpretaciones erróneas que resulten en errores durante la fabricación o construcción.",
+                        "Porque las normas ISO obligan a pagar multas por cada línea mal utilizada en los planos.",
+                        "Porque el grosor incorrecto de las líneas arruina el papel técnico de alta calidad."}, 1);
+        agregarPregunta(l, "¿Cuál es el grosor relativo de la línea continua gruesa comparado con los demás tipos de líneas?",
+                new String[]{"Es el más delgado, para no opacar los detalles del interior del objeto.",
+                        "Es igual al de la línea continua fina, solo difieren en el color utilizado.",
+                        "Es el mayor de todos los utilizados en el dibujo, lo que la hace fácilmente identificable.",
+                        "Varía según el tamaño del formato de papel, sin un valor fijo normalizado."}, 2);
+        agregarPregunta(l, "¿Qué norma internacional establece el grosor, estilo y aplicación de cada tipo de línea?",
+                new String[]{"La norma NASA-STD, diseñada para planos de proyectos aeroespaciales.",
+                        "La norma ISO, emitida por la Organización Internacional de Normalización.",
+                        "La norma ANSI, que solo aplica en países del continente americano.",
+                        "La norma COGUANOR, que es exclusiva del territorio de Guatemala."}, 1);
+        agregarPregunta(l, "¿Cuál es la ventaja de representar correctamente las líneas ocultas con línea de trazos?",
+                new String[]{"Evita la necesidad de hacer cortes adicionales para mostrar el interior del objeto.",
+                        "Permite usar menos hojas de papel al condensar toda la información en una sola vista.",
+                        "Hace el dibujo más artístico y atractivo para presentaciones ante clientes.",
+                        "Elimina la necesidad de incluir un cajetín con información del proyecto."}, 0);
+        agregarPregunta(l, "¿Qué indica la presencia de una línea de eje pasando por el centro de un círculo en un plano?",
+                new String[]{"Que el círculo representa una vista frontal de una esfera sólida.",
+                        "Que esa área debe rellenarse con material de alta densidad en la fabricación.",
+                        "Que el círculo es el eje de simetría principal de toda la pieza dibujada.",
+                        "Que el círculo representa un agujero o elemento cilíndrico con eje de simetría definido."}, 3);
+    }
+
+    private void crearLecturaDibujoTecnico3(Carrera c) {
+        String texto = "Escalas y Acotado en el Dibujo Técnico\n\n" +
+                "En el dibujo técnico, los objetos rara vez se pueden dibujar a su tamaño real. " +
+                "Un edificio, un puente o una pieza de maquinaria de grandes dimensiones no cabrían en ningún formato de papel estándar, " +
+                "mientras que un componente electrónico microscópico sería imposible de apreciar en su tamaño original. " +
+                "Para resolver este problema se utiliza la escala, que es la relación matemática entre el tamaño dibujado y el tamaño real del objeto.\n\n" +
+                "Existen tres tipos de escala. La escala natural, expresada como uno a uno, significa que el dibujo tiene exactamente el mismo tamaño que el objeto real. " +
+                "La escala de reducción, como uno a dos o uno a diez, indica que el dibujo es más pequeño que el objeto real: " +
+                "con escala uno a diez, cada centímetro en el papel representa diez centímetros en la realidad. " +
+                "La escala de ampliación, como dos a uno o cinco a uno, indica que el dibujo es más grande que el objeto real, " +
+                "y se usa para representar piezas muy pequeñas con mayor nivel de detalle. " +
+                "La escala siempre debe indicarse en el cajetín de la lámina.\n\n" +
+                "El acotado es el proceso de indicar las medidas reales del objeto directamente sobre el dibujo, " +
+                "independientemente de la escala utilizada. Las cotas siempre representan las dimensiones reales del objeto, no las del dibujo. " +
+                "Una cota se compone de tres elementos: la línea de cota, que es paralela al segmento que se mide y está delimitada por flechas en sus extremos; " +
+                "las líneas auxiliares de prolongación, que son perpendiculares al objeto y conectan su borde con la línea de cota; " +
+                "y la cifra de cota, que es el número que indica la medida real colocado sobre la línea de cota.\n\n" +
+                "El acotado debe seguir reglas claras: las cotas no deben duplicarse, no deben cortarse entre sí, " +
+                "deben colocarse preferentemente fuera de la figura y deben ser suficientes para fabricar el objeto sin necesidad de realizar ningún cálculo adicional. " +
+                "Un acotado correcto y completo es la firma de un técnico competente.";
+        Lectura l = new Lectura("Escalas y Acotado en el Dibujo Técnico", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Qué es la escala en el dibujo técnico?",
+                new String[]{"El nivel de detalle con que se representa el interior de una pieza en corte.",
+                        "El tipo de papel utilizado para dibujar objetos de gran tamaño en ingeniería.",
+                        "La relación matemática entre el tamaño dibujado y el tamaño real del objeto.",
+                        "La herramienta graduada en centímetros que se usa para medir en el tablero."}, 2);
+        agregarPregunta(l, "Si un plano tiene escala uno a diez, ¿qué significa un centímetro en el papel?",
+                new String[]{"Que el objeto real mide exactamente un centímetro de largo en total.",
+                        "Que el dibujo es diez veces más grande que el objeto real representado.",
+                        "Que cada centímetro en el papel representa diez centímetros en la realidad.",
+                        "Que la escala de ampliación aplica solo para objetos de uso industrial."}, 2);
+        agregarPregunta(l, "¿Cuándo se utiliza la escala de ampliación en el dibujo técnico?",
+                new String[]{"Cuando el objeto es tan grande que no cabe en el formato de papel estándar.",
+                        "Cuando se necesita representar piezas muy pequeñas con mayor nivel de detalle visible.",
+                        "Cuando el técnico prefiere trabajar con dibujos más pequeños por comodidad.",
+                        "Cuando el proyecto es de uso exclusivo en Fundación Kinal de Guatemala."}, 1);
+        agregarPregunta(l, "¿Las cifras de cota en un dibujo representan las medidas del dibujo o del objeto real?",
+                new String[]{"Las medidas del dibujo, que varían según la escala utilizada en el plano.",
+                        "La mitad de las medidas reales, para que el fabricante las duplique al construir.",
+                        "Las medidas reales del objeto, independientemente de la escala utilizada.",
+                        "Un valor aproximado que el técnico ajusta según la tolerancia de fabricación."}, 2);
+        agregarPregunta(l, "¿Cuáles son los tres elementos que componen una cota en un plano técnico?",
+                new String[]{"El título, la firma del técnico y la fecha de elaboración del dibujo.",
+                        "La línea de cota, las líneas auxiliares de prolongación y la cifra de cota.",
+                        "El contorno del objeto, el eje de simetría y el número de identificación.",
+                        "La escala, el formato del papel y el nombre del proyecto en el cajetín."}, 1);
+        agregarPregunta(l, "¿Por qué las cotas no deben duplicarse en un plano técnico?",
+                new String[]{"Porque duplicar cotas hace el dibujo más pesado y difícil de imprimir.",
+                        "Porque genera contradicción y confusión al momento de fabricar o construir el objeto.",
+                        "Porque las normas ISO solo permiten un máximo de diez cotas por lámina técnica.",
+                        "Porque el papel técnico no tiene espacio suficiente para colocar cotas repetidas."}, 1);
+        agregarPregunta(l, "¿Dónde debe indicarse la escala utilizada en una lámina de dibujo técnico?",
+                new String[]{"En el centro del dibujo, dentro de la figura principal representada.",
+                        "En la línea de cota más larga del objeto para que sea visible de inmediato.",
+                        "En el cajetín de la lámina, junto con el nombre del proyecto y el autor.",
+                        "En la esquina superior izquierda de la lámina, antes del marco exterior."}, 2);
+        agregarPregunta(l, "¿Qué significa la escala natural uno a uno en el dibujo técnico?",
+                new String[]{"Que el dibujo fue realizado a mano alzada sin instrumentos de precisión.",
+                        "Que el dibujo tiene exactamente el mismo tamaño que el objeto real representado.",
+                        "Que el dibujo es diez veces más pequeño que el objeto fabricado en taller.",
+                        "Que la escala fue elegida libremente por el dibujante sin seguir normas."}, 1);
+        agregarPregunta(l, "¿Qué significa que el acotado debe ser suficiente para fabricar el objeto sin cálculos adicionales?",
+                new String[]{"Que el número de cotas debe ser el mínimo posible para no saturar el plano.",
+                        "Que todas las dimensiones necesarias deben estar indicadas directamente en el plano sin que el operario tenga que deducir ninguna medida.",
+                        "Que el fabricante puede completar las medidas faltantes usando su experiencia.",
+                        "Que las cotas deben expresarse en metros para evitar conversiones de unidades."}, 1);
+        agregarPregunta(l, "¿Por qué se dice que un acotado correcto y completo es la firma de un técnico competente?",
+                new String[]{"Porque el acotado reemplaza la firma manuscrita obligatoria en los planos.",
+                        "Porque la ley exige que los técnicos firmen cada cota individualmente en el plano.",
+                        "Porque refleja que el técnico conoce las normas, domina el objeto y garantiza que puede fabricarse sin ambigüedad.",
+                        "Porque el número de cotas determina el salario del técnico en la industria."}, 2);
+    }
+
+    private void crearLecturaDibujoTecnico4(Carrera c) {
+        String texto = "Vistas Ortogonales y Sistema Diédrico en el Dibujo Técnico\n\n" +
+                "Uno de los mayores desafíos del dibujo técnico es representar objetos tridimensionales en un plano bidimensional. " +
+                "Para resolver este problema se utiliza el sistema de vistas ortogonales, también llamado sistema diédrico o de proyección ortogonal. " +
+                "Este sistema proyecta el objeto sobre planos perpendiculares entre sí, generando vistas que, en conjunto, describen completamente la forma del objeto.\n\n" +
+                "El sistema diédrico europeo, que es el más utilizado en Guatemala y en Fundación Kinal, trabaja con tres vistas principales. " +
+                "La vista frontal, también llamada alzado, es la vista más representativa del objeto y se coloca en el centro de la lámina. " +
+                "Muestra el objeto tal como lo vemos de frente. " +
+                "La vista superior, también llamada planta, se coloca debajo del alzado y muestra el objeto visto desde arriba. " +
+                "La vista lateral derecha, también llamada perfil, se coloca a la derecha del alzado y muestra el objeto visto desde ese lado.\n\n" +
+                "Para que el sistema de vistas sea coherente, existe una regla de alineación fundamental: " +
+                "la vista superior debe estar perfectamente alineada en vertical con el alzado, " +
+                "y la vista lateral debe estar perfectamente alineada en horizontal con el alzado. " +
+                "Esto permite que el lector del plano pueda relacionar fácilmente los elementos de una vista con los de las otras.\n\n" +
+                "Cuando las tres vistas no son suficientes para describir completamente el objeto, se pueden agregar vistas auxiliares: " +
+                "la vista posterior, la vista lateral izquierda o la vista inferior. " +
+                "También se recurre a las secciones o cortes, que consisten en imaginar que el objeto es cortado por un plano " +
+                "para mostrar su interior, lo cual es especialmente útil en piezas con cavidades, agujeros o geometrías internas complejas.\n\n" +
+                "El dominio del sistema diédrico es la base del dibujo técnico industrial y es una habilidad esencial para cualquier técnico egresado de Fundación Kinal.";
+        Lectura l = new Lectura("Vistas Ortogonales y Sistema Diédrico", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Cuál es el propósito principal del sistema de vistas ortogonales en el dibujo técnico?",
+                new String[]{"Decorar los planos técnicos con perspectivas artísticas tridimensionales.",
+                        "Representar objetos tridimensionales en un plano bidimensional de forma precisa y completa.",
+                        "Calcular el volumen y el peso de los objetos representados en los planos.",
+                        "Sustituir las cotas para que el fabricante mida directamente del dibujo."}, 1);
+        agregarPregunta(l, "En el sistema diédrico europeo utilizado en Fundación Kinal, ¿cómo se llama la vista que muestra el objeto visto desde arriba?",
+                new String[]{"Alzado, que es la vista frontal y más representativa del objeto.",
+                        "Perfil, que muestra el objeto desde el lado derecho en el plano.",
+                        "Planta, que es la vista superior y se coloca debajo del alzado.",
+                        "Sección, que muestra el interior cortado por un plano imaginario."}, 2);
+        agregarPregunta(l, "¿Dónde se coloca la vista frontal o alzado en una lámina de dibujo técnico?",
+                new String[]{"En la esquina inferior izquierda, cerca del cajetín de la lámina.",
+                        "En el centro de la lámina, ya que es la vista más representativa del objeto.",
+                        "En la parte superior derecha, por encima de la vista de planta y perfil.",
+                        "En cualquier posición libre, ya que su ubicación no está normalizada."}, 1);
+        agregarPregunta(l, "¿Cuál es la regla de alineación fundamental entre las vistas del sistema diédrico?",
+                new String[]{"La vista lateral debe estar debajo del alzado y la planta a su derecha.",
+                        "La planta debe alinearse verticalmente con el alzado y el perfil horizontalmente con el alzado.",
+                        "Las tres vistas pueden colocarse libremente siempre que tengan el mismo tamaño.",
+                        "El alzado siempre debe ser la vista más pequeña para que quepan las otras dos."}, 1);
+        agregarPregunta(l, "¿Cuándo se recurre a una sección o corte en el dibujo técnico?",
+                new String[]{"Cuando el objeto es tan pequeño que no se puede dibujar a escala natural.",
+                        "Cuando el dibujo tiene demasiadas líneas de trazos que dificultan su lectura.",
+                        "Cuando se necesita mostrar el interior de piezas con cavidades o geometrías internas complejas.",
+                        "Cuando el formato de papel no es suficientemente grande para todas las vistas."}, 2);
+        agregarPregunta(l, "¿Cuál es la diferencia entre el sistema diédrico europeo y el sistema americano?",
+                new String[]{"El europeo usa papel A4 y el americano usa papel carta en todos los proyectos.",
+                        "El europeo coloca el perfil a la derecha del alzado y el americano lo coloca a la izquierda.",
+                        "El europeo utiliza tres vistas y el americano solo permite dibujar una sola vista.",
+                        "No existe diferencia, ya que ambos sistemas son idénticos en su totalidad."}, 1);
+        agregarPregunta(l, "¿Por qué la vista frontal se elige como la más representativa del objeto?",
+                new String[]{"Porque siempre muestra la cara más grande y con mayor número de aristas.",
+                        "Porque es obligatorio por norma que sea la vista con mayor número de cotas.",
+                        "Porque es la que mejor describe la forma general del objeto y la que más información visual aporta.",
+                        "Porque la norma ISO exige que la vista frontal incluya el título del proyecto."}, 2);
+        agregarPregunta(l, "¿Qué tipo de líneas se usan en las vistas para representar las aristas que no son visibles desde ese punto de vista?",
+                new String[]{"Líneas continuas gruesas, que son las más visibles en el dibujo técnico.",
+                        "Líneas de punto y raya, que indican los ejes de simetría del objeto.",
+                        "Líneas de trazos o discontinuas, que representan aristas y contornos ocultos.",
+                        "Líneas continuas finas, que se usan también para las cotas del dibujo."}, 2);
+        agregarPregunta(l, "¿Cuántas vistas principales considera el sistema diédrico para describir un objeto?",
+                new String[]{"Una sola vista, ya que la perspectiva isométrica complementa la información.",
+                        "Dos vistas: la frontal y la lateral, que son suficientes para cualquier objeto.",
+                        "Tres vistas principales: alzado, planta y perfil, que en conjunto describen el objeto.",
+                        "Cinco vistas mínimas, incluyendo anterior, posterior, superior, inferior y lateral."}, 2);
+        agregarPregunta(l, "¿Por qué el dominio del sistema diédrico es considerado la base del dibujo técnico industrial?",
+                new String[]{"Porque permite calcular automáticamente el costo de fabricación de cualquier pieza.",
+                        "Porque es el único método reconocido para presentar proyectos ante el gobierno.",
+                        "Porque es el sistema estándar que permite comunicar la geometría completa de cualquier objeto de forma precisa y normalizada.",
+                        "Porque reemplaza completamente los programas de diseño asistido por computadora."}, 2);
+    }
+
+    private void crearLecturaDibujoTecnico5(Carrera c) {
+        String texto = "Geometría Descriptiva y Dibujo Técnico Asistido por Computadora\n\n" +
+                "La geometría descriptiva es la rama de las matemáticas que estudia la representación de figuras tridimensionales en un plano bidimensional mediante métodos de proyección. " +
+                "Fue sistematizada por el matemático francés Gaspard Monge en el siglo dieciocho y sigue siendo la base teórica del dibujo técnico moderno. " +
+                "Su estudio permite al técnico desarrollar la capacidad de visualizar mentalmente objetos en tres dimensiones a partir de sus vistas planas, " +
+                "y también de imaginar cómo se verán las vistas planas a partir de un objeto tridimensional.\n\n" +
+                "Entre los temas fundamentales de la geometría descriptiva aplicada al dibujo técnico están la construcción de figuras geométricas planas como polígonos regulares, " +
+                "la determinación de verdaderas magnitudes de segmentos oblicuos, la representación de sólidos geométricos como prismas, pirámides, cilindros, conos y esferas, " +
+                "y el desarrollo de superficies, que consiste en desplegar sobre un plano la superficie lateral de un sólido para calcular el material necesario para fabricarlo.\n\n" +
+                "La perspectiva isométrica es una forma de representación tridimensional muy utilizada en dibujo técnico. " +
+                "En ella, los tres ejes del espacio, que son el eje X, el eje Y y el eje Z, se representan a ciento veinte grados entre sí, " +
+                "con los ejes laterales a treinta grados de la horizontal. " +
+                "La perspectiva isométrica permite apreciar el objeto en tres dimensiones de forma inmediata, lo que la hace muy útil para representaciones de catálogos, manuales y presentaciones.\n\n" +
+                "En la actualidad, el dibujo técnico manual coexiste con el Dibujo Técnico Asistido por Computadora, conocido por sus siglas en inglés como CAD. " +
+                "Los programas CAD como AutoCAD, SolidWorks y FreeCAD permiten crear planos con precisión absoluta, realizar modificaciones rápidamente y simular el comportamiento del objeto antes de fabricarlo. " +
+                "Sin embargo, en Fundación Kinal se enfatiza que el dominio del dibujo técnico manual es la base indispensable para usar correctamente cualquier herramienta CAD, " +
+                "ya que sin comprender los principios del dibujo técnico, el software se convierte en una herramienta ciega.";
+        Lectura l = new Lectura("Geometría Descriptiva y Dibujo CAD", texto, c);
+        lecturaRepository.save(l);
+
+        agregarPregunta(l, "¿Quién sistematizó la geometría descriptiva como disciplina matemática y en qué siglo?",
+                new String[]{"Isaac Newton en el siglo diecisiete, como parte de su estudio de la mecánica.",
+                        "Gaspard Monge en el siglo dieciocho, como método de proyección tridimensional.",
+                        "Albert Einstein en el siglo veinte, aplicando la relatividad al dibujo técnico.",
+                        "Leonardo da Vinci en el siglo quince, inventando la perspectiva artística."}, 1);
+        agregarPregunta(l, "¿Qué es el desarrollo de superficies en el contexto del dibujo técnico?",
+                new String[]{"El proceso de agregar cotas a todas las aristas de un sólido geométrico.",
+                        "La técnica de representar un objeto en perspectiva isométrica a treinta grados.",
+                        "Desplegar sobre un plano la superficie lateral de un sólido para calcular el material necesario.",
+                        "El método de construir polígonos regulares usando compás y regla únicamente."}, 2);
+        agregarPregunta(l, "En la perspectiva isométrica, ¿a cuántos grados entre sí se representan los tres ejes del espacio?",
+                new String[]{"A noventa grados, formando un sistema de coordenadas cartesiano estándar.",
+                        "A ciento veinte grados entre sí, con los ejes laterales a treinta grados de la horizontal.",
+                        "A cuarenta y cinco grados, usando las escuadras estándar del dibujo técnico.",
+                        "A sesenta grados, siguiendo la construcción del triángulo equilátero normalizado."}, 1);
+        agregarPregunta(l, "¿Cuál es la utilidad principal de la perspectiva isométrica en el dibujo técnico?",
+                new String[]{"Reemplaza completamente al sistema diédrico en los planos de fabricación industrial.",
+                        "Permite calcular con exactitud el volumen y la masa de cualquier pieza diseñada.",
+                        "Permite apreciar el objeto en tres dimensiones de forma inmediata, útil en catálogos y manuales.",
+                        "Es obligatoria por norma ISO en todos los planos de construcción civil."}, 2);
+        agregarPregunta(l, "¿Qué significa la sigla CAD en el contexto del dibujo técnico moderno?",
+                new String[]{"Cálculo Automático de Dimensiones, un método numérico de acotado.",
+                        "Construcción Arquitectónica Descriptiva, aplicada en edificios y puentes.",
+                        "Computer Aided Design o Dibujo Técnico Asistido por Computadora.",
+                        "Control de Acabados y Detalles, estándar de calidad en fabricación."}, 2);
+        agregarPregunta(l, "¿Qué ventaja ofrecen los programas CAD como AutoCAD sobre el dibujo técnico manual?",
+                new String[]{"Eliminan la necesidad de conocer normas técnicas o tipos de líneas.",
+                        "Permiten crear planos con precisión absoluta, modificarlos rápidamente y simular el objeto antes de fabricarlo.",
+                        "Sustituyen completamente al técnico humano en el proceso de diseño industrial.",
+                        "Son gratuitos y no requieren ningún tipo de capacitación previa para usarlos."}, 1);
+        agregarPregunta(l, "Según el texto, ¿por qué Fundación Kinal enfatiza el dibujo técnico manual antes del uso de software CAD?",
+                new String[]{"Porque los programas CAD son muy costosos y no están disponibles en Guatemala.",
+                        "Porque el dibujo manual es más rápido que el digital para planos de gran tamaño.",
+                        "Porque sin comprender los principios del dibujo técnico, el software se convierte en una herramienta ciega.",
+                        "Porque las normas ISO prohíben el uso de software en los primeros años de formación."}, 2);
+        agregarPregunta(l, "¿Qué habilidad desarrolla el estudio de la geometría descriptiva en el técnico?",
+                new String[]{"La capacidad de calcular resistencias de materiales mediante fórmulas algebraicas.",
+                        "La visualización mental de objetos tridimensionales a partir de vistas planas y viceversa.",
+                        "La habilidad de dibujar a gran velocidad sin el uso de instrumentos de precisión.",
+                        "El conocimiento del idioma inglés necesario para leer normas internacionales."}, 1);
+        agregarPregunta(l, "¿Para qué tipo de representaciones se utiliza preferentemente la perspectiva isométrica?",
+                new String[]{"Para planos de fabricación donde se necesita acotar todas las dimensiones del objeto.",
+                        "Para representar cortes y secciones de piezas con geometrías internas complejas.",
+                        "Para catálogos, manuales técnicos y presentaciones donde se necesita ver el objeto en tres dimensiones.",
+                        "Para dibujar exclusivamente edificios y estructuras de construcción civil."}, 2);
+        agregarPregunta(l, "¿Cuál es la base teórica del dibujo técnico moderno según el texto?",
+                new String[]{"El álgebra lineal, que permite calcular transformaciones geométricas en el espacio.",
+                        "La geometría descriptiva, que estudia la representación tridimensional mediante proyecciones.",
+                        "La trigonometría, que calcula ángulos y distancias en los planos de fabricación.",
+                        "La estadística, que determina las tolerancias de fabricación en la industria."}, 1);
     }
 
     private void agregarPregunta(Lectura lectura, String enunciado, String[] textosOpciones, int indiceCorrecta) {
