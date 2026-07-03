@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Error · Kinal</title>
+    <meta name="theme-color" content="#1B3A6B"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
+</head>
+<body>
+<nav class="k-nav">
+    <a href="/carreras" class="k-nav-brand">
+        <img src="https://static.wixstatic.com/media/128120_32e25aed1e3b488f9f2e834a59aef168~mv2.png/v1/fill/w_313,h_114,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Recurso%208_3x-8%20(3).png" alt="Fundación Kinal">
+    </a>
+</nav>
+
+<div class="k-page" style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 64px)">
+    <div class="k-glow k-glow-indigo" style="width:400px;height:400px;top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+
+    <div style="text-align:center;position:relative;z-index:1" class="fade-up">
+        <div style="font-family:var(--k-font-display);font-size:8rem;font-weight:800;color:var(--kinal-blue-light);line-height:1;user-select:none"
+             th:text="${status ?: '404'}">404</div>
+
+        <div style="margin-top:-3rem;position:relative;z-index:1">
+            <div class="k-badge k-badge-red" style="margin-bottom:1rem;display:inline-flex">
+                <i class="fa fa-triangle-exclamation"></i>
+                Error <span th:text="${status ?: '404'}">404</span>
+            </div>
+
+            <h1 class="k-heading" style="margin-bottom:.75rem">
+                <span th:if="${status == 404}">Página no encontrada</span>
+                <span th:if="${status == 403}">Acceso denegado</span>
+                <span th:if="${status == 500}">Error del servidor</span>
+                <span th:unless="${status == 404 or status == 403 or status == 500}">Algo salió mal</span>
+            </h1>
+
+            <p class="k-subtext" style="max-width:400px;margin:0 auto 2rem">
+                <span th:if="${status == 404}">La página que buscas no existe o fue movida.</span>
+                <span th:if="${status == 403}">No tienes permisos para acceder a este recurso.</span>
+                <span th:unless="${status == 404 or status == 403}">
+                    <span th:text="${message ?: 'Ocurrió un error inesperado. Por favor intenta de nuevo.'}"></span>
+                </span>
+            </p>
+
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+                <a href="/carreras" class="k-btn k-btn-primary k-btn-lg"><i class="fa fa-house"></i> Ir al inicio</a>
+                <button onclick="history.back()" class="k-btn k-btn-ghost k-btn-lg"><i class="fa fa-arrow-left"></i> Volver</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/kinal.js}" defer></script>
+</body>
+</html>

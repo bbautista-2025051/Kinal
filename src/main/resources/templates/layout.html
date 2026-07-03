@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${pageTitle != null ? pageTitle + ' · Kinal' : 'Kinal — Comprensión Lectora'}">Kinal</title>
+    <meta name="theme-color" content="#0b0e1a"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.5.2/css/all.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/kinal.css}"/>
+    <th:block th:replace="${extraHead}"></th:block>
+</head>
+<body>
+
+<!-- ── NAVBAR ────────────────────────────────────── -->
+<a href="/carreras" class="k-nav-brand">
+    <img src="https://static.wixstatic.com/media/128120_32e25aed1e3b488f9f2e834a59aef168~mv2.png/v1/fill/w_313,h_114,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Recurso%208_3x-8%20(3).png" alt="Fundación Kinal">
+</a>
+    <ul class="k-nav-links">
+        <li sec:authorize="isAuthenticated()">
+            <a th:href="@{/carreras}" th:classappend="${currentPage == 'carreras'} ? 'active'">
+                <i class="fa fa-book-open" style="font-size:.8rem"></i> Carreras
+            </a>
+        </li>
+        <li sec:authorize="isAuthenticated()">
+            <a th:href="@{/mis-notas}" th:classappend="${currentPage == 'notas'} ? 'active'">
+                <i class="fa fa-chart-line" style="font-size:.8rem"></i> Mis Notas
+            </a>
+        </li>
+        <li sec:authorize="isAuthenticated()">
+            <form th:action="@{/logout}" method="post" style="margin:0">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="k-btn k-btn-ghost k-btn-sm" style="cursor:pointer">
+                    <i class="fa fa-right-from-bracket" style="font-size:.8rem"></i> Salir
+                </button>
+            </form>
+        </li>
+        <li sec:authorize="!isAuthenticated()">
+            <a href="/login" class="k-btn k-btn-ghost k-btn-sm">Ingresar</a>
+        </li>
+        <li sec:authorize="!isAuthenticated()">
+            <a href="/registro" class="k-btn k-btn-primary k-btn-sm">Registrarse</a>
+        </li>
+    </ul>
+</nav>
+
+<th:block th:replace="${content}"></th:block>
+
+<!-- ── FOOTER ────────────────────────────────────── -->
+<footer class="k-footer" th:fragment="footer">
+    <p>© 2025 Fundación Kinal · Plataforma de Comprensión Lectora</p>
+</footer>
+
+<script th:src="@{/js/kinal.js}" defer></script>
+<th:block th:replace="${extraScript}"></th:block>
+</body>
+</html>
