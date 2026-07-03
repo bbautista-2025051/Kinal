@@ -45,6 +45,17 @@ public class DataInitializer implements CommandLineRunner {
                     "Cuentos, fábulas y leyendas de Guatemala: narrativa popular, tradición oral y literatura imaginativa del pueblo guatemalteco.");
             carreraRepository.save(fantasia);
 
+            Carrera electronica = new Carrera("Electrónica",
+                    "Fundamentos y principios de la electrónica moderna, semiconductores y circuitos.");
+            carreraRepository.save(electronica);
+
+            // ==================== LECTURAS ELECTRÓNICA ====================
+            crearLecturaElectronica1(electronica);
+            crearLecturaElectronica2(electronica);
+            crearLecturaElectronica3(electronica);
+            crearLecturaElectronica4(electronica);
+            crearLecturaElectronica5(electronica);
+
             // ==================== LECTURAS INFORMÁTICA ====================
             crearLecturaJava(informatica);
             crearLecturaHTML(informatica);
@@ -66,16 +77,6 @@ public class DataInitializer implements CommandLineRunner {
             crearLecturaElectricidad5(electricidad);
 
             // ==================== LECTURAS CULTURA GENERAL ====================
-            Carrera electronica = new Carrera("Electrónica",
-                    "Fundamentos y principios de la electrónica moderna, semiconductores y circuitos.",
-                    "/img/electronica.jpg");
-            carreraRepository.save(electronica);
-
-            crearLecturaElectronica1(electronica);
-            crearLecturaElectronica2(electronica);
-            crearLecturaElectronica3(electronica);
-            crearLecturaElectronica4(electronica);
-            crearLecturaElectronica5(electronica);
 
             crearLecturaRevolucionIndustrial(culturaGeneral);
             crearLecturaSegundaGuerraMundial(culturaGeneral);
